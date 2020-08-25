@@ -14,7 +14,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "jenssegers/mongodb": "dev-develop",
-        "laravel/framework": "^7.24",
+        "laravel/framework": "^7.26",
         "laravel/tinker": "^2.0",
         "socialiteproviders/discord": "^2.0"
     },
