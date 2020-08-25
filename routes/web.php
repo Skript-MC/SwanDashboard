@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('profile', 'ProfileController@self');
+
 Route::get('login', 'AuthController@redirect');
 Route::get('login/callback', 'AuthController@callback');
 Route::get('logout', 'AuthController@logout');
