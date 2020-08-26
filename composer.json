@@ -1,16 +1,33 @@
 {
-    "name": "laravel/laravel",
+    "name": "Swan Dashboard",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Dashboard using MongoDB and Laravel for Swan.",
     "keywords": [
-        "framework",
-        "laravel"
+        "laravel",
+        "mongodb",
+        "swan"
     ],
-    "license": "MIT",
+    "version": "1.0.0",
+    "license": "GPL-3.0-only",
+    "homepage": "https://github.com/Romitou/SwanDashboard",
+    "readme": "https://github.com/Romitou/SwanDashboard#readme",
+    "authors": [
+        {
+            "name": "Romitou",
+            "email": "romitou@protonmail.com",
+            "homepage": "https://github.com/Romitou",
+            "role": "developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Romitou/SwanDashboard/issues",
+        "wiki": "https://github.com/Romitou/SwanDashboard/wiki",
+        "source": "https://github.com/Romitou/SwanDashboard"
+    },
     "require": {
         "php": "^7.2.5",
-        "ext-pdo": "*",
         "ext-mongodb": "^1.8",
+        "ext-pdo": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
