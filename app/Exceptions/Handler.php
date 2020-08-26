@@ -44,12 +44,36 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable
      */
     public function render($request, Throwable $exception)
     {
+        switch (get_class($exception)) {
+            case 'MongoDB\Driver\Exception\AuthenticationException':
+                return response()->view('errors.custom', [
+                    'title' => 'Base de donnée indisponible',
+                    'fa' => 'database',
+                    'message' => 'La base de donnée est indisponible. Nous vous invitons à réessayer dans quelques instants.',
+                    'redirect' => false,
+                ]);
+            case 'GuzzleHttp\Exception\ClientException':
+                if (!$request->get('error') === 'access_denied') break;
+                return response()->view('errors.custom', [
+                    'title' => 'OAuth annulé',
+                    'fa' => 'sign-in-alt',
+                    'message' => 'Vous avez annulé l\'authentification via votre compte Discord. Appuyez sur le bouton ci-dessous pour recommencer l\'authentification.',
+                    'redirect' => true,
+                ]);
+            case 'Laravel\Socialite\Two\InvalidStateException':
+                return response()->view('errors.custom', [
+                    'title' => 'Session invalide',
+                    'fa' => 'shield-alt',
+                    'message' => 'Votre requête d\'authentification n\'a pas pu être validée. Merci de réessayer et de contacter un administrateur du panel en cas de besoin.',
+                    'redirect' => false,
+                ]);
+        }
         return parent::render($request, $exception);
     }
 }
