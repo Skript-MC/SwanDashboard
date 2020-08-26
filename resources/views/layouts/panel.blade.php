@@ -14,7 +14,7 @@
             <div class="sidebar-brand-text mx-3">Swan</div>
         </a>
         <hr class="sidebar-divider my-0">
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
             <a class="nav-link" href="/">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Tableau de bord</span>
@@ -24,7 +24,7 @@
         <div class="sidebar-heading">
             Swan
         </div>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('logs') ? 'active' : '' }}">
             <a class="nav-link" href="/logs">
                 <i class="fas fa-history"></i>
                 <span>Historique</span>
@@ -34,14 +34,14 @@
         <div class="sidebar-heading">
             Admin
         </div>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('users') ? 'active' : '' }}">
             <a class="nav-link" href="/users">
                 <i class="fas fa-users"></i>
                 <span>Gestion utilisateurs</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/panelconfig">
+        <li class="nav-item {{ request()->is('config/panel') ? 'active' : '' }}">
+            <a class="nav-link" href="/config/panel">
                 <i class="fas fa-cogs"></i>
                 <span>Configuration</span></a>
         </li>
