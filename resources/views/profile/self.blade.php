@@ -12,21 +12,27 @@
             <div class="card-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
+                        <span class="input-group-text" id="discordId">Identifiant</span>
+                    </div>
+                    <input type="text" class="form-control" value="{{ $user->id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
                         <span class="input-group-text" id="discordNickname">Nom d'utilisateur</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="{{ $user->nickname }}" aria-label="Nom d'utilisateur" aria-describedby="discordNickname" disabled>
+                    <input type="text" class="form-control" value="{{ $user->nickname }}" aria-label="Nom d'utilisateur" aria-describedby="discordNickname" readonly>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="discordUsername">Pseudonyme</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="{{ $user->name }}" aria-label="Pseudonyme" aria-describedby="discordUsername" disabled>
+                    <input type="text" class="form-control" value="{{ $user->name }}" aria-label="Pseudonyme" aria-describedby="discordUsername" readonly>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="discordAvatar">Avatar</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="{{ $user->avatar }}" aria-label="Avatar" aria-describedby="discordAvatar" disabled>
+                    <input type="text" class="form-control" value="{{ $user->avatar }}" aria-label="Avatar" aria-describedby="discordAvatar" readonly>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">

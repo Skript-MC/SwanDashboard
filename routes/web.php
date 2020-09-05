@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('profile', 'ProfileController@self');
+Route::get('profile', 'ProfileController@self')->name('profile');
+Route::get('users', 'UserController@index')->name('users');
+Route::get('users/{id}', 'UserController@edit')->name('user-edit');
+Route::post('users/{id}/edit', 'UserController@postEdit');
 
 Route::get('login', 'AuthController@redirect');
 Route::get('login/callback', 'AuthController@callback');
