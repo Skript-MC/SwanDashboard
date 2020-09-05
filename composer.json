@@ -1,5 +1,5 @@
 {
-    "name": "Swan Dashboard",
+    "name": "swan-dashboard",
     "type": "project",
     "description": "Dashboard using MongoDB and Laravel for Swan.",
     "keywords": [
@@ -32,9 +32,10 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "jenssegers/mongodb": "dev-develop",
-        "laravel/framework": "^7.26",
+        "laravel/framework": "^7.27",
         "laravel/tinker": "^2.0",
-        "socialiteproviders/discord": "^2.0"
+        "socialiteproviders/discord": "^2.0",
+        "symfony/http-kernel": "5.1.5"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
