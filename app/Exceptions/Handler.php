@@ -74,6 +74,11 @@ class Handler extends ExceptionHandler
                     'redirect' => false,
                 ]);
         }
+
+        if (app()->bound('sentry') && $this->shouldReport($exception)) {
+            app('sentry')->captureException($exception);
+        }
+
         return parent::render($request, $exception);
     }
 }
