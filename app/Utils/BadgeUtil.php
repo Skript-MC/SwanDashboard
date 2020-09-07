@@ -17,9 +17,8 @@ class BadgeUtil
                 return 'Staff';
             case 4:
                 return 'Admin';
-            default:
-                return null;
         }
+        return null;
     }
 
 }

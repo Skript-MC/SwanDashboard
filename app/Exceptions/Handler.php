@@ -40,16 +40,13 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Render an exception into an HTTP response.
+     * Check if a exception is handled and return a custom view.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Throwable
+     * @param \Illuminate\Http\Request $request
+     * @param Throwable $exception
+     * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception)
-    {
+    private function handleException($request, Throwable $exception) {
         switch (get_class($exception)) {
             case 'MongoDB\Driver\Exception\AuthenticationException':
                 return response()->view('errors.custom', [
@@ -74,6 +71,24 @@ class Handler extends ExceptionHandler
                     'redirect' => false,
                 ]);
         }
+        return null;
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $exception
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Throwable
+     */
+    public function render($request, Throwable $exception)
+    {
+
+        $handle = $this->handleException($request, $exception);
+        if ($handle)
+            return $handle;
 
         if (app()->bound('sentry') && $this->shouldReport($exception)) {
             app('sentry')->captureException($exception);
