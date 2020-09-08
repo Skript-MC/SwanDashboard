@@ -45,6 +45,11 @@
                 <i class="fas fa-cogs"></i>
                 <span>Configuration</span></a>
         </li>
+        <li class="nav-item {{ request()->is('sentry') ? 'active' : '' }}">
+            <a class="nav-link" href="/sentry">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Exceptions Sentry</span></a>
+        </li>
         <hr class="sidebar-divider d-none d-md-block">
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
