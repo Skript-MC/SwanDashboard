@@ -16,7 +16,8 @@ class ProfileController extends Controller
      *
      * @return View
      */
-    public function self() {
+    public function self()
+    {
         return view('profile.self', [
             'user' => auth()->user()
         ]);

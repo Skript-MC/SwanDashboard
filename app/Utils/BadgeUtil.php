@@ -7,8 +7,7 @@ class BadgeUtil
 
     public static function getBadge(int $rank)
     {
-        switch ($rank)
-        {
+        switch ($rank) {
             case 1:
                 return 'Invité';
             case 2:

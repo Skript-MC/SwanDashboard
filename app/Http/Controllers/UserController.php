@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         if (auth()->user()->rank < 3) abort(403);
         $user = User::query()->firstWhere('id', '=', $request->post('discordId'));
-        $rank = (int) $request->post('dashRole');
+        $rank = (int)$request->post('dashRole');
 
         if (auth()->user()->rank < $rank) return redirect()->back()->with('error', 'Vous ne pouvez pas modifier un rôle supérieur au votre.');
         if (auth()->user()->rank < $user->rank) return redirect()->back()->with('error', 'Vous ne pouvez pas modifier cet utilisateur.');

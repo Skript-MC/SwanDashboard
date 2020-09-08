@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -29,10 +32,10 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Throwable  $exception
+     * @param Throwable $exception
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function report(Throwable $exception)
     {
@@ -40,13 +43,37 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * Render an exception into an HTTP response.
+     *
+     * @param Request $request
+     * @param Throwable $exception
+     * @return Response
+     *
+     * @throws Throwable
+     */
+    public function render($request, Throwable $exception)
+    {
+
+        $handle = $this->handleException($request, $exception);
+        if ($handle)
+            return $handle;
+
+        if (app()->bound('sentry') && $this->shouldReport($exception)) {
+            app('sentry')->captureException($exception);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    /**
      * Check if a exception is handled and return a custom view.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Throwable $exception
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    private function handleException($request, Throwable $exception) {
+    private function handleException($request, Throwable $exception)
+    {
         switch (get_class($exception)) {
             case 'MongoDB\Driver\Exception\AuthenticationException':
                 return response()->view('errors.custom', [
@@ -72,28 +99,5 @@ class Handler extends ExceptionHandler
                 ]);
         }
         return null;
-    }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Throwable
-     */
-    public function render($request, Throwable $exception)
-    {
-
-        $handle = $this->handleException($request, $exception);
-        if ($handle)
-            return $handle;
-
-        if (app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
-        }
-
-        return parent::render($request, $exception);
     }
 }
