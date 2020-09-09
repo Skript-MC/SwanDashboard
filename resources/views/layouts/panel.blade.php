@@ -40,10 +40,10 @@
                 <span>Gestion utilisateurs</span>
             </a>
         </li>
-        <li class="nav-item {{ request()->is('config/panel') ? 'active' : '' }}">
-            <a class="nav-link" href="/config/panel">
+        <li class="nav-item {{ request()->is('config/dashboard') ? 'active' : '' }}">
+            <a class="nav-link" href="/config/dashboard">
                 <i class="fas fa-cogs"></i>
-                <span>Configuration</span></a>
+                <span>Configuration Dashboard</span></a>
         </li>
         <li class="nav-item {{ request()->is('sentry') ? 'active' : '' }}">
             <a class="nav-link" href="/sentry">

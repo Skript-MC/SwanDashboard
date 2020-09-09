@@ -23,6 +23,9 @@ Route::post('users/{id}/edit', 'UserController@postEdit');
 
 Route::get('sentry', 'SentryController@index')->name('sentry');
 
+Route::get('config/dashboard', 'ConfigController@dashboard')->name('dashboard-config');
+Route::post('config/dashboard/edit', 'ConfigController@postDashboard');
+
 Route::get('login', 'AuthController@redirect');
 Route::get('login/callback', 'AuthController@callback');
 Route::get('logout', 'AuthController@logout');

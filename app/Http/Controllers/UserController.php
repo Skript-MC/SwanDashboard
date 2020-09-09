@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Utils\DataProvider;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -16,7 +17,7 @@ class UserController extends Controller
     {
         if (auth()->user()->rank < 3) abort(403);
         return view('admin.users', [
-            'users' => User::query()->paginate(10)
+            'users' => User::query()->paginate(DataProvider::getConfig('pagination'))
         ]);
     }
 
