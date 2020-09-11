@@ -28,6 +28,10 @@ class ConfigController extends Controller
         $configName = $request->post('name');
         Cache::forget($configName); // Clear the cache
         $config = Config::query()->firstWhere('name', '=', $configName);
+        if (!$config) {
+            $config = new Config();
+            $config->name = $configName;
+        }
         $config->value = (int)$request->post($configName);
         $config->save();
         return redirect()->back()->with($configName, 'Vos modifications ont été enregistrées.');
