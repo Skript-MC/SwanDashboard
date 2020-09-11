@@ -32,7 +32,7 @@ Route::get('sentry', [SentryController::class, 'index'])->name('sentry');
 Route::get('config/dashboard', [ConfigController::class, 'dashboard'])->name('dashboard-config');
 Route::post('config/dashboard/edit', [ConfigController::class, 'postDashboard']);
 
-Route::get('login', [AuthController::class, 'redirect']);
+Route::get('login', [AuthController::class, 'redirect'])->name('login');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('login/callback', [AuthController::class, 'callback']);
-Route::get('logout', [AuthController::class, 'logout']);
 

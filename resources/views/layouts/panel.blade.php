@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Swan Dashboard - @yield('title')</title>
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="{{ asset(mix('css/app.css')) }}" rel="stylesheet">
 </head>
 <body id="page-top">
 <div id="wrapper">
@@ -28,7 +28,7 @@
             Swan
         </div>
         <li class="nav-item {{ request()->is('logs') ? 'active' : '' }}">
-            <a class="nav-link" href="/logs">
+            <a class="nav-link" href="">
                 <i class="fas fa-history"></i>
                 <span>Historique</span>
             </a>
@@ -38,18 +38,18 @@
             Admin
         </div>
         <li class="nav-item {{ request()->is('users') ? 'active' : '' }}">
-            <a class="nav-link" href="/users">
+            <a class="nav-link" href="{{ route('users') }}">
                 <i class="fas fa-users"></i>
                 <span>Gestion utilisateurs</span>
             </a>
         </li>
         <li class="nav-item {{ request()->is('config/dashboard') ? 'active' : '' }}">
-            <a class="nav-link" href="/config/dashboard">
+            <a class="nav-link" href="{{ route('dashboard-config') }}">
                 <i class="fas fa-cogs"></i>
                 <span>Configuration Dashboard</span></a>
         </li>
         <li class="nav-item {{ request()->is('sentry') ? 'active' : '' }}">
-            <a class="nav-link" href="/sentry">
+            <a class="nav-link" href="{{ route('sentry') }}">
                 <i class="fas fa-exclamation-circle"></i>
                 <span>Exceptions Sentry</span></a>
         </li>
@@ -98,7 +98,7 @@
                             <img class="img-profile rounded-circle" src="{{ auth()->user()->avatar }}" alt="Avatar de l'utilisateur">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/profile">
+                            <a class="dropdown-item" href="{{ route('profile') }}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Mon profil
                             </a>
@@ -139,11 +139,11 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
-                <a class="btn btn-primary" href="/logout">Déconnexion</a>
+                <a class="btn btn-primary" href="{{ route('logout') }}">Déconnexion</a>
             </div>
         </div>
     </div>
 </div>
-<script src="/js/app.js"></script>
+<script src="{{ asset(mix('js/app.js')) }}"></script>
 </body>
 </html>
