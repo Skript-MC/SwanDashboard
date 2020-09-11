@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('profile', [ProfileController::class, 'home'])->name('profile');
+Route::get('profile', [ProfileController::class, 'self'])->name('profile');
 
 Route::get('users', [UserController::class, 'index'])->name('users');
 Route::get('users/{id}', [UserController::class, 'edit'])->name('user-edit');
