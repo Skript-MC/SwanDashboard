@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
-        "axios": "^0.19",
+        "axios": "^0.20",
         "bootstrap": "^4.0.0",
         "chart.js": "^2.9.3",
         "cross-env": "^7.0",
