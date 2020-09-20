@@ -1,5 +1,5 @@
 {
-    "name": "swan-dashboard",
+    "name": "romitou/swandashboard",
     "type": "project",
     "description": "Dashboard using MongoDB and Laravel for Swan.",
     "keywords": [
@@ -26,7 +26,7 @@
     },
     "require": {
         "php": "^7.2.5",
-        "ext-mongodb": "^1.8",
+        "ext-mongodb": "*",
         "ext-pdo": "*",
         "ext-json": "*",
         "fideloper/proxy": "^4.2",
