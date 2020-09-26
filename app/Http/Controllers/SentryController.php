@@ -14,7 +14,7 @@ class SentryController extends Controller
     public function index()
     {
         if (auth()->user()->rank < 4) abort(403);
-        return view('sentry.index', [
+        return view('admin.sentry', [
             'reports' => DataProvider::getSentryIssues()
         ]);
     }

@@ -24,6 +24,7 @@ class DataProvider
             $sentryData = json_decode(Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('SENTRY_API_TOKEN')
             ])->get(env('SENTRY_API_URL') . '/issues/'), true);
+            if ($sentryData['detail'] ?? false) $sentryData = [];
             Cache::put('sentry', $sentryData, 600); // 10 minutes
             return $sentryData;
         }
