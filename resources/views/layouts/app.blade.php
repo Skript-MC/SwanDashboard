@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Swan Dashboard - @yield('title')</title>
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="{{ asset(mix('css/app.css')) }}" rel="stylesheet">
+    <script src="{{ asset(mix('js/sb-admin.js')) }}"></script>
 </head>
 <body class="bg-gradient-primary">
 <div class="container">
@@ -23,6 +24,5 @@
         </div>
     </div>
 </div>
-<script src="/js/app.js"></script>
 </body>
 </html>
