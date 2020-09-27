@@ -19,4 +19,36 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <script src="{{ asset(mix('js/chartjs.js')) }}"></script>
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="commands-stats" height="80"></canvas>
+                    <script>
+                        // Bar chart
+                        new Chart(document.getElementById("commands-stats"), {
+                            type: 'bar',
+                            data: {
+                                labels: {!! json_encode($commands['names']) !!},
+                                datasets: [
+                                    {
+                                        label: "Nombre d'utilisation",
+                                        data: {!! json_encode($commands['values']) !!}
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

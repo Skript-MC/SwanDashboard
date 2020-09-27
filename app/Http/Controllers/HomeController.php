@@ -21,6 +21,7 @@ class HomeController extends Controller
             return view('welcome'); // The user isn't auth.
         return view('dashboard', [
             'sentry' => count(DataProvider::getSentryIssues()),
+            'commands' => DataProvider::getCommandStats(),
         ]);
     }
 
