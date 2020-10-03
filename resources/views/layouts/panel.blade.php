@@ -28,8 +28,8 @@
         <div class="sidebar-heading">
             Swan
         </div>
-        <li class="nav-item {{ request()->is('logs') ? 'active' : '' }}">
-            <a class="nav-link" href="">
+        <li class="nav-item {{ request()->is('history') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('history') }}">
                 <i class="fas fa-history"></i>
                 <span>Historique</span>
             </a>
@@ -65,6 +65,14 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
+                <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+                    <a href="https://github.com/Skript-MC/Swan" class="btn btn-outline-primary">
+                        <i class="fab fa-github"></i> GitHub de Swan
+                    </a>
+                    <a href="https://github.com/Romitou/SwanDashboard" class="btn btn-outline-primary mx-2">
+                        <i class="fab fa-github"></i> GitHub de Swan Dashboard
+                    </a>
+                </div>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -85,15 +93,12 @@
                     </li>
                 </ul>
             </nav>
-            <div class="container-fluid">
-                <h1 class="h3 mb-4 text-gray-800">@yield('title')</h1>
-                    @yield('content')
-            </div>
+            @yield('content')
         </div>
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Swan Dashboard &copy; Romitou 2020</span>
+                    <span>Développé par <a href="https://github.com/Romitou">Romitou</a> - Panel par <a href="https://startbootstrap.com">Start Bootstrap</a></span>
                 </div>
             </div>
         </footer>
