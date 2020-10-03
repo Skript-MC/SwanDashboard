@@ -1,4 +1,4 @@
-name: CI
+name: PHP CI
 on: [push, pull_request]
 jobs:
   laravel-mix:
@@ -18,10 +18,20 @@ jobs:
         key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-
-      
+
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: npm i
 
     - name: Run production build
       run: npm run production
+
+  composer-validate:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Composer validate
+      run: composer validate
