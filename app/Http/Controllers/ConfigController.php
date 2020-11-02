@@ -17,8 +17,10 @@ class ConfigController extends Controller
     public function dashboard()
     {
         if (auth()->user()->rank < 3) abort(403);
-        return view('config.dashboard', [
-            'pagination' => DataProvider::getConfig('pagination')
+        $log_channels = DataProvider::getConfig('log_channels');
+        return view('admin.config', [
+            'pagination' => DataProvider::getConfig('pagination'),
+            'log_channels' => $log_channels == null ? [] : $log_channels,
         ]);
     }
 
@@ -26,13 +28,15 @@ class ConfigController extends Controller
     {
         if (auth()->user()->rank < 3) abort(403);
         $configName = $request->post('name');
-        Cache::forget($configName); // Clear the cache
+        Cache::forget('config-' . $configName); // Clear the cache
         $config = Config::query()->firstWhere('name', '=', $configName);
         if (!$config) {
             $config = new Config();
             $config->name = $configName;
         }
-        $config->value = (int)$request->post($configName);
+        $config->value = ($configName === "pagination")
+            ? (int) $request->post($configName)
+            : $request->post($configName);
         $config->save();
         return redirect()->back()->with($configName, 'Vos modifications ont été enregistrées.');
     }

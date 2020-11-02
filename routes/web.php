@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SentryController;
@@ -31,6 +32,9 @@ Route::get('sentry', [SentryController::class, 'index'])->name('sentry');
 
 Route::get('config/dashboard', [ConfigController::class, 'dashboard'])->name('dashboard-config');
 Route::post('config/dashboard/edit', [ConfigController::class, 'postDashboard']);
+
+Route::get('history', [HistoryController::class, 'index'])->name('history');
+Route::get('history/{channelName}', [HistoryController::class, 'channelHistory']);
 
 Route::get('login', [AuthController::class, 'redirect'])->name('login');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
