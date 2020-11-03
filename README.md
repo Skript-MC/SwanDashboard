@@ -7,12 +7,11 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/83ba962d1237ac5048c1/maintainability)](https://codeclimate.com/github/Romitou/SwanDashboard/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/83ba962d1237ac5048c1/test_coverage)](https://codeclimate.com/github/Romitou/SwanDashboard/test_coverage) ![GitHub](https://img.shields.io/github/license/Romitou/SwanDashboard)
 
 ## 🚀 Installation
-- Installer [Composer](https://getcomposer.org/) sur votre machine
-- Télécharger la [dernière version stable](https://github.com/Romitou/SwanDashboard/releases/latest) ou cloner ce dépôt pour tester les dernières modifications
-- Copier le fichier `.env.example` vers `.env` et remplir celui-ci
-- Exécuter la commande `composer install` et `npm run production` pour installer les modules nécessaires
-- Démarrer Swan une première fois pour créer les collections automatiquement
-- C'est parti ! Mettez en place un serveur Apache ou NGINX et connectez-vous.
+- Installez [PHP 7.4+](https://www.php.net/downloads) & [Composer](https://getcomposer.org/) sur votre machine, puis assurez-vous que [PECL](https://www.php.net/manual/fr/install.pecl.php) est présent ;
+- Installez [MongoDB PHP Driver](https://docs.mongodb.com/drivers/php) via PECL : `$ pecl install mongodb`. N'oubliez pas d'ajouter `extension=mongodb.so` dans votre `php.ini` ;
+- Téléchargez la [dernière version stable](https://github.com/Romitou/SwanDashboard/releases/latest) ou clonez ce dépôt pour tester les dernières modifications ;
+- Exécutez la commande `composer install` pour installer les modules nécessaires et `php artisan command:install` pour configurer et installer simplement ce projet ; 
+- C'est parti ! Mettez en place un serveur web (ou `php artisan serve` en développement) et connectez-vous.
 
 ## 🔍 Rapport de bug et suggestions
 - 🐛 Vous avez aperçu un bug lorsque vous utilisez Swan Dashboard ?
