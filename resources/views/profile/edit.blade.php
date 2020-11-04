@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-6">
-                <div class="card shadow position-relative">
+                <div class="card shadow position-relative mb-3">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Données de l'utilisateur</h6>
                     </div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card shadow position-relative">
+                <div class="card shadow position-relative mb-3">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Authentification à deux facteurs</h6>
                     </div>

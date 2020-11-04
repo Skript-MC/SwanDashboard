@@ -13,7 +13,7 @@
                     <div class="card-body">
                         @if(count($reports) != 0)
                         <p>Les rapports enregistrés par Sentry non traités sont affichés ici ; mis en cache pendant 10 minutes. Pour accéder à plus de détails, cliquez sur le rapport en question qui vous redirigera vers son récapitulatif Sentry.</p>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush table-responsive">
                                 @foreach($reports as $report)
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <a href="{{ $report['permalink'] }}"> {{ $report['title'] }}</a>
