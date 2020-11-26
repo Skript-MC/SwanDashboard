@@ -16,6 +16,13 @@ Encore.setOutputPath('public/build/')
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
     // enables Sass/SCSS support
-    .enableSassLoader();
+    .enableSassLoader()
+    // copies images without additional processing
+    .copyFiles({
+        from: './assets/images',
+        to: 'images/[path][name].[ext]',
+        pattern: /\.(png|jpg|jpeg|ico)$/
+    })
+;
 
 module.exports = Encore.getWebpackConfig();

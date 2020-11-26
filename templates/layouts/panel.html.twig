@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{{ asset('build/images/swan-logo.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('build/images/favicon.ico') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -16,12 +18,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon">
-                    <img src="/" alt="Logo de Swan">
+                    <img src="{{ asset('build/images/swan-logo.png') }}" alt="Logo de Swan">
                 </div>
                 <div class="sidebar-brand-text mx-3">Swan</div>
             </a>
             <hr class="sidebar-divider my-0">
-            <li class="nav-item {{ app.request.attributes.get('_route') == '/' ? 'active' }}">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'home' ? 'active' }}">
                 <a class="nav-link" href="/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Tableau de bord</span>
@@ -31,7 +33,7 @@
             <div class="sidebar-heading">
                 Swan
             </div>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'history' ? 'active' }}">
+            <li class="nav-item {{ app.request.attributes.get('_route') in ['history', 'history-channel'] ? 'active' }}">
                 <a class="nav-link" href="{{ path('history') }}">
                     <i class="fas fa-history"></i>
                     <span>Historique</span>
@@ -71,9 +73,6 @@
                     <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
                         <a href="https://github.com/Skript-MC/Swan" class="btn btn-outline-primary">
                             <i class="fab fa-github"></i> GitHub de Swan
-                        </a>
-                        <a href="https://github.com/Romitou/SwanDashboard" class="btn btn-outline-primary mx-2">
-                            <i class="fab fa-github"></i> GitHub de Swan Dashboard
                         </a>
                     </div>
                     <ul class="navbar-nav ml-auto">
