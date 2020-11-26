@@ -6,19 +6,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(collection="users")
  */
 class User implements UserInterface
 {
     /**
-     * @MongoDB\Id
+     * @MongoDB\Id(strategy="none", type="int")
      */
     protected $id;
-
-    /**
-     * @MongoDB\Field(type="int")
-     */
-    protected $discordId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -44,19 +39,11 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getDiscordId()
+    public function setId($id): void
     {
-        return $this->discordId;
-    }
-
-    /**
-     * @param $discordId
-     */
-    public function setDiscordId($discordId): void
-    {
-        $this->discordId = $discordId;
+        $this->id = $id;
     }
 
     /**
@@ -114,15 +101,21 @@ class User implements UserInterface
     /**
      * @return void
      */
-    public function getPassword() {}
+    public function getPassword()
+    {
+    }
 
     /**
      * @return void
      */
-    public function getSalt() {}
+    public function getSalt()
+    {
+    }
 
     /**
      * @return void
      */
-    public function eraseCredentials() {}
+    public function eraseCredentials()
+    {
+    }
 }

@@ -12,9 +12,9 @@
 
                     <div class="list-group list-group-flush">
                         {% for channel in allChannels %}
-                        <a href="{{ path('history-channel', { channelId: channel.channelId }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params') is not empty) and (app.request.attributes.get('_route_params')['channelId'] == channel.channelId) %}active{% endif %}">
-                            #{{ channel.channelName }}
-                            {% if channel.channelId in loggedChannels %}
+                        <a href="{{ path('history-channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params') is not empty) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
+                            #{{ channel.name }}
+                            {% if channel.id in loggedChannels %}
                                 <span class="badge badge-pill badge-success ml-2">Archivé</span>
                             {% else %}
                                 <span class="badge badge-pill badge-warning ml-2">Non archivé</span>
@@ -32,12 +32,12 @@
                             <div class="px-0">
                                 <div class="px-4 py-2 bg-white">
                                     <div class="media table-responsive">
-                                        <img src="{{ message.userAvatarUrl }}" width="50" class="rounded-circle" alt="User avatar">
+                                        <img src="{{ message.user.avatarUrl }}" width="50" class="rounded-circle" alt="User avatar">
                                         <div class="ml-3">
                                             <div class="bg-light rounded py-2 px-3 mb-2">
                                                 <p class="text-small mb-0">{{ message.content }}</p>
                                             </div>
-                                            <p class="small"><strong>{{ message.userName }}</strong> ({{ message.userId }}), <strong>le {{ message.messageId|discordTimestamp }}</strong> ({{ message.messageId }})</p>
+                                            <p class="small"><strong>{{ message.user.username }}</strong> ({{ message.user.id }}), <strong>le {{ message.messageId|discordTimestamp }}</strong> ({{ message.messageId }})</p>
                                         </div>
                                     </div>
                                 </div>

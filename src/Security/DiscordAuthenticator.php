@@ -5,9 +5,9 @@ namespace App\Security;
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +42,14 @@ class DiscordAuthenticator extends SocialAuthenticator
     }
 
     /**
+     * @return OAuth2ClientInterface
+     */
+    private function getDiscordClient()
+    {
+        return $this->clientRegistry->getClient('discord');
+    }
+
+    /**
      * @param $credentials
      * @param UserProviderInterface $userProvider
      * @return User|UserInterface
@@ -55,26 +63,18 @@ class DiscordAuthenticator extends SocialAuthenticator
 
         $existingUser = $this->dm
             ->getRepository(User::class)
-            ->findOneBy(['discordId' => $discordUser->getId()]);
+            ->findOneBy(['id' => $discordUser->getId()]);
 
         if ($existingUser) return $existingUser;
 
         $user = new User();
-        $user->setDiscordId($discordUser->getId());
+        $user->setId($discordUser->getId());
         $user->setUsername($discordUser->getUsername() . '#' . $discordUser->getDiscriminator());
         $user->setAvatarUrl('https://cdn.discordapp.com/avatars/' . $discordUser->getId() . '/' . $discordUser->getAvatarHash() . '.png');
         $this->dm->persist($user);
         $this->dm->flush();
 
         return $user;
-    }
-
-    /**
-     * @return OAuth2ClientInterface
-     */
-    private function getDiscordClient()
-    {
-        return $this->clientRegistry->getClient('discord');
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

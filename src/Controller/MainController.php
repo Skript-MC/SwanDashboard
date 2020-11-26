@@ -29,7 +29,7 @@ class MainController extends AbstractController
     {
         return $registry
             ->getClient('discord')
-            ->redirect(['identify'], [ /* Empty */ ]);
+            ->redirect(['identify'], [/* Empty */]);
     }
 
 }

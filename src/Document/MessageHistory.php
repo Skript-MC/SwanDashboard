@@ -5,7 +5,7 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(collection="messageHistories")
  */
 class MessageHistory
 {
@@ -15,19 +15,9 @@ class MessageHistory
     protected $id;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\ReferenceOne(targetDocument=User::class)
      */
-    protected $userId;
-
-    /**
-     * Field not saved.
-     */
-    protected $userName;
-
-    /**
-     * Field not saved.
-     */
-    protected $userAvatarUrl;
+    protected $user;
 
     /**
      * @MongoDB\Field(type="int")
@@ -35,14 +25,9 @@ class MessageHistory
     protected $messageId;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\ReferenceOne(targetDocument=Channel::class)
      */
-    protected $channelId;
-
-    /**
-     * Field not saved.
-     */
-    protected $channelName;
+    protected $channel;
 
     /**
      * @MongoDB\Field(type="string")
@@ -58,51 +43,27 @@ class MessageHistory
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getUserId()
+    public function setId($id): void
     {
-        return $this->userId;
-    }
-
-    /**
-     * @param mixed $userId
-     */
-    public function setUserId($userId): void
-    {
-        $this->userId = $userId;
+        $this->id = $id;
     }
 
     /**
      * @return mixed
      */
-    public function getUserName()
+    public function getUser()
     {
-        return $this->userName;
+        return $this->user;
     }
 
     /**
-     * @param mixed $userName
+     * @param mixed $user
      */
-    public function setUserName($userName): void
+    public function setUser($user): void
     {
-        $this->userName = $userName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserAvatarUrl()
-    {
-        return $this->userAvatarUrl;
-    }
-
-    /**
-     * @param mixed $userAvatarUrl
-     */
-    public function setUserAvatarUrl($userAvatarUrl): void
-    {
-        $this->userAvatarUrl = $userAvatarUrl;
+        $this->user = $user;
     }
 
     /**
@@ -124,33 +85,17 @@ class MessageHistory
     /**
      * @return mixed
      */
-    public function getChannelId()
+    public function getChannel()
     {
-        return $this->channelId;
+        return $this->channel;
     }
 
     /**
-     * @param mixed $channelId
+     * @param mixed $channel
      */
-    public function setChannelId($channelId): void
+    public function setChannel($channel): void
     {
-        $this->channelId = $channelId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getChannelName()
-    {
-        return $this->channelName;
-    }
-
-    /**
-     * @param mixed $channelName
-     */
-    public function setChannelName($channelName): void
-    {
-        $this->channelName = $channelName;
+        $this->channel = $channel;
     }
 
     /**

@@ -5,24 +5,19 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(collection="channels")
  */
 class Channel
 {
     /**
-     * @MongoDB\Id
+     * @MongoDB\Id(strategy="none", type="int")
      */
     protected $id;
 
     /**
-     * @MongoDB\Field(type="int")
-     */
-    protected $channelId;
-
-    /**
      * @MongoDB\Field(type="string")
      */
-    protected $channelName;
+    protected $name;
 
     /**
      * @return mixed
@@ -33,35 +28,27 @@ class Channel
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getChannelId()
+    public function setId($id): void
     {
-        return $this->channelId;
-    }
-
-    /**
-     * @param mixed $channelId
-     */
-    public function setChannelId($channelId): void
-    {
-        $this->channelId = $channelId;
+        $this->id = $id;
     }
 
     /**
      * @return mixed
      */
-    public function getChannelName()
+    public function getName()
     {
-        return $this->channelName;
+        return $this->name;
     }
 
     /**
-     * @param mixed $channelName
+     * @param mixed $name
      */
-    public function setChannelName($channelName): void
+    public function setName($name): void
     {
-        $this->channelName = $channelName;
+        $this->name = $name;
     }
 
 }
