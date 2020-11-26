@@ -1,0 +1,5 @@
+connect_discord_check:
+  path: /login/authenticate
+
+logout:
+  path: /logout

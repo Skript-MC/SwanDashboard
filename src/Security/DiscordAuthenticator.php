@@ -55,13 +55,14 @@ class DiscordAuthenticator extends SocialAuthenticator
 
         $existingUser = $this->dm
             ->getRepository(User::class)
-            ->findOneBy(['id' => $discordUser->getId()]);
+            ->findOneBy(['discordId' => $discordUser->getId()]);
 
         if ($existingUser) return $existingUser;
 
         $user = new User();
         $user->setDiscordId($discordUser->getId());
         $user->setUsername($discordUser->getUsername() . '#' . $discordUser->getDiscriminator());
+        $user->setAvatarUrl('https://cdn.discordapp.com/avatars/' . $discordUser->getId() . '/' . $discordUser->getAvatarHash() . '.png');
         $this->dm->persist($user);
         $this->dm->flush();
 
@@ -78,7 +79,7 @@ class DiscordAuthenticator extends SocialAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        return new RedirectResponse($this->router->generate('index'));
+        return new RedirectResponse($this->router->generate('home'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
@@ -97,7 +98,7 @@ class DiscordAuthenticator extends SocialAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new RedirectResponse(
-            '/auth/',
+            '/login',
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

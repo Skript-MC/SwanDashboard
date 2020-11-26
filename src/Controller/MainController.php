@@ -10,16 +10,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="home")
      * @return Response
      */
-    public function main(): Response
+    public function home(): Response
     {
-        return $this->render('base.html.twig');
+        if (!$this->isGranted('ROLE_USER'))
+            return $this->render('welcome.html.twig');
+        return $this->render('dashboard.html.twig');
     }
 
     /**
-     * @Route("/auth")
+     * @Route("/login")
      * @param ClientRegistry $registry
      * @return Response
      */

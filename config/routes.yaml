@@ -1,2 +1,0 @@
-connect_discord_check:
-  path: /auth/authenticate

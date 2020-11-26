@@ -11,6 +11,8 @@ security:
             security: false
         main:
             anonymous: true
+            logout:
+                path: logout
             guard:
                 authenticators:
                     - App\Security\DiscordAuthenticator
