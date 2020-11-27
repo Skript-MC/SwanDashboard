@@ -32,7 +32,12 @@ class MessageHistory
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $content;
+    protected $oldContent;
+
+    /**
+     * @MongoDB\Field(type="string", nullable=true)
+     */
+    protected $newContent;
 
     /**
      * @return mixed
@@ -101,17 +106,33 @@ class MessageHistory
     /**
      * @return mixed
      */
-    public function getContent()
+    public function getOldContent()
     {
-        return $this->content;
+        return $this->oldContent;
     }
 
     /**
-     * @param mixed $content
+     * @param mixed $oldContent
      */
-    public function setContent($content): void
+    public function setOldContent($oldContent): void
     {
-        $this->content = $content;
+        $this->oldContent = $oldContent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewContent()
+    {
+        return $this->newContent;
+    }
+
+    /**
+     * @param mixed $newContent
+     */
+    public function setNewContent($newContent): void
+    {
+        $this->newContent = $newContent;
     }
 
 }

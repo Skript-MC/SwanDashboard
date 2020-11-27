@@ -7,10 +7,14 @@
             <div class="col-sm-3 mb-3">
                 <div class="card shadow position-relative">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Salons</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Recherche et salons</h6>
                     </div>
 
                     <div class="list-group list-group-flush">
+                        <form class="form-inline list-group-item">
+                            <input class="form-control" type="search" placeholder="Recherche" aria-label="Recherche">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+                        </form>
                         {% for channel in allChannels %}
                         <a href="{{ path('history-channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params') is not empty) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
                             #{{ channel.name }}
@@ -28,25 +32,49 @@
                 <div class="card shadow position-relative">
                     <div class="card-body">
                         {% if messages is not empty %}
-                            {% for message in messages %}
-                            <div class="px-0">
-                                <div class="px-4 py-2 bg-white">
-                                    <div class="media table-responsive">
-                                        <img src="{{ message.user.avatarUrl }}" width="50" class="rounded-circle" alt="User avatar">
-                                        <div class="ml-3">
-                                            <div class="bg-light rounded py-2 px-3 mb-2">
-                                                <p class="text-small mb-0">{{ message.content }}</p>
+                                <div class="card-columns">
+                                    {% for message in messages %}
+                                        <div class="card pt-3">
+                                            <div class="d-flex flex-column align-items-center text-center">
+                                                <img src="{{ message.user.avatarUrl }}" width="50" class="rounded-circle mb-1" alt="User avatar">
+                                                <p class="small m-0"><strong>{{ message.user.username }}</strong></p>
+                                                <div class="">
+                                                    {% if message.newContent is empty %}
+                                                        <span class="badge badge-pill badge-danger">Supprimé</span>
+                                                    {% else %}
+                                                        <span class="badge badge-pill badge-warning">Édité</span>
+                                                    {% endif %}
+                                                </div>
                                             </div>
-                                            <p class="small"><strong>{{ message.user.username }}</strong> ({{ message.user.id }}), <strong>le {{ message.messageId|discordTimestamp }}</strong> ({{ message.messageId }})</p>
+                                            <div class="card border-white m-0">
+                                                <div class="card-body">
+                                                    <div class="bg-light rounded py-2 px-3 mb-2">
+                                                        <p class="text-small mb-0">{{ message.oldContent|truncate }}</p>
+                                                    </div>
+                                                    {% if message.newContent is not empty %}
+                                                        <div class="bg-light rounded py-2 px-3 mb-2">
+                                                            <span class="text-small mb-0">{{ message.newContent|truncate }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    <p class="small m-0"><strong>{{ message.messageId|discordTimestamp }}</strong></p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                            </div>
-                            {% endfor %}
                         {% else %}
-                            Aucun message disponible.
+                            {% if app.request.attributes.get('_route') == 'history' %}
+                                Sélectionnez un salon sur le côté ou effectuez une recherche.
+                            {% else %}
+                                Aucun message disponible dans ce salon.
+                            {% endif %}
                         {% endif %}
                     </div>
+                    {% if messages is not empty %}
+                        <div class="px-3">
+                            {{ knp_pagination_render(messages) }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
