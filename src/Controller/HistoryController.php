@@ -9,6 +9,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,8 +30,7 @@ class HistoryController extends AbstractController
     {
         return $this->render('history.html.twig', [
             'allChannels' => $this->getAllChannels($dm),
-            'loggedChannels' => $this->getLoggedChannels($dm),
-            'messages' => [],
+            'loggedChannels' => $this->getLoggedChannels($dm)
         ]);
     }
 
@@ -48,14 +48,14 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/{channelId}", name="history-channel")
+     * @Route("/channel/{channelId}", name="history-channel")
      * @param int $channelId
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @return Response
      */
-    public function view(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request): Response
+    public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request): Response
     {
         $messages = $paginator->paginate(
             $dm->createQueryBuilder(MessageHistory::class)
@@ -70,6 +70,30 @@ class HistoryController extends AbstractController
             'allChannels' => $this->getAllChannels($dm),
             'loggedChannels' => $this->getLoggedChannels($dm),
             'messages' => $messages
+        ]);
+    }
+
+    /**
+     * @Route("/message/{messageId}", name="history-message")
+     * @param int $messageId
+     * @param DocumentManager $dm
+     * @return Response
+     */
+    public function viewMessage(int $messageId, DocumentManager $dm): Response
+    {
+        $message = $dm->getRepository(MessageHistory::class)
+            ->findOneBy(['messageId' => $messageId]);
+
+        if (!$message)
+            return new RedirectResponse(
+                $this->generateUrl('history'),
+                Response::HTTP_SEE_OTHER
+            );
+
+        return $this->render('history.html.twig', [
+            'allChannels' => $this->getAllChannels($dm),
+            'loggedChannels' => $this->getLoggedChannels($dm),
+            'message' => $message
         ]);
     }
 

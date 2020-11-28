@@ -35,6 +35,11 @@ class MessageHistory
     protected $oldContent;
 
     /**
+     * @MongoDB\Field(type="collection")
+     */
+    protected $editions;
+
+    /**
      * @MongoDB\Field(type="string", nullable=true)
      */
     protected $newContent;
@@ -117,6 +122,22 @@ class MessageHistory
     public function setOldContent($oldContent): void
     {
         $this->oldContent = $oldContent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditions()
+    {
+        return $this->editions;
+    }
+
+    /**
+     * @param mixed $editions
+     */
+    public function setEditions($editions): void
+    {
+        $this->editions = $editions;
     }
 
     /**
