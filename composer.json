@@ -1,6 +1,28 @@
 {
+    "name": "romitou/swandashboard",
     "type": "project",
-    "license": "proprietary",
+    "description": "Dashboard using MongoDB and Symfony for Swan.",
+    "keywords": [
+        "laravel",
+        "mongodb",
+        "swan"
+    ],
+    "version": "1.0.0",
+    "license": "GPL-3.0-only",
+    "homepage": "https://github.com/Romitou/SwanDashboard",
+    "readme": "https://github.com/Romitou/SwanDashboard#readme",
+    "authors": [
+        {
+            "name": "Romitou",
+            "email": "romitou@protonmail.com",
+            "homepage": "https://github.com/Romitou"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Romitou/SwanDashboard/issues",
+        "wiki": "https://github.com/Romitou/SwanDashboard/wiki",
+        "source": "https://github.com/Romitou/SwanDashboard"
+    },
     "require": {
         "php": ">=7.4",
         "doctrine/annotations": "^1.0",
