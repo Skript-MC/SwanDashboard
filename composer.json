@@ -25,7 +25,7 @@
         "source": "https://github.com/Romitou/SwanDashboard"
     },
     "require": {
-        "php": "^7.3.0",
+        "php": "^7.4",
         "ext-json": "*",
         "ext-mongodb": "*",
         "ext-pdo": "*",
