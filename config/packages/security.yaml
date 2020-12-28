@@ -14,9 +14,6 @@ security:
             logout:
                 path: logout
             guard:
+                entry_point: App\Security\DiscordAuthenticator
                 authenticators:
                     - App\Security\DiscordAuthenticator
-
-    access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
