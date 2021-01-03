@@ -47,7 +47,7 @@
         "symfony/yaml": "5.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "wohali/oauth2-discord-new": "^1.1"
+        "romitou/oauth2-discord": "dev-main"
     },
     "require-dev": {
         "symfony/browser-kit": "^5.1",

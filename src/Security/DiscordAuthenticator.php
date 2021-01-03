@@ -19,9 +19,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class DiscordAuthenticator extends SocialAuthenticator
 {
-    private $clientRegistry;
-    private $dm;
-    private $router;
+    private ClientRegistry $clientRegistry;
+    private DocumentManager $dm;
+    private RouterInterface $router;
 
     public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router)
     {
@@ -71,7 +71,7 @@ class DiscordAuthenticator extends SocialAuthenticator
         $user = new User();
         $user->setId($discordUser->getId());
         $user->setUsername($discordUser->getUsername() . '#' . $discordUser->getDiscriminator());
-        $user->setAvatarUrl('https://cdn.discordapp.com/avatars/' . $discordUser->getId() . '/' . $discordUser->getAvatarHash() . '.png');
+        $user->setAvatarUrl($discordUser->getAvatarUrl());
         $this->dm->persist($user);
         $this->dm->flush();
 
