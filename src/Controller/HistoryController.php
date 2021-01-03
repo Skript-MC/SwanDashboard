@@ -62,8 +62,7 @@ class HistoryController extends AbstractController
                 ->field('channel.id')->equals($channelId)
                 ->sort('messageId', 'DESC')
                 ->getQuery(),
-            $request->query->getInt('page', 1),
-            10
+            $request->query->getInt('page', 1)
         );
 
         return $this->render('history.html.twig', [

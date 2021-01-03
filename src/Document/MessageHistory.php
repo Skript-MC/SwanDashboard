@@ -17,32 +17,32 @@ class MessageHistory
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class)
      */
-    protected $user;
+    protected User $user;
 
     /**
      * @MongoDB\Field(type="int")
      */
-    protected $messageId;
+    protected int $messageId;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=Channel::class)
      */
-    protected $channel;
+    protected Channel $channel;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $oldContent;
+    protected string $oldContent;
 
     /**
      * @MongoDB\Field(type="collection")
      */
-    protected $editions;
+    protected array $editions;
 
     /**
      * @MongoDB\Field(type="string", nullable=true)
      */
-    protected $newContent;
+    protected ?string $newContent = null;
 
     /**
      * @return mixed
@@ -61,97 +61,97 @@ class MessageHistory
     }
 
     /**
-     * @return mixed
+     * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
      */
-    public function setUser($user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getMessageId()
+    public function getMessageId(): int
     {
         return $this->messageId;
     }
 
     /**
-     * @param mixed $messageId
+     * @param int $messageId
      */
-    public function setMessageId($messageId): void
+    public function setMessageId(int $messageId): void
     {
         $this->messageId = $messageId;
     }
 
     /**
-     * @return mixed
+     * @return Channel
      */
-    public function getChannel()
+    public function getChannel(): Channel
     {
         return $this->channel;
     }
 
     /**
-     * @param mixed $channel
+     * @param Channel $channel
      */
-    public function setChannel($channel): void
+    public function setChannel(Channel $channel): void
     {
         $this->channel = $channel;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getOldContent()
+    public function getOldContent(): string
     {
         return $this->oldContent;
     }
 
     /**
-     * @param mixed $oldContent
+     * @param string $oldContent
      */
-    public function setOldContent($oldContent): void
+    public function setOldContent(string $oldContent): void
     {
         $this->oldContent = $oldContent;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getEditions()
+    public function getEditions(): array
     {
         return $this->editions;
     }
 
     /**
-     * @param mixed $editions
+     * @param array $editions
      */
-    public function setEditions($editions): void
+    public function setEditions(array $editions): void
     {
         $this->editions = $editions;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getNewContent()
+    public function getNewContent(): ?string
     {
         return $this->newContent;
     }
 
     /**
-     * @param mixed $newContent
+     * @param string $newContent
      */
-    public function setNewContent($newContent): void
+    public function setNewContent(string $newContent): void
     {
         $this->newContent = $newContent;
     }

@@ -13,109 +13,102 @@ class User implements UserInterface
     /**
      * @MongoDB\Id(strategy="none", type="int")
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $username;
+    protected string $username;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $avatarUrl;
+    protected string $avatarUrl;
 
     /**
      * @MongoDB\Field(type="collection")
      */
-    protected $roles;
+    protected array $roles = [];
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      */
-    public function setId($id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
     /**
-     * @param mixed $username
+     * @param string $username
      */
-    public function setUsername($username): void
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAvatarUrl()
+    public function getAvatarUrl(): string
     {
         return $this->avatarUrl;
     }
 
     /**
-     * @param mixed $avatarUrl
+     * @param string $avatarUrl
      */
-    public function setAvatarUrl($avatarUrl): void
+    public function setAvatarUrl(string $avatarUrl): void
     {
         $this->avatarUrl = $avatarUrl;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // This guarantee every user at least has ROLE_USER.
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
     /**
-     * @param mixed $roles
+     * @param array $roles
      */
-    public function setRoles($roles): void
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }
 
-    /**
-     * @return void
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
+        return null;
     }
 
-    /**
-     * @return void
-     */
-    public function getSalt()
+    public function getSalt(): ?string
     {
+        return null;
     }
 
-    /**
-     * @return void
-     */
     public function eraseCredentials()
     {
+        return null;
     }
 }

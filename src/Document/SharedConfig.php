@@ -17,12 +17,12 @@ class SharedConfig
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $name;
+    protected string $name;
 
     /**
      * @MongoDB\Field(type="collection")
      */
-    protected $value;
+    protected array $value;
 
     /**
      * @return mixed
@@ -33,17 +33,25 @@ class SharedConfig
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getName()
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -51,15 +59,15 @@ class SharedConfig
     /**
      * @return array
      */
-    public function getValue()
+    public function getValue(): array
     {
         return $this->value;
     }
 
     /**
-     * @param mixed $value
+     * @param array $value
      */
-    public function setValue($value): void
+    public function setValue(array $value): void
     {
         $this->value = $value;
     }
