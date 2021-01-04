@@ -1,0 +1,19 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        mongo_provider:
+            mongodb:
+                class: App\Document\User
+                property: discordId
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            logout:
+                path: logout
+            guard:
+                entry_point: App\Security\DiscordAuthenticator
+                authenticators:
+                    - App\Security\DiscordAuthenticator

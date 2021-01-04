@@ -1,0 +1,18 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+{% block content %}
+    <div class="p-5">
+        <div class="text-center">
+            <a class="sidebar-brand d-flex justify-content-center" href="/">
+                <div class="sidebar-brand-icon">
+                    <img src="{{ asset('build/images/swan-logo.png') }}" alt="Logo de Swan">
+                </div>
+                <h1 class="h4 text-gray-900 mb-3 ml-2">Swan</h1>
+            </a>
+
+            <p>Merci de vous authentifier avec votre compte Discord afin d'accéder au panel de Swan.</p>
+        </div>
+        <a href="{{ path('app_main_login') }}" class="btn btn-facebook btn-block"><i class="fab fa-discord fa-fw mt-0"></i> Connexion avec Discord</a>
+    </div>
+{% endblock %}
