@@ -22,7 +22,7 @@ class HistoryController extends AbstractController
 {
 
     /**
-     * @Route("/", name="history")
+     * @Route("", name="history")
      * @param DocumentManager $dm
      * @return Response
      */
@@ -48,7 +48,7 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/channel/{channelId}", name="history-channel")
+     * @Route("/channel/{channelId}", name="history:channel")
      * @param int $channelId
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
@@ -73,7 +73,7 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/message/{messageId}", name="history-message")
+     * @Route("/message/{messageId}", name="history:message")
      * @param int $messageId
      * @param DocumentManager $dm
      * @return Response
@@ -94,6 +94,27 @@ class HistoryController extends AbstractController
             'loggedChannels' => $this->getLoggedChannels($dm),
             'message' => $message
         ]);
+    }
+
+    /**
+     * @Route("/search", methods={"POST"}, name="history:search")
+     * @param Request $request
+     * @param DocumentManager $dm
+     * @return Response
+     */
+    public function searchMessages(Request $request, DocumentManager $dm): Response
+    {
+        $args = preg_split('/ /', $request->get('query'));
+
+        $channel = null;
+        $user = null;
+
+        foreach ($args as $arg) {
+            foreach (['channel', 'user'] as $item)
+                if (str_contains($arg, $item . ':'))
+                    $$item = preg_split('/' . $item . ':/', $arg)[1];
+        }
+        return new Response($channel . ' - ' . $user);
     }
 
 }

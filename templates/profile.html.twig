@@ -39,7 +39,14 @@
                                 <option>Admin</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-danger" disabled><i class="fas fa-trash-alt"></i> Supprimer mon compte (désactivé)</button>
+                        <form method="post" action="{{ path('profile:delete') }}">
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer mon compte</button>
+                        </form>
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
