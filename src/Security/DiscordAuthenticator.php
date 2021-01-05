@@ -71,7 +71,7 @@ class DiscordAuthenticator extends SocialAuthenticator
         $user = new User();
         $user->setId($discordUser->getId());
         $user->setUsername($discordUser->getUsername() . '#' . $discordUser->getDiscriminator());
-        $user->setAvatarUrl($discordUser->getAvatarUrl());
+        $user->setAvatarUrl($discordUser->getAvatarUrl() ?? "https://www.atelierdeschefs.com/media/recette-e793-gratin-dauphinois.jpg");
         $this->dm->persist($user);
         $this->dm->flush();
 
