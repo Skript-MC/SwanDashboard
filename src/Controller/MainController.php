@@ -21,7 +21,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/login")
+     * @Route("/login", name="login")
      * @param ClientRegistry $registry
      * @return Response
      */

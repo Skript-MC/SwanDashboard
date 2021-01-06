@@ -16,9 +16,13 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class DiscordAuthenticator extends SocialAuthenticator
 {
+
+    use TargetPathTrait;
+
     private ClientRegistry $clientRegistry;
     private DocumentManager $dm;
     private RouterInterface $router;
@@ -80,7 +84,8 @@ class DiscordAuthenticator extends SocialAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
-        return new RedirectResponse($this->router->generate('home'));
+
+        return new RedirectResponse($this->getTargetPath($request->getSession(), 'discord') ?? $this->router->generate('home'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
@@ -90,17 +95,14 @@ class DiscordAuthenticator extends SocialAuthenticator
     }
 
     /**
-     * Called when authentication is needed, but it's not sent.
-     * This redirects to the 'login'.
+     * Called when authentication is needed.
      * @param Request $request
      * @param AuthenticationException|null $authException
      * @return RedirectResponse
      */
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
     {
-        return new RedirectResponse(
-            '/login',
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        $this->saveTargetPath($request->getSession(), 'discord', $request->getRequestUri());
+        return new RedirectResponse($this->router->generate('login'));
     }
 }

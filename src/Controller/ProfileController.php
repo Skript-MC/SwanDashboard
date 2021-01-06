@@ -34,12 +34,14 @@ class ProfileController extends AbstractController
      */
     public function deleteAccount(DocumentManager $dm): Response
     {
-        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if ($this->isGranted("ROLE_ADMIN")) {
             $this->addFlash('error', 'Les administrateurs ne peuvent pas supprimer leurs comptes.');
             return $this->redirectToRoute('profile');
         }
         $collection = $dm->getDocumentCollection(User::class);
-        $collection->deleteOne(['_id' => $this->getUser()->getId()]);
+        /** @var $user User */
+        $user = $this->getUser();
+        $collection->deleteOne(['_id' => $user->getId()]);
         return new RedirectResponse($this->generateUrl('home'));
     }
 
