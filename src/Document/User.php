@@ -26,6 +26,11 @@ class User implements UserInterface
     protected string $avatarUrl;
 
     /**
+     * @MongoDB\Field(type="boolean")
+     */
+    protected bool $hasMFA;
+
+    /**
      * @MongoDB\Field(type="collection")
      */
     protected array $roles = [];
@@ -79,14 +84,27 @@ class User implements UserInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isHasMFA(): bool
+    {
+        return $this->hasMFA;
+    }
+
+    /**
+     * @param bool $hasMFA
+     */
+    public function setHasMFA(bool $hasMFA): void
+    {
+        $this->hasMFA = $hasMFA;
+    }
+
+    /**
      * @return array
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // This guarantee every user at least has ROLE_USER.
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
+        return $this->roles;
     }
 
     /**

@@ -17,3 +17,4 @@ security:
                 entry_point: App\Security\DiscordAuthenticator
                 authenticators:
                     - App\Security\DiscordAuthenticator
+            access_denied_handler: App\Security\AccessDeniedHandler

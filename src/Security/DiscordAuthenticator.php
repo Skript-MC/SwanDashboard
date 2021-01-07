@@ -9,6 +9,7 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use League\OAuth2\Client\Token\AccessToken;
+use Romitou\OAuth2\Client\DiscordRessourceOwner;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,21 +62,26 @@ class DiscordAuthenticator extends SocialAuthenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider): User
     {
+        /** @var DiscordRessourceOwner $discordUser */
         $discordUser = $this
             ->getDiscordClient()
             ->fetchUserFromToken($credentials);
 
+        /* @var $existingUser User */
         $existingUser = $this->dm
             ->getRepository(User::class)
-            ->findOneBy(['id' => $discordUser->getId()]);
+            ->findOneBy(['_id' => $discordUser->getId()]);
 
-        /* @var $existingUser User */
-        if ($existingUser) return $existingUser;
+        // Refreshing user
+        $user = $existingUser ? $existingUser : new User();
 
-        $user = new User();
-        $user->setId($discordUser->getId());
-        $user->setUsername($discordUser->getUsername() . '#' . $discordUser->getDiscriminator());
+        if (!$existingUser) {
+            $user->setId($discordUser->getId());
+            $user->setRoles(['ROLE_USER']);
+        }
+        $user->setUsername($discordUser->getCompleteUsername());
         $user->setAvatarUrl($discordUser->getAvatarUrl() ?? "https://www.atelierdeschefs.com/media/recette-e793-gratin-dauphinois.jpg");
+        $user->setHasMFA($discordUser->hasMfaEnabled());
         $this->dm->persist($user);
         $this->dm->flush();
 
