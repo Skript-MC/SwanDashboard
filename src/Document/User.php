@@ -36,6 +36,11 @@ class User implements UserInterface
     protected array $roles = [];
 
     /**
+     * @MongoDB\Field(type="collection")
+     */
+    protected array $discordRoles = [];
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -113,6 +118,22 @@ class User implements UserInterface
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDiscordRoles(): array
+    {
+        return $this->discordRoles;
+    }
+
+    /**
+     * @param array $discordRoles
+     */
+    public function setDiscordRoles(array $discordRoles): void
+    {
+        $this->discordRoles = $discordRoles;
     }
 
     public function getPassword(): ?string

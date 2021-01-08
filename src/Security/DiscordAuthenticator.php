@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Discord\SwanClient;
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -27,12 +28,14 @@ class DiscordAuthenticator extends SocialAuthenticator
     private ClientRegistry $clientRegistry;
     private DocumentManager $dm;
     private RouterInterface $router;
+    private SwanClient $swanClient;
 
-    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router)
+    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router, SwanClient $swanClient)
     {
         $this->clientRegistry = $clientRegistry;
         $this->dm = $dm;
         $this->router = $router;
+        $this->swanClient = $swanClient;
     }
 
     public function supports(Request $request): bool
@@ -72,16 +75,21 @@ class DiscordAuthenticator extends SocialAuthenticator
             ->getRepository(User::class)
             ->findOneBy(['_id' => $discordUser->getId()]);
 
-        // Refreshing user
+        // Merge existing user and new user, this will update the existing user if it is found
         $user = $existingUser ? $existingUser : new User();
+        $discordMember = $this->swanClient->getMember($discordUser->getId());
 
+        // If we have an existing user, don't refresh these data.
         if (!$existingUser) {
             $user->setId($discordUser->getId());
             $user->setRoles(['ROLE_USER']);
         }
+
         $user->setUsername($discordUser->getCompleteUsername());
         $user->setAvatarUrl($discordUser->getAvatarUrl() ?? "https://www.atelierdeschefs.com/media/recette-e793-gratin-dauphinois.jpg");
+        $user->setDiscordRoles($discordMember ? $discordMember->getRoles() ?? [] : []); // The discordMember can be null if the API is unavailable, so give no roles
         $user->setHasMFA($discordUser->hasMfaEnabled());
+
         $this->dm->persist($user);
         $this->dm->flush();
 
@@ -96,8 +104,10 @@ class DiscordAuthenticator extends SocialAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        $message = strtr($exception->getMessageKey(), $exception->getMessageData());
-        return new Response($message, Response::HTTP_FORBIDDEN);
+        return new RedirectResponse(
+            $this->router->generate('error', ['message' => 'Nous n\'avons pas pu accéder à votre compte afin de vous authentifier.']),
+            Response::HTTP_TEMPORARY_REDIRECT
+        );
     }
 
     /**
