@@ -30,18 +30,28 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="inputGroupSelect01">Rôle</label>
+                                <span class="input-group-text" id="discordRoles">Rôles Discord</span>
                             </div>
-                            <select class="custom-select" id="inputGroupSelect01" disabled>
-                                <option>Invité</option>
-                                <option>Membre</option>
-                                <option>Staff</option>
-                                <option>Admin</option>
-                            </select>
+                            <span class="input-group-text" id="discordRoles">
+                                {% for role in discordRoles %}
+                                    {{ role|roleBadge|raw }}
+                                {% endfor %}
+                            </span>
                         </div>
-                        <form method="post" action="{{ path('profile:delete') }}">
-                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer mon compte</button>
-                        </form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="dashRoles">Rôles du panel</span>
+                            </div>
+                            <span class="input-group-text" id="dashRoles">
+                                {{ app.user.roles|join(', ') }}
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <form method="post" action="{{ path('profile:delete') }}">
+                                <button type="submit" class="btn btn-danger m-1"><i class="fas fa-trash-alt"></i> Supprimer mon compte</button>
+                            </form>
+                            <a href="{{ path('login') }}" class="btn btn-info m-1"><i class="fas fa-sync-alt"></i> Rafraîchir mon compte</a>
+                        </div>
                         {% for message in app.flashes('error') %}
                             <div class="alert alert-danger mt-3">
                                 {{ message }}

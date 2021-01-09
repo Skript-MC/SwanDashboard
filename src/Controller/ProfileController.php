@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Discord\SwanClient;
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -19,11 +20,16 @@ class ProfileController extends AbstractController
 {
     /**
      * @Route("", name="profile")
+     * @param SwanClient $swanClient
      * @return Response
      */
-    public function home(): Response
+    public function home(SwanClient $swanClient): Response
     {
-        return $this->render('profile.html.twig');
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render('profile.html.twig', [
+            'discordRoles' => $swanClient->getRolesFromSnowflakes($user->getDiscordRoles())
+        ]);
     }
 
     /**
