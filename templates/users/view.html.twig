@@ -1,0 +1,77 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Édition d'un utilisateur{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow position-relative mb-3">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Données de l'utilisateur</h6>
+                    </div>
+                    <div class="card-body">
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <form method="POST">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="discordId">Identifiant</span>
+                                </div>
+                                <input type="text" name="discordId" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="discordUsername">Nom d'utilisateur</span>
+                                </div>
+                                <input type="text" name="discordUsername" class="form-control" value="{{ user.username }}" aria-label="Pseudonyme" aria-describedby="discordUsername">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="discordAvatar">Avatar</span>
+                                </div>
+                                <input type="text" name="discordAvatar" class="form-control" value="{{ user.avatarUrl }}" aria-label="Avatar" aria-describedby="discordAvatar">
+                            </div>
+
+                            <button type="submit" class="btn btn-info"><i class="fas fa-save"></i> Sauvegarder les modifications</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow position-relative mb-3">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Données de l'utilisateur</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">2FA Discord</span>
+                            </div>
+                            <input type="text" name="discord2FA" class="form-control {{ user.hasMFA ? 'text-success' : 'text-danger' }}" value="{{ user.hasMFA == true ? 'Activée' : 'Désactivée' }}" aria-label="Authentification à deux facteurs" aria-describedby="discordId" readonly>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="discordRoles">Rôles Discord</span>
+                            </div>
+                            <span class="input-group-text" id="discordRoles">
+                                {% for role in user.discordRoles|discordRolesFromSnowflakes %}
+                                    {{ role|roleBadge|raw }}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
