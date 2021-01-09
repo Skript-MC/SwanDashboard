@@ -23,14 +23,10 @@ class SwanClient implements ServiceSubscriberInterface
         $this->httpClient = $discord_client;
     }
 
-    public static function getRole(array $role): DiscordRole
+    public static function arrayToRoles(array $roles): array
     {
-        return new DiscordRole($role);
-    }
-
-    public static function roleSort($discordRoleA, $discordRoleB): int
-    {
-        return $discordRoleB['position'] - $discordRoleA['position'];
+        usort($roles, function (array $roleA, array $roleB): int { return $roleB['position'] - $roleA['position']; });
+        return array_map(function (array $role): DiscordRole  {return new DiscordRole($role); }, $roles);
     }
 
     public function getMember(int $userId): ?DiscordMember
@@ -46,7 +42,15 @@ class SwanClient implements ServiceSubscriberInterface
         }
     }
 
-    public function getRoles(): ?array
+    public function getRolesFromSnowflakes(array $snowflakes): array
+    {
+        $roles = $this->getRoles(true);
+        return self::arrayToRoles(array_map(function (int $snowflake) use ($roles) {
+            return $roles[array_search($snowflake, array_column($roles, 'id'))];
+        }, $snowflakes));
+    }
+
+    public function getRoles(bool $raw = false): ?array
     {
         try {
             $response = $this->httpClient->request(
@@ -54,9 +58,21 @@ class SwanClient implements ServiceSubscriberInterface
                 '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/roles'
             );
             $responseArray = $response->toArray();
-            usort($responseArray, '\App\Discord\SwanClient::roleSort');
-            return array_map('\App\Discord\SwanClient::getRole', $responseArray);
-        } catch (TransportExceptionInterface | RedirectionExceptionInterface | DecodingExceptionInterface | ClientExceptionInterface | ServerExceptionInterface $e) {
+            return ($raw) ? $responseArray : self::arrayToRoles($responseArray);
+        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+            return null;
+        }
+    }
+
+    public function getGuild(): ?DiscordGuild
+    {
+        try {
+            $response = $this->httpClient->request(
+                'GET',
+                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/preview'
+            );
+            return new DiscordGuild($response->toArray());
+        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
             return null;
         }
     }
