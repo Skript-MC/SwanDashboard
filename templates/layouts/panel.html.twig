@@ -8,9 +8,6 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
     <title>Swan - {% block title %}{% endblock %}</title>
 </head>
 <body id="page-top">
@@ -44,7 +41,7 @@
                 Admin
             </div>
             <li class="nav-item {{ app.request.attributes.get('_route') == 'users' ? 'active' }}">
-                <a class="nav-link" href="/">
+                <a class="nav-link" href="{{ path('users') }}">
                     <i class="fas fa-users"></i>
                     <span>Gestion utilisateurs</span>
                 </a>
@@ -126,5 +123,9 @@
             </div>
         </div>
     </div>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 </body>
 </html>
