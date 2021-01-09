@@ -26,40 +26,54 @@
                     <span>Tableau de bord</span>
                 </a>
             </li>
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Swan
-            </div>
-            <li class="nav-item {{ app.request.attributes.get('_route') in ['history', 'history-channel', 'history-message'] ? 'active' }}">
-                <a class="nav-link" href="{{ path('history') }}">
-                    <i class="fas fa-history"></i>
-                    <span>Historique</span>
-                </a>
-            </li>
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Admin
-            </div>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'users' ? 'active' }}">
-                <a class="nav-link" href="{{ path('users') }}">
-                    <i class="fas fa-users"></i>
-                    <span>Gestion utilisateurs</span>
-                </a>
-            </li>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'config/dashboard' ? 'active' }}">
-                <a class="nav-link" href="/">
-                    <i class="fas fa-cogs"></i>
-                    <span>Configuration Dashboard</span></a>
-            </li>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'sentry' ? 'active' }}">
-                <a class="nav-link" href="/">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>Rapports Sentry</span></a>
-            </li>
-            <hr class="sidebar-divider d-none d-md-block">
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            {% if is_granted('ROLE_USER') %}
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Swan
+                </div>
+                {% if is_granted('ROLE_STAFF') %}
+                    <li class="nav-item {{ app.request.attributes.get('_route') in ['history', 'history:channel', 'history:message'] ? 'active' }}">
+                        <a class="nav-link" href="{{ path('history') }}">
+                            <i class="fas fa-history"></i>
+                            <span>Historique</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item {{ app.request.attributes.get('_route') == 'message' ? 'active' }}">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Messages</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Admin
+                </div>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'users' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('users') }}">
+                        <i class="fas fa-users"></i>
+                        <span>Gestion utilisateurs</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'config/dashboard' ? 'active' }}">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-cogs"></i>
+                        <span>Configuration Dashboard</span></a>
+                </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'sentry' ? 'active' }}">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Rapports Sentry</span></a>
+                </li>
+            {% endif %}
+                <hr class="sidebar-divider d-none d-md-block">
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
         </ul>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
@@ -67,11 +81,6 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
-                        <a href="https://github.com/Skript-MC/Swan" class="btn btn-outline-primary">
-                            <i class="fab fa-github"></i> GitHub de Swan
-                        </a>
-                    </div>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,7 +107,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Développé par <a href="https://github.com/Romitou">Romitou</a> - Panel par <a href="https://startbootstrap.com">Start Bootstrap</a></span>
+                        <span>Swan Dashboard (version {{ gitCommit()|raw }}) développé par <a href="https://github.com/Romitou">Romitou</a> - Panel par <a href="https://startbootstrap.com">Start Bootstrap</a></span>
                     </div>
                 </div>
             </footer>
