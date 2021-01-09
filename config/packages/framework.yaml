@@ -15,3 +15,10 @@ framework:
     #fragments: true
     php_errors:
         log: true
+
+    http_client:
+      scoped_clients:
+        discord_client:
+          base_uri: 'https://discord.com'
+          headers:
+            Authorization: 'Bot %env(DISCORD_SWAN_TOKEN)%'

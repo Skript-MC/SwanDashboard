@@ -2,7 +2,6 @@
 
 namespace App\Discord;
 
-use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -16,13 +15,22 @@ class SwanClient implements ServiceSubscriberInterface
 {
 
     private HttpClientInterface $httpClient;
-    private ContainerInterface $container;
-    const DISCORD_API = "https://discord.com/api/v8";
+    private ContainerBagInterface $containerBag;
 
-    public function __construct(HttpClientInterface $httpClient, ContainerInterface $container)
+    public function __construct(HttpClientInterface $discord_client, ContainerBagInterface $containerBag)
     {
-        $this->container = $container;
-        $this->httpClient = $httpClient;
+        $this->containerBag = $containerBag;
+        $this->httpClient = $discord_client;
+    }
+
+    public static function getRole(array $role): DiscordRole
+    {
+        return new DiscordRole($role);
+    }
+
+    public static function roleSort($discordRoleA, $discordRoleB): int
+    {
+        return $discordRoleB['position'] - $discordRoleA['position'];
     }
 
     public function getMember(int $userId): ?DiscordMember
@@ -30,14 +38,25 @@ class SwanClient implements ServiceSubscriberInterface
         try {
             $response = $this->httpClient->request(
                 'GET',
-                self::DISCORD_API . '/guilds/' . $this->container->get('parameter_bag')->get('discordGuild') .  '/members/' . $userId, [
-                    'headers' => [
-                        'Authorization' => 'Bot ' . $this->container->get('parameter_bag')->get('discordSwanToken')
-                    ]
-                ]
+                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') .  '/members/' . $userId
             );
             return new DiscordMember($response->toArray());
         } catch (RedirectionExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+            return null;
+        }
+    }
+
+    public function getRoles(): ?array
+    {
+        try {
+            $response = $this->httpClient->request(
+                'GET',
+                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/roles'
+            );
+            $responseArray = $response->toArray();
+            usort($responseArray, '\App\Discord\SwanClient::roleSort');
+            return array_map('\App\Discord\SwanClient::getRole', $responseArray);
+        } catch (TransportExceptionInterface | RedirectionExceptionInterface | DecodingExceptionInterface | ClientExceptionInterface | ServerExceptionInterface $e) {
             return null;
         }
     }
