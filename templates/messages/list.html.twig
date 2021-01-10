@@ -1,0 +1,61 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="card shadow position-relative">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:auto' ? 'active' }}" href="{{ path('messages:auto') }}">Messages rapides</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:error' ? 'active' }}" href="{{ path('messages:error') }}">Détails erreurs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:addonpack' ? 'active' }}" href="{{ path('messages:addonpack') }}">Packs d'add-ons</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Aliases</th>
+                                    <th scope="col">Aperçu du contenu</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for message in messages %}
+                                    <tr>
+                                        <td>
+                                            {{ message.name }}
+                                        </td>
+                                        <td>
+                                            {{ message.aliases|join(', ') }}
+                                        </td>
+                                        <td>
+                                            {{ message.content|truncate }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('messages:edit', { messageId: message.id }) }}" type="button" class="btn btn-info"><i class="fas fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {{ knp_pagination_render(messages) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

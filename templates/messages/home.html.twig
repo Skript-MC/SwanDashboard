@@ -1,0 +1,62 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Messages{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="card shadow position-relative">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('messages:auto') }}">Messages rapides</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('messages:error') }}">Détails erreurs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('messages:addonpack') }}">Packs d'add-ons</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h5 class="text-primary">Bienvenue sur le gestionnaire des messages de Swan !</h5>
+                                <div class="dropdown-divider mb-3"></div>
+                                Vous avez ici la possibilité de modifier les messages envoyés par Swan sur Discord, comme les messages rapides, les détails d'erreur et même les packs d'add-ons.
+                                <br/>Pour consulter les messages d'une catégorie, choisissez-la ci-dessus : la liste des messages de celle-ci s'affichera.
+                                <br/>Ensuite, si vous souhaitez modifier un message, cliquez sur le bouton d'édition <i class="fas fa-edit"></i>. Un éditeur s'affichera, ainsi qu'un résumé de vos changements :
+                                <img class="img-fluid" src="{{ asset('build/images/message-edition.png') }}">
+                            </div>
+                            <div class="col-lg-6">
+                                <h5 class="text-primary">Statuts de vos suggestions</h5>
+                                <div class="dropdown-divider mb-3"></div>
+                                <ul class="list-group list-group-flush">
+                                    {% for request in requests %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <strong>{{ request.message.name }}</strong>{{ request.newContent|truncate }}
+                                            {% if request.validated is null %}
+                                                <span class="badge badge-secondary badge-pill">En cours de traitement</span>
+                                            {% elseif request.validated %}
+                                                <span class="badge badge-success badge-pill">Validée</span>
+                                            {% else %}
+                                                <span class="badge badge-danger badge-pill">Refusée</span>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                {{ knp_pagination_render(requests) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

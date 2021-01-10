@@ -1,0 +1,139 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Édition{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        {{ encore_entry_script_tags('editor') }}
+        {{ encore_entry_link_tags('editor') }}
+        <form action="{{ path('messages:postEdit') }}" id="form" method="POST">
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <div class="card shadow position-relative">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Éditeur</h6>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" value="{{ addonPack.id }}" name="messageId">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Nom</span>
+                                </div>
+                                <input type="text" class="form-control" value="{{ addonPack.name }}" aria-label="Nom" aria-describedby="name" id="name" name="name" onchange="generateDiff()">
+                            </div>
+                            <div class="dropdown-divider mb-3"></div>
+                            <div> {# Don't remove this empty node #}
+                                <div class="form-row" id="aliases">
+                                    {% for alias in addonPack.aliases %}
+                                        <div class="form-group col-md-2">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-danger link-remove" type="button">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <button type="button" id="addAliasButton" class="btn btn-sm btn-success">
+                                    <i class="fas fa-plus"></i> Ajouter un alias
+                                </button>
+                            </div>
+                            <div class="dropdown-divider mb-3"></div>
+                            <ul class="list-group list-group-flush">
+                                <input id="easymde" name="content">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card shadow position-relative">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Aperçu des modifications</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="diff"></div>
+                            {% if editForbidden %}
+                                <div class="alert alert-info" role="alert">
+                                    Une suggestion de modification est déjà en cours pour ce message.
+                                    <br/>Vous ne pouvez pas le modifier tant qu'elle n'aura pas été traitée.
+                                </div>
+                            {% else %}
+                                <button type="submit" class="btn btn-info m-1" onclick="submit()"><i class="fas fa-check"></i> Suggérer mes modifications</button>
+                            {% endif %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger mt-3">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <script>
+                const easyMDE = new window.easyMDE({
+                    element: document.getElementById('easymde'),
+                    initialValue: '{{ addonPack.content }}',
+                    toolbar: ['bold', 'italic', 'quote', 'link', 'code', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide']
+                });
+                const diff2html = window.diff2html;
+
+                easyMDE.codemirror.on('change', () => generateDiff());
+
+                document.getElementById('form').addEventListener('submit', () => {
+                    document.getElementById('easymde').value = encodeURIComponent(easyMDE.value());
+                    let i = 0;
+                    document.getElementById('aliases').querySelectorAll('.form-group').forEach((el) => {
+                        el.querySelectorAll('input').forEach((input) => input.name = input.name.replace('{index}', i.toString()));
+                        i++;
+                    });
+                });
+
+                document.querySelectorAll('.link-remove').forEach((el) => el.addEventListener('click', () => {
+                    const element = el.parentNode.parentNode;
+                    element.parentNode.removeChild(element);
+                }));
+
+                document.getElementById('addAliasButton').addEventListener('click', () => {
+                    const input = '<div class="input-group"> <input type="text" class="form-control" name="aliases[{index}]" onchange="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
+                    const newElement = document.createElement('div');
+
+                    newElement.className = 'form-group col-md-2';
+                    newElement.innerHTML = input;
+
+                    document.getElementById('aliases').appendChild(newElement);
+
+                    const linkRemove = newElement.querySelector('.link-remove');
+                    linkRemove.addEventListener('click', () => {
+                        const element = linkRemove.parentNode.parentNode;
+                        element.parentNode.removeChild(element);
+                    });
+
+                });
+
+                function generateDiff() {
+                    const name = document.getElementById('name').value || 'Sans nom';
+                    const aliases = getAliases();
+                    const diff = window.diff.createTwoFilesPatch('{{ addonPack.name }}', name, 'Aliases:\n{{ addonPack.aliases|join('\\n') }}\n\n{{ addonPack.content }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
+                    const diffJson = diff2html.parse(diff);
+                    document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
+                        drawFileList: false
+                    });
+                }
+
+                function getAliases() {
+                    const aliases = [];
+                    document.getElementById('aliases').querySelectorAll('.form-group').forEach((el) => el.querySelectorAll('input').forEach((input) => aliases.push(input.value)));
+                    return aliases;
+                }
+
+                generateDiff();
+
+            </script>
+        </form>
+    </div>
+{% endblock %}

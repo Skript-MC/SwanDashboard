@@ -1,0 +1,159 @@
+<?php
+
+namespace App\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+
+/**
+ * @MongoDB\Document(collection="messageEditRequests")
+ */
+class MessageEditRequest
+{
+    /**
+     * @MongoDB\Id
+     */
+    protected $id;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument=Message::class)
+     */
+    protected Message $message;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument=User::class)
+     */
+    protected User $user;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected string $newName;
+
+    /**
+     * @MongoDB\Field(type="collection")
+     */
+    protected array $newAliases;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected string $newContent;
+
+    /**
+     * @MongoDB\Field(type="bool", nullable=true)
+     */
+    protected ?bool $validated = null;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return Message
+     */
+    public function getMessage(): Message
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param Message $message
+     */
+    public function setMessage(Message $message): void
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewName(): string
+    {
+        return $this->newName;
+    }
+
+    /**
+     * @param string $newName
+     */
+    public function setNewName(string $newName): void
+    {
+        $this->newName = $newName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNewAliases(): array
+    {
+        return $this->newAliases;
+    }
+
+    /**
+     * @param array $newAliases
+     */
+    public function setNewAliases(array $newAliases): void
+    {
+        $this->newAliases = $newAliases;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewContent(): string
+    {
+        return $this->newContent;
+    }
+
+    /**
+     * @param string $newContent
+     */
+    public function setNewContent(string $newContent): void
+    {
+        $this->newContent = $newContent;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    /**
+     * @param bool $validated
+     */
+    public function setValidated(bool $validated): void
+    {
+        $this->validated = $validated;
+    }
+
+}

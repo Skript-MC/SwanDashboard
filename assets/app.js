@@ -5,4 +5,3 @@ import './js/sb-admin';
 // Import FontAwesome icons
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all';
-
