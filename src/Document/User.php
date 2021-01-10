@@ -26,7 +26,7 @@ class User implements UserInterface
     protected string $avatarUrl;
 
     /**
-     * @MongoDB\Field(type="boolean")
+     * @MongoDB\Field(type="bool")
      */
     protected bool $hasMFA;
 
