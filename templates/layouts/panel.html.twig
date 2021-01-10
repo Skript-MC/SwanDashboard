@@ -20,8 +20,8 @@
                 <div class="sidebar-brand-text mx-3">Swan</div>
             </a>
             <hr class="sidebar-divider my-0">
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'home' ? 'active' }}">
-                <a class="nav-link" href="/">
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'home' ? 'active' }}">
+                <a class="nav-link" href="{{ path('home') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Tableau de bord</span>
                 </a>
@@ -32,7 +32,7 @@
                     Swan
                 </div>
                 {% if is_granted('ROLE_STAFF') %}
-                    <li class="nav-item {{ app.request.attributes.get('_route') in ['history', 'history:channel', 'history:message'] ? 'active' }}">
+                    <li class="nav-item {{ app.request.attributes.get('_route') starts with 'history' ? 'active' }}">
                         <a class="nav-link" href="{{ path('history') }}">
                             <i class="fas fa-history"></i>
                             <span>Historique</span>
@@ -40,8 +40,8 @@
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
-                    <li class="nav-item {{ app.request.attributes.get('_route') == 'message' ? 'active' }}">
-                        <a class="nav-link" href="">
+                    <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('messages') }}">
                             <i class="fas fa-file-alt"></i>
                             <span>Messages</span>
                         </a>
@@ -53,21 +53,11 @@
                 <div class="sidebar-heading">
                     Admin
                 </div>
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'users' ? 'active' }}">
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'users' ? 'active' }}">
                     <a class="nav-link" href="{{ path('users') }}">
                         <i class="fas fa-users"></i>
                         <span>Gestion utilisateurs</span>
                     </a>
-                </li>
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'config/dashboard' ? 'active' }}">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-cogs"></i>
-                        <span>Configuration Dashboard</span></a>
-                </li>
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'sentry' ? 'active' }}">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>Rapports Sentry</span></a>
                 </li>
             {% endif %}
                 <hr class="sidebar-divider d-none d-md-block">
@@ -132,7 +122,6 @@
             </div>
         </div>
     </div>
-
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}

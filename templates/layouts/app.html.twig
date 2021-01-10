@@ -8,27 +8,27 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
     <title>Swan - {% block title %}{% endblock %}</title>
 </head>
 <body class="bg-gradient-primary">
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-xl-5 col-lg-12 col-md-9">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {% block content %}
-                            {% endblock %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                {% block content %}
+                                {% endblock %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 </body>
 </html>
