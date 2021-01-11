@@ -15,9 +15,9 @@ class MessageEditRequest
     protected $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=Message::class)
+     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true)
      */
-    protected Message $message;
+    protected ?Message $message = null;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class)
@@ -45,6 +45,16 @@ class MessageEditRequest
     protected ?bool $validated = null;
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument=User::class, nullable=true)
+     */
+    protected ?User $reviewer = null;
+
+    /**
+     * @MongoDB\Field
+     */
+    protected ?string $messageType = null;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -63,15 +73,15 @@ class MessageEditRequest
     /**
      * @return Message
      */
-    public function getMessage(): Message
+    public function getMessage(): ?Message
     {
         return $this->message;
     }
 
     /**
-     * @param Message $message
+     * @param Message|null $message
      */
-    public function setMessage(Message $message): void
+    public function setMessage(?Message $message): void
     {
         $this->message = $message;
     }
@@ -154,6 +164,38 @@ class MessageEditRequest
     public function setValidated(bool $validated): void
     {
         $this->validated = $validated;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getReviewer(): ?User
+    {
+        return $this->reviewer;
+    }
+
+    /**
+     * @param User|null $reviewer
+     */
+    public function setReviewer(?User $reviewer): void
+    {
+        $this->reviewer = $reviewer;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMessageType(): ?string
+    {
+        return $this->messageType;
+    }
+
+    /**
+     * @param string|null $messageType
+     */
+    public function setMessageType(?string $messageType): void
+    {
+        $this->messageType = $messageType;
     }
 
 }

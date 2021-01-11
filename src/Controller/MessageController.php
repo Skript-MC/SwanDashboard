@@ -102,37 +102,71 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/{messageId}", name="messages:edit", methods={"GET"})
+     * @Route("/new", name="messages:new", methods={"GET"})
+     * @return Response
+     */
+    public function newMessage(): Response
+    {
+        return $this->render('messages/new.html.twig');
+    }
+
+    /**
+     * @Route("/new", name="messages:postNew")
      * @param Request $request
      * @param DocumentManager $dm
      * @return Response
+     * @throws MongoDBException
      */
-    public function editMessage(Request $request, DocumentManager $dm): Response
+    public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
-        $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
-        if (!$message) return new RedirectResponse($this->generateUrl('messages'));
-        $messageEditRequest = $dm->createQueryBuilder(MessageEditRequest::class)
-            ->field('message.id')->equals($message->getId())
-            ->getQuery()
-            ->getSingleResult();
-        return $this->render('messages/edit.html.twig', [
-            'addonPack' => $message,
-            'editForbidden' => isset($messageEditRequest)
-        ]);
+        // Prevent XSS attacks
+        $name = strip_tags($request->request->get('name'));
+        $aliases = array_map(function (string $entry) { return strip_tags($entry); }, $request->request->all('aliases'));
+        $content = strip_tags(urldecode($request->request->get('content')));
+        $messageType = strip_tags($request->request->get('type'));
+
+        $content = str_replace('\n', '\\n', $content);
+
+        if (!$name || !$aliases || !$content || !in_array($messageType, ['auto', 'error', 'addonpack'])) {
+            $this->addFlash('error', 'Certains champs sont incorrects, merci de réessayer votre édition.');
+            return $this->redirectToRoute('messages');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $request = new MessageEditRequest();
+        $request->setNewName($name);
+        $request->setNewAliases($aliases);
+        $request->setNewContent($content);
+        $request->setUser($user);
+        $request->setMessageType($messageType);
+        $dm->persist($request);
+        $dm->flush();
+
+        $this->addFlash('success', 'Votre suggestion de nouveau message a été enregistrée. Elle sera traitée prochainement !');
+        return $this->redirectToRoute('messages');
+
     }
 
     /**
      * @Route("/edit", name="messages:postEdit", methods={"POST"})
      * @param Request $request
+     * @param DocumentManager $dm
      * @return Response
      * @throws MongoDBException
      */
     public function postEdit(Request $request, DocumentManager $dm): Response
     {
         $messageId = $request->request->get('messageId');
-        $newName = $request->request->get('name');
-        $newAliases = $request->request->all('aliases');
-        $newContent = urldecode($request->request->get('content'));
+
+        // Prevent XSS attacks
+        $newName = strip_tags($request->request->get('name'));
+        $newAliases = array_map(function (string $entry) { return strip_tags($entry); }, $request->request->all('aliases'));
+        $newContent = strip_tags(urldecode($request->request->get('content')));
+
+        $newContent = str_replace('\n', '\\n', $newContent);
+
         if (!$messageId || !$newName || !$newAliases || !$newContent) {
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
             return $this->redirectToRoute('messages:edit', ['messageId' => $messageId]);
