@@ -19,7 +19,7 @@ security:
                     - App\Security\DiscordAuthenticator
             access_denied_handler: App\Security\AccessDeniedHandler
     role_hierarchy:
-      - ROLE_ADMIN
-      - ROLE_STAFF
-      - ROLE_MEMBER
-      - ROLE_USER
+      ROLE_ADMIN: [ROLE_STAFF]
+      ROLE_STAFF: [ROLE_MEMBER]
+      ROLE_MEMBER: [ROLE_USER]
+      ROLE_USER: [ROLE_USER]

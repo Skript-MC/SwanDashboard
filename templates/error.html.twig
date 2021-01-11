@@ -9,8 +9,6 @@
             <h1 class="h4 text-gray-900 mb-4"><i class="fas fa-{{ fa }}"></i> {{ title }}</h1>
             <p>{{ message }}</p>
         </div>
-        {% if referer is defined %}
-            <a href="{{ referer }}" class="btn btn-facebook btn-block"><i class="fas fa-long-arrow-alt-left"></i> Retour à la page précédente</a>
-        {% endif %}
+        <a href="{{ path('home') }}" class="btn btn-facebook btn-block"><i class="fas fa-long-arrow-alt-left"></i> Retour à l'accueil</a>
     </div>
 {% endblock %}

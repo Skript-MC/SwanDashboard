@@ -22,8 +22,7 @@ class AccessDeniedHandler extends AbstractController implements AccessDeniedHand
         return $this->render('error.html.twig', [
             'title' => 'Accès non autorisé',
             'fa' => 'user-slash',
-            'message' => 'Vous n\'avez pas accès à cette ressource.',
-            'referer' => $request->headers->get('referer')
+            'message' => 'Vous n\'avez pas accès à cette ressource.'
         ]);
     }
 }
