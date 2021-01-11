@@ -2,7 +2,10 @@
 
 namespace App\Discord;
 
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -16,11 +19,13 @@ class SwanClient implements ServiceSubscriberInterface
 
     private HttpClientInterface $httpClient;
     private ContainerBagInterface $containerBag;
+    private CacheInterface $cache;
 
-    public function __construct(HttpClientInterface $discord_client, ContainerBagInterface $containerBag)
+    public function __construct(HttpClientInterface $discord_client, ContainerBagInterface $containerBag, CacheInterface $swanCache)
     {
         $this->containerBag = $containerBag;
         $this->httpClient = $discord_client;
+        $this->cache = $swanCache;
     }
 
     public static function arrayToRoles(array $roles): array
@@ -45,6 +50,7 @@ class SwanClient implements ServiceSubscriberInterface
     public function getRolesFromSnowflakes(array $snowflakes): array
     {
         $roles = $this->getRoles(true);
+        if (!isset($roles)) return [];
         return self::arrayToRoles(array_map(function (int $snowflake) use ($roles) {
             return $roles[array_search($snowflake, array_column($roles, 'id'))];
         }, $snowflakes));
@@ -53,13 +59,16 @@ class SwanClient implements ServiceSubscriberInterface
     public function getRoles(bool $raw = false): ?array
     {
         try {
-            $response = $this->httpClient->request(
-                'GET',
-                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/roles'
-            );
-            $responseArray = $response->toArray();
-            return ($raw) ? $responseArray : self::arrayToRoles($responseArray);
-        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+            $roles = $this->cache->get('discordRoles', function (CacheItem $item) {
+                $response = $this->httpClient->request(
+                    'GET',
+                    '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/roles'
+                );
+                $item->expiresAfter(300);
+                return $response->toArray();
+            });
+            return ($raw) ? $roles : self::arrayToRoles($roles);
+        } catch (InvalidArgumentException $e) {
             return null;
         }
     }
@@ -67,12 +76,16 @@ class SwanClient implements ServiceSubscriberInterface
     public function getGuild(): ?DiscordGuild
     {
         try {
-            $response = $this->httpClient->request(
-                'GET',
-                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/preview'
-            );
-            return new DiscordGuild($response->toArray());
-        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+            $guild = $this->cache->get('discordGuild', function (CacheItem $item) {
+                $response = $this->httpClient->request(
+                    'GET',
+                    '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/preview'
+                );
+                $item->expiresAfter(300);
+                return $response->toArray();
+            });
+            return new DiscordGuild($guild);
+        } catch (InvalidArgumentException $e) {
             return null;
         }
     }
