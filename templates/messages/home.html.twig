@@ -17,9 +17,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('messages:addonpack') }}">Packs d'add-ons</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('messages:new') }}"><i class="fas fa-pen"></i> Nouveau message</a>
+                            </li>
                             {% if is_granted('ROLE_STAFF') %}
                                 <li class="nav-item">
-                                    <a class="nav-link text-info" href="{{ path('messages:waiting') }}">Approbation</a>
+                                    <a class="nav-link text-info" href="{{ path('messages:waiting') }}"><i class="fas fa-thumbs-up"></i> Approbation</a>
                                 </li>
                             {% endif %}
                         </ul>
