@@ -22,8 +22,8 @@ class MainController extends AbstractController
             return $this->render('welcome.html.twig');
         $guild = $swanClient->getGuild();
         return $this->render('dashboard.html.twig', [
-            'discordMembers' => $guild->getMemberCount(),
-            'discordOnlineMembers' => $guild->getPresenceCount()
+            'discordMembers' => $guild->getMemberCount() ?? 'Inconnu',
+            'discordOnlineMembers' => $guild->getPresenceCount() ?? 'Inconnu'
         ]);
     }
 

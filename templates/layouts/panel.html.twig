@@ -26,28 +26,24 @@
                     <span>Tableau de bord</span>
                 </a>
             </li>
-            {% if is_granted('ROLE_MEMBER') %}
-                <hr class="sidebar-divider">
-                <div class="sidebar-heading">
-                    Swan
-                </div>
-                {% if is_granted('ROLE_STAFF') %}
-                    <li class="nav-item {{ app.request.attributes.get('_route') starts with 'history' ? 'active' }}">
-                        <a class="nav-link" href="{{ path('history') }}">
-                            <i class="fas fa-history"></i>
-                            <span>Historique</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_MEMBER') %}
-                    <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages' ? 'active' }}">
-                        <a class="nav-link" href="{{ path('messages') }}">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Messages</span>
-                        </a>
-                    </li>
-                {% endif %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Swan
+            </div>
+            {% if is_granted('ROLE_STAFF') %}
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'history' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('history') }}">
+                        <i class="fas fa-history"></i>
+                        <span>Historique</span>
+                    </a>
+                </li>
             {% endif %}
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages' ? 'active' }}">
+                <a class="nav-link" href="{{ path('messages') }}">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
             {% if is_granted('ROLE_ADMIN') %}
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading">
