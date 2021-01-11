@@ -22,18 +22,5 @@
                 </div>
             </div>
         </div>
-
-        {% if not is_granted('ROLE_MEMBER') %}
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Demande d'accès</h6>
-                    </div>
-                    <div class="card-body">
-                        Bienvenue sur le panel de gestion de Swan. Afin d'accéder aux différentes fonctionnalités du panel, il vous suffit de remplir les conditions ci-dessous. Vous aurez ensuite accès aux différents espaces qui s'afficheront dans le menu.
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
 {% endblock %}
