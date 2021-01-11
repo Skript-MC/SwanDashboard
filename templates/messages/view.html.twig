@@ -1,0 +1,95 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}
+    Visualisation
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        {{ encore_entry_script_tags('editor') }}
+        {{ encore_entry_link_tags('editor') }}
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <div class="card shadow position-relative">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Modifications de {{ request.user.username }}</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Nom</span>
+                            </div>
+                            <input type="text" class="form-control" value="{{ request.newName }}" aria-label="Nom" aria-describedby="name" readonly>
+                        </div>
+                        <div class="dropdown-divider mb-3"></div>
+                        <div class="form-row" id="aliases">
+                            {% for alias in request.newAliases %}
+                                <div class="form-group col-md-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()" disabled>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-danger link-remove" type="button" disabled>
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" id="addAliasButton" class="btn btn-sm btn-success" disabled>
+                                <i class="fas fa-plus"></i> Ajouter un alias
+                            </button>
+                        </div>
+                        <div class="dropdown-divider mb-3"></div>
+                        <ul class="list-group list-group-flush">
+                            <input id="easymde" name="content">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card shadow position-relative">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Aperçu des modifications</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="diff"></div>
+                        <div class="input-group">
+                            {% if is_granted('ROLE_STAFF') %}
+                                <form action="{{ path('messages:approve') }}" method="POST">
+                                    <input type="hidden" value="{{ request.id }}" name="messageId">
+                                    <input type="hidden" value=true name="validated">
+                                    <button type="submit" class="btn btn-success m-1"><i class="fas fa-check"></i> Accepter ces modifications</button>
+                                </form>
+                                <form action="{{ path('messages:approve') }}" method="POST">
+                                    <input type="hidden" value="{{ request.id }}" name="messageId">
+                                    <input type="hidden" value=false name="validated">
+                                    <button type="submit" class="btn btn-danger m-1"><i class="fas fa-check"></i> Refuser ces modifications</button>
+                                </form>
+                            {% endif %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger mt-3">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script>
+            const easyMDE = new window.easyMDE({
+                element: document.getElementById('easymde'),
+                initialValue: '{{ request.newContent|replace({'\n':'\\n'})|raw }}',
+                toolbar: []
+            });
+            const diff2html = window.diff2html;
+            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|raw }}', '{{ request.newName|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|raw }}\n\n{{ (request.message.content ?? '')|replace({'\n':'\\n'})|raw }}', `Aliases:\n{{ request.newAliases|join('\\n')|raw }}\n\n{{ request.newContent|replace({'\n':'\\n'})|raw }}`);
+            const diffJson = diff2html.parse(diff);
+            document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
+                drawFileList: false
+            });
+        </script>
+    </div>
+{% endblock %}

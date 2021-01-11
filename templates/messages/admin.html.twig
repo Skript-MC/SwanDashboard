@@ -1,0 +1,70 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="card shadow position-relative">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:waiting' ? 'active' }}" href="{{ path('messages:waiting') }}">Modifications à approuver</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:accepted' ? 'active' }}" href="{{ path('messages:accepted') }}">Modifications acceptées</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:denied' ? 'active' }}" href="{{ path('messages:denied') }}">Modifications refusées</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Auteur</th>
+                                    <th scope="col">Aperçu du nouveau contenu</th>
+                                    <th scope="col">Approbateur</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for request in requests %}
+                                    <tr>
+                                        <td>
+                                            {{ request.message.name ?? request.newName }}
+                                        </td>
+                                        <td>
+                                            {{ request.user.username }}
+                                        </td>
+                                        <td>
+                                            {{ (request.message.content ?? request.newContent)|truncate }}
+                                        </td>
+                                        <td>
+                                            {{ request.reviewer.username ?? '' }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('messages:view', { messageId: request.id }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {{ knp_pagination_render(requests) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

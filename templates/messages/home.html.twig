@@ -17,11 +17,21 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('messages:addonpack') }}">Packs d'add-ons</a>
                             </li>
+                            {% if is_granted('ROLE_STAFF') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-info" href="{{ path('messages:waiting') }}">Approbation</a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <div class="card-body">
                         {% for message in app.flashes('success') %}
                             <div class="alert alert-success mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger mt-3">
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -40,9 +50,9 @@
                                 <ul class="list-group list-group-flush">
                                     {% for request in requests %}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <strong>{{ request.message.name }}</strong>{{ request.newContent|truncate }}
+                                            <strong>{{ request.message.name ?? request.newName }}</strong>{{ request.newContent|truncate }}
                                             {% if request.validated is null %}
-                                                <span class="badge badge-secondary badge-pill">En cours de traitement</span>
+                                                <span class="badge badge-secondary badge-pill">En attente</span>
                                             {% elseif request.validated %}
                                                 <span class="badge badge-success badge-pill">Validée</span>
                                             {% else %}
