@@ -23,7 +23,7 @@
                         <div class="dropdown-divider mb-3"></div>
                         <div class="form-row" id="aliases">
                             {% for alias in request.newAliases %}
-                                <div class="form-group">
+                                <div class="form-group mr-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()" disabled>
                                         <div class="input-group-append">
@@ -64,7 +64,7 @@
                                 <form action="{{ path('messages:approve') }}" method="POST">
                                     <input type="hidden" value="{{ request.id }}" name="messageId">
                                     <input type="hidden" value=false name="validated">
-                                    <button type="submit" class="btn btn-danger m-1"><i class="fas fa-check"></i> Refuser ces modifications</button>
+                                    <button type="submit" class="btn btn-danger m-1"><i class="fas fa-times-circle"></i> Refuser ces modifications</button>
                                 </form>
                             {% elseif (request.validated) %}
                                 <p>Suggestion de modification {{ request.validated ? 'acceptée' : 'refusée' }} par {{ request.reviewer.username }}</p>

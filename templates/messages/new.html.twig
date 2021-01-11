@@ -33,6 +33,13 @@
                             <ul class="list-group list-group-flush">
                                 <input id="easymde" name="content">
                             </ul>
+                            <div class="dropdown-divider mb-3"></div>
+
+                            <select class="form-control" name="type">
+                                <option value="auto">Message rapide</option>
+                                <option value="error">Détails d'erreurs</option>
+                                <option value="addonpack">Pack d'add-ons</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -43,13 +50,6 @@
                         </div>
                         <div class="card-body">
                             <div id="diff"></div>
-                            <label>
-                                <select class="form-control" name="type">
-                                    <option value="auto">Message rapide</option>
-                                    <option value="error">Détails d'erreurs</option>
-                                    <option value="addonpack">Pack d'add-ons</option>
-                                </select>
-                            </label>
                             <button type="submit" class="btn btn-info m-1" onclick="submit()"><i class="fas fa-check"></i> Suggérer mon nouveau message</button>
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger mt-3">
@@ -89,7 +89,7 @@
                     const input = '<div class="input-group"> <input type="text" class="form-control" name="aliases[{index}]" onchange="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
                     const newElement = document.createElement('div');
 
-                    newElement.className = 'form-group';
+                    newElement.className = 'form-group mr-2';
                     newElement.innerHTML = input;
 
                     document.getElementById('aliases').appendChild(newElement);
