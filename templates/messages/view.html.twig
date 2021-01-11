@@ -55,7 +55,7 @@
                     <div class="card-body">
                         <div id="diff"></div>
                         <div class="input-group">
-                            {% if is_granted('ROLE_STAFF') %}
+                            {% if is_granted('ROLE_STAFF') and not (request.validated ?? false) %}
                                 <form action="{{ path('messages:approve') }}" method="POST">
                                     <input type="hidden" value="{{ request.id }}" name="messageId">
                                     <input type="hidden" value=true name="validated">
@@ -66,6 +66,8 @@
                                     <input type="hidden" value=false name="validated">
                                     <button type="submit" class="btn btn-danger m-1"><i class="fas fa-check"></i> Refuser ces modifications</button>
                                 </form>
+                            {% elseif (request.validated) %}
+                                <p>Suggestion de modification {{ request.validated ? 'acceptée' : 'refusée' }} par {{ request.reviewer.username }}</p>
                             {% endif %}
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger mt-3">
@@ -81,11 +83,11 @@
         <script>
             const easyMDE = new window.easyMDE({
                 element: document.getElementById('easymde'),
-                initialValue: '{{ request.newContent|replace({'\n':'\\n'})|raw }}',
+                initialValue: '{{ request.newContent|customEscape|raw }}',
                 toolbar: []
             });
             const diff2html = window.diff2html;
-            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|raw }}', '{{ request.newName|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|raw }}\n\n{{ (request.message.content ?? '')|replace({'\n':'\\n'})|raw }}', `Aliases:\n{{ request.newAliases|join('\\n')|raw }}\n\n{{ request.newContent|replace({'\n':'\\n'})|raw }}`);
+            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|customEscape|raw }}', '{{ request.newName|customEscape|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|customEscape|raw }}\n\n{{ (request.message.content ?? '')|customEscape|raw }}', 'Aliases:\n{{ request.newAliases|join('\\n')|customEscape|raw }}\n\n{{ request.newContent|customEscape|raw }}');
             const diffJson = diff2html.parse(diff);
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false

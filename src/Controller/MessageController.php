@@ -19,11 +19,27 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class MessageController
  * @package App\Controller
  *
- * @IsGranted("ROLE_MEMBER")
+ * @IsGranted("ROLE_USER")
  * @Route("/messages")
  */
 class MessageController extends AbstractController
 {
+
+    public function formatString(string $input): string
+    {
+        $input = strip_tags($input);
+        $input = str_replace('\n', ' ', $input);
+        $input = str_replace('\t', ' ', $input);
+        return $input;
+    }
+
+    public function formatContent(string $input): string
+    {
+        $input = strip_tags($input);
+        $input = str_replace("\\n", "\n", $input);
+        return $input;
+    }
+
     /**
      * @Route("", name="messages")
      * @param Request $request
@@ -120,12 +136,10 @@ class MessageController extends AbstractController
     public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
         // Prevent XSS attacks
-        $name = strip_tags($request->request->get('name'));
-        $aliases = array_map(function (string $entry) { return strip_tags($entry); }, $request->request->all('aliases'));
-        $content = strip_tags(urldecode($request->request->get('content')));
-        $messageType = strip_tags($request->request->get('type'));
-
-        $content = str_replace('\n', '\\n', $content);
+        $name = $this->formatString($request->request->get('name'));
+        $aliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
+        $content = $this->formatContent(urldecode($request->request->get('content')));
+        $messageType = $this->formatString($request->request->get('type'));
 
         if (!$name || !$aliases || !$content || !in_array($messageType, ['auto', 'error', 'addonpack'])) {
             $this->addFlash('error', 'Certains champs sont incorrects, merci de réessayer votre édition.');
@@ -161,11 +175,9 @@ class MessageController extends AbstractController
         $messageId = $request->request->get('messageId');
 
         // Prevent XSS attacks
-        $newName = strip_tags($request->request->get('name'));
-        $newAliases = array_map(function (string $entry) { return strip_tags($entry); }, $request->request->all('aliases'));
-        $newContent = strip_tags(urldecode($request->request->get('content')));
-
-        $newContent = str_replace('\n', '\\n', $newContent);
+        $newName = $this->formatString($request->request->get('name'));
+        $newAliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
+        $newContent = $this->formatContent(urldecode($request->request->get('content')));
 
         if (!$messageId || !$newName || !$newAliases || !$newContent) {
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
@@ -201,7 +213,16 @@ class MessageController extends AbstractController
     public function viewEdit(Request $request, DocumentManager $dm): Response
     {
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
-        if (!$messageRequest) return new RedirectResponse($this->generateUrl('messages:waiting'));
+        if (!$messageRequest) {
+            $this->addFlash('error', 'Nous n\'avons pas pu trouver de message correspondant à cet identifiant.');
+            return new RedirectResponse($this->generateUrl('messages'));
+        }
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$this->isGranted('ROLE_STAFF') && $messageRequest->getUser() != $user) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette modification.');
+            return new RedirectResponse($this->generateUrl('messages'));
+        }
         return $this->render('messages/view.html.twig', [
             'request' => $messageRequest
         ]);
