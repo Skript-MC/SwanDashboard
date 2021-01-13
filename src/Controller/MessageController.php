@@ -313,7 +313,7 @@ class MessageController extends AbstractController
         /** @var User $reviewer */
         $reviewer = $this->getUser();
 
-        if (!$targetMessage) { // It's a new message
+        if (!$targetMessage && $isValidated) { // It's a new message
             $newMessage = new Message();
             $newMessage->setName($message->getNewName());
             $newMessage->setAliases($message->getNewAliases());
