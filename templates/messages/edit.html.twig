@@ -62,7 +62,7 @@
                                     <br/>Vous ne pouvez pas le modifier tant qu'elle n'aura pas été traitée.
                                 </div>
                             {% else %}
-                                <button type="submit" class="btn btn-info m-1" onclick="submit()"><i class="fas fa-check"></i> Suggérer mes modifications</button>
+                                <button type="submit" class="btn btn-info m-1" onclick="submit()" id="send"><i class="fas fa-check"></i> Suggérer mes modifications</button>
                             {% endif %}
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger mt-3">
@@ -119,10 +119,24 @@
                     const name = document.getElementById('name').value || 'Sans nom';
                     const aliases = getAliases();
                     const diff = window.diff.createTwoFilesPatch('{{ addonPack.name|customEscape|raw }}', name, 'Aliases:\n{{ addonPack.aliases|join('\\n')|customEscape|raw }}\n\n{{ addonPack.content|customEscape|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
+
+                    toggleSubmitButton(name !== '{{ addonPack.name }}'
+                        || '{{ addonPack.aliases|join|customEscape|raw }}' !== aliases.join('')
+                        || '{{ addonPack.content|customEscape|raw }}' !== easyMDE.value()
+                    );
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                         drawFileList: false
                     });
+                }
+
+                function toggleSubmitButton(status) {
+                    const element = document.getElementById('send');
+                    if (!element) return;
+                    if (!status)
+                        element.setAttribute('disabled', 'true')
+                    else
+                        element.removeAttribute('disabled')
                 }
 
                 function getAliases() {
