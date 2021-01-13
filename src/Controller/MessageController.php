@@ -27,7 +27,6 @@ class MessageController extends AbstractController
 
     public function formatString(string $input): string
     {
-        $input = strip_tags($input);
         $input = str_replace('\n', ' ', $input);
         $input = str_replace('\t', ' ', $input);
         return $input;
@@ -35,7 +34,6 @@ class MessageController extends AbstractController
 
     public function formatContent(string $input): string
     {
-        $input = strip_tags($input);
         $input = str_replace("\\n", "\n", $input);
         return $input;
     }

@@ -77,7 +77,7 @@
             <script>
                 const easyMDE = new window.easyMDE({
                     element: document.getElementById('easymde'),
-                    initialValue: '{{ addonPack.content|customEscape|raw }}',
+                    initialValue: '{{ addonPack.content|escape('js')|raw }}',
                     toolbar: ['bold', 'italic', 'quote', 'link', 'code', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide']
                 });
                 const diff2html = window.diff2html;
@@ -118,11 +118,11 @@
                 function generateDiff() {
                     const name = document.getElementById('name').value || 'Sans nom';
                     const aliases = getAliases();
-                    const diff = window.diff.createTwoFilesPatch('{{ addonPack.name|customEscape|raw }}', name, 'Aliases:\n{{ addonPack.aliases|join('\\n')|customEscape|raw }}\n\n{{ addonPack.content|customEscape|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
+                    const diff = window.diff.createTwoFilesPatch('{{ addonPack.name|escape('js')|raw }}', name, 'Aliases:\n{{ addonPack.aliases|join('\\n')|escape('js')|raw }}\n\n{{ addonPack.content|escape('js')|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
 
                     toggleSubmitButton(name !== '{{ addonPack.name }}'
-                        || '{{ addonPack.aliases|join|customEscape|raw }}' !== aliases.join('')
-                        || '{{ addonPack.content|customEscape|raw }}' !== easyMDE.value()
+                        || '{{ addonPack.aliases|join|escape('js')|raw }}' !== aliases.join('')
+                        || '{{ addonPack.content|escape('js')|raw }}' !== easyMDE.value()
                     );
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {

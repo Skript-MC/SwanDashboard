@@ -83,11 +83,11 @@
         <script>
             const easyMDE = new window.easyMDE({
                 element: document.getElementById('easymde'),
-                initialValue: '{{ request.newContent|customEscape|raw }}',
+                initialValue: '{{ request.newContent|escape('js')|raw }}',
                 toolbar: []
             });
             const diff2html = window.diff2html;
-            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|customEscape|raw }}', '{{ request.newName|customEscape|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|customEscape|raw }}\n\n{{ (request.message.content ?? '')|customEscape|raw }}', 'Aliases:\n{{ request.newAliases|join('\\n')|customEscape|raw }}\n\n{{ request.newContent|customEscape|raw }}');
+            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|escape('js')|raw }}\n\n{{ (request.message.content ?? '')|escape('js')|raw }}', 'Aliases:\n{{ request.newAliases|join('\\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
             const diffJson = diff2html.parse(diff);
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false
