@@ -29,7 +29,7 @@ class UserController extends AbstractController
         return $this->render('users/home.html.twig', [
             'users' => $paginator->paginate(
                 $dm->getRepository(User::class)->findAll(),
-                $request->query->get('page')
+                $request->query->getInt('page', 1)
             )
         ]);
     }

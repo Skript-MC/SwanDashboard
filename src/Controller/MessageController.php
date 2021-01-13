@@ -231,16 +231,18 @@ class MessageController extends AbstractController
     /**
      * @Route("/waiting", name="messages:waiting")
      * @IsGranted("ROLE_STAFF")
+     * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function waitingRequests(DocumentManager $dm, PaginatorInterface $paginator): Response
+    public function waitingRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
             $dm->createQueryBuilder(MessageEditRequest::class)
                 ->field('validated')->equals(null)
-                ->getQuery()
+                ->getQuery(),
+            $request->query->getInt('page', 1)
         );
         return $this->render('messages/admin.html.twig', [
             'title' => 'Messages en attente',
@@ -251,16 +253,18 @@ class MessageController extends AbstractController
     /**
      * @Route("/accepted", name="messages:accepted")
      * @IsGranted("ROLE_STAFF")
+     * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function acceptedRequests(DocumentManager $dm, PaginatorInterface $paginator): Response
+    public function acceptedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
             $dm->createQueryBuilder(MessageEditRequest::class)
                 ->field('validated')->equals(true)
-                ->getQuery()
+                ->getQuery(),
+            $request->query->getInt('page', 1)
         );
         return $this->render('messages/admin.html.twig', [
             'title' => 'Messages acceptés',
@@ -271,16 +275,18 @@ class MessageController extends AbstractController
     /**
      * @Route("/denied", name="messages:denied")
      * @IsGranted("ROLE_STAFF")
+     * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function deniedRequests(DocumentManager $dm, PaginatorInterface $paginator): Response
+    public function deniedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
             $dm->createQueryBuilder(MessageEditRequest::class)
                 ->field('validated')->equals(false)
-                ->getQuery()
+                ->getQuery(),
+            $request->query->getInt('page', 1)
         );
         return $this->render('messages/admin.html.twig', [
             'title' => 'Messages refusés',
