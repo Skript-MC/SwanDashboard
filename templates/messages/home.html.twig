@@ -48,22 +48,39 @@
                                 <img class="img-fluid" src="{{ asset('build/images/message-edition.png') }}">
                             </div>
                             <div class="col-lg-6">
-                                <h5 class="text-primary">Statuts de vos suggestions</h5>
-                                <div class="dropdown-divider mb-3"></div>
-                                <ul class="list-group list-group-flush">
-                                    {% for request in requests %}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <strong>{{ request.message.name ?? request.newName }}</strong>{{ request.newContent|truncate }}
-                                            {% if request.validated is null %}
-                                                <span class="badge badge-secondary badge-pill">En attente</span>
-                                            {% elseif request.validated %}
-                                                <span class="badge badge-success badge-pill">Validée</span>
-                                            {% else %}
-                                                <span class="badge badge-danger badge-pill">Refusée</span>
-                                            {% endif %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                <h5 class="text-primary">Vos suggestions</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Nom</th>
+                                            <th scope="col">Aperçu du contenu</th>
+                                            <th scope="col">Statut</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for request in requests %}
+                                            <tr>
+                                                <td>
+                                                    {{ request.message.name ?? request.newName }}
+                                                </td>
+                                                <td>
+                                                    {{ request.newContent|truncate }}
+                                                </td>
+                                                <td>
+                                                    {% if request.validated is null %}
+                                                        <span class="badge badge-secondary badge-pill">En attente</span>
+                                                    {% elseif request.validated %}
+                                                        <span class="badge badge-success badge-pill">Validée</span>
+                                                    {% else %}
+                                                        <span class="badge badge-danger badge-pill">Refusée</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                                 {{ knp_pagination_render(requests) }}
                             </div>
                         </div>
