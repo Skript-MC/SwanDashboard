@@ -19,14 +19,18 @@ class UserController extends AbstractController
 {
     /**
      * @Route("", name="users")
+     * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function home(DocumentManager $dm, PaginatorInterface $paginator): Response
+    public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         return $this->render('users/home.html.twig', [
-            'users' => $paginator->paginate($dm->getRepository(User::class)->findAll())
+            'users' => $paginator->paginate(
+                $dm->getRepository(User::class)->findAll(),
+                $request->query->get('page')
+            )
         ]);
     }
 
