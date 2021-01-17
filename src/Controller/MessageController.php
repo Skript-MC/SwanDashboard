@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Document\Message;
 use App\Document\MessageEditRequest;
 use App\Document\User;
+use App\Service\MessageService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
@@ -133,7 +134,6 @@ class MessageController extends AbstractController
      */
     public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
-        // Prevent XSS attacks
         $name = $this->formatString($request->request->get('name'));
         $aliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
         $content = $this->formatContent(urldecode($request->request->get('content')));
@@ -172,7 +172,6 @@ class MessageController extends AbstractController
     {
         $messageId = $request->request->get('messageId');
 
-        // Prevent XSS attacks
         $newName = $this->formatString($request->request->get('name'));
         $newAliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
@@ -206,9 +205,10 @@ class MessageController extends AbstractController
      * @Route("/view/{messageId}", name="messages:view")
      * @param Request $request
      * @param DocumentManager $dm
+     * @param MessageService $messageService
      * @return Response
      */
-    public function viewEdit(Request $request, DocumentManager $dm): Response
+    public function viewEdit(Request $request, DocumentManager $dm, MessageService $messageService): Response
     {
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
@@ -222,7 +222,8 @@ class MessageController extends AbstractController
             return new RedirectResponse($this->generateUrl('messages'));
         }
         return $this->render('messages/view.html.twig', [
-            'request' => $messageRequest
+            'request' => $messageRequest,
+            'previous' => $messageService->getPreviousEdit($messageRequest)
         ]);
     }
 

@@ -12,7 +12,7 @@ class Message
     /**
      * @MongoDB\Id
      */
-    protected $id;
+    protected string $id;
 
     /**
      * @MongoDB\Field(type="string")
@@ -35,17 +35,17 @@ class Message
     protected string $content;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
-    public function setId($id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
