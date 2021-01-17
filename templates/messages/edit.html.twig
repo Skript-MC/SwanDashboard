@@ -18,7 +18,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Nom</span>
                                 </div>
-                                <input type="text" class="form-control" value="{{ addonPack.name }}" aria-label="Nom" aria-describedby="name" id="name" name="name" onchange="generateDiff()">
+                                <input type="text" class="form-control" value="{{ addonPack.name }}" aria-label="Nom" aria-describedby="name" id="name" name="name" onkeyup="generateDiff()">
                             </div>
                             <div class="dropdown-divider mb-3"></div>
                             <div> {# Don't remove this empty node #}
@@ -26,7 +26,7 @@
                                     {% for alias in addonPack.aliases %}
                                         <div class="form-group mr-2">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()">
+                                                <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onkeyup="generateDiff()">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-danger link-remove" type="button">
                                                         <i class="fas fa-times"></i>
@@ -96,10 +96,12 @@
                 document.querySelectorAll('.link-remove').forEach((el) => el.addEventListener('click', () => {
                     const element = el.parentNode.parentNode;
                     element.parentNode.removeChild(element);
+
+                    generateDiff();
                 }));
 
                 document.getElementById('addAliasButton').addEventListener('click', () => {
-                    const input = '<div class="input-group"> <input type="text" class="form-control" name="aliases[{index}]" onchange="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
+                    const input = '<div class="input-group"> <input type="text" class="form-control" name="aliases[{index}]" onkeyup="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
                     const newElement = document.createElement('div');
 
                     newElement.className = 'form-group mr-2';
@@ -111,6 +113,8 @@
                     linkRemove.addEventListener('click', () => {
                         const element = linkRemove.parentNode.parentNode;
                         element.parentNode.removeChild(element);
+
+                        generateDiff();
                     });
 
                 });
