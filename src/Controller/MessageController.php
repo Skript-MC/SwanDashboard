@@ -315,8 +315,6 @@ class MessageController extends AbstractController
         }
         /** @var Message $targetMessage */
         $targetMessage = $message->getMessage();
-        /** @var User $reviewer */
-        $reviewer = $this->getUser();
 
         if (!$targetMessage && $isValidated) { // It's a new message
             $newMessage = new Message();
@@ -326,6 +324,7 @@ class MessageController extends AbstractController
             $newMessage->setMessageType($message->getMessageType());
             $dm->persist($newMessage);
             $dm->flush();
+            $targetMessage = $newMessage;
         } else if ($isValidated) {
             $dm->createQueryBuilder(Message::class)
                 ->findAndUpdate()
@@ -341,10 +340,11 @@ class MessageController extends AbstractController
             ->field('_id')->equals($message->getId())
             ->field('validated')->set($isValidated)
             ->field('reviewer')->set($reviewer)
+            ->field('message')->set($targetMessage)
             ->getQuery()
             ->execute();
         $this->addFlash('success', 'Cette suggestion de modification a été marquée comme ' . ($isValidated ? 'validée' : 'refusée') . '.');
-        return $this->redirectToRoute('messages:waiting');
+        return $this->redirectToRoute('messages');
     }
 
     /**

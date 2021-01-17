@@ -53,6 +53,7 @@
                                             <th scope="col">Nom</th>
                                             <th scope="col">Aperçu du contenu</th>
                                             <th scope="col">Statut</th>
+                                            <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -72,6 +73,9 @@
                                                     {% else %}
                                                         <span class="badge badge-danger badge-pill">Refusée</span>
                                                     {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ path('messages:view', { messageId: request.id }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

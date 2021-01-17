@@ -9,15 +9,20 @@ use MongoDB\BSON\ObjectId;
 class MessageService
 {
     private DocumentManager $documentManager;
+    private MessageEditRequest $emptyEdit;
 
     public function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;
+        $this->emptyEdit = new MessageEditRequest();
+        $this->emptyEdit->setNewName('Sans nom');
+        $this->emptyEdit->setNewAliases([]);
+        $this->emptyEdit->setNewContent('');
     }
 
     public function getPreviousEdit(MessageEditRequest $currentEdit): ?MessageEditRequest
     {
-        if ($currentEdit->getMessage() == null) return $currentEdit;
+        if ($currentEdit->getMessage() == null) return $this->emptyEdit;
         /** @var MessageEditRequest $result */
         $result = $this->documentManager->createQueryBuilder(MessageEditRequest::class)
             ->field('_id')->lt(new ObjectId($currentEdit->getId()))
@@ -26,7 +31,7 @@ class MessageService
             ->limit(1)
             ->getQuery()
             ->getSingleResult();
-        return $result;
+        return $result ?? $this->emptyEdit;
     }
 
 }

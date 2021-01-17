@@ -122,7 +122,7 @@
                 function generateDiff() {
                     const name = document.getElementById('name').value || 'Sans nom';
                     const aliases = getAliases();
-                    const diff = window.diff.createTwoFilesPatch('{{ message.name|escape('js')|raw }}', name, 'Aliases:\n{{ message.aliases|join('\\n')|escape('js')|raw }}\n\n{{ message.content|escape('js')|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
+                    const diff = window.diff.createTwoFilesPatch('{{ message.name|escape('js')|raw }}', name, 'Aliases:\n{{ message.aliases|join('\n')|escape('js')|raw }}\n\n{{ message.content|escape('js')|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
 
                     toggleSubmitButton(name !== '{{ message.name }}'
                         || '{{ message.aliases|join|escape('js')|raw }}' !== aliases.join('')
