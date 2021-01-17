@@ -363,7 +363,7 @@ class MessageController extends AbstractController
             ->getQuery()
             ->getSingleResult();
         return $this->render('messages/edit.html.twig', [
-            'addonPack' => $message,
+            'message' => $message,
             'editForbidden' => isset($messageEditRequest)
         ]);
     }

@@ -13,17 +13,17 @@
                             <h6 class="m-0 font-weight-bold text-primary">Éditeur</h6>
                         </div>
                         <div class="card-body">
-                            <input type="hidden" value="{{ addonPack.id }}" name="messageId">
+                            <input type="hidden" value="{{ message.id }}" name="messageId">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Nom</span>
                                 </div>
-                                <input type="text" class="form-control" value="{{ addonPack.name }}" aria-label="Nom" aria-describedby="name" id="name" name="name" onkeyup="generateDiff()">
+                                <input type="text" class="form-control" value="{{ message.name }}" aria-label="Nom" aria-describedby="name" id="name" name="name" onkeyup="generateDiff()">
                             </div>
                             <div class="dropdown-divider mb-3"></div>
                             <div> {# Don't remove this empty node #}
                                 <div class="form-row" id="aliases">
-                                    {% for alias in addonPack.aliases %}
+                                    {% for alias in message.aliases %}
                                         <div class="form-group mr-2">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onkeyup="generateDiff()">
@@ -77,7 +77,7 @@
             <script>
                 const easyMDE = new window.easyMDE({
                     element: document.getElementById('easymde'),
-                    initialValue: '{{ addonPack.content|escape('js')|raw }}',
+                    initialValue: '{{ message.content|escape('js')|raw }}',
                     toolbar: ['bold', 'italic', 'quote', 'link', 'code', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide']
                 });
                 const diff2html = window.diff2html;
@@ -122,11 +122,11 @@
                 function generateDiff() {
                     const name = document.getElementById('name').value || 'Sans nom';
                     const aliases = getAliases();
-                    const diff = window.diff.createTwoFilesPatch('{{ addonPack.name|escape('js')|raw }}', name, 'Aliases:\n{{ addonPack.aliases|join('\\n')|escape('js')|raw }}\n\n{{ addonPack.content|escape('js')|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
+                    const diff = window.diff.createTwoFilesPatch('{{ message.name|escape('js')|raw }}', name, 'Aliases:\n{{ message.aliases|join('\\n')|escape('js')|raw }}\n\n{{ message.content|escape('js')|raw }}', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
 
-                    toggleSubmitButton(name !== '{{ addonPack.name }}'
-                        || '{{ addonPack.aliases|join|escape('js')|raw }}' !== aliases.join('')
-                        || '{{ addonPack.content|escape('js')|raw }}' !== easyMDE.value()
+                    toggleSubmitButton(name !== '{{ message.name }}'
+                        || '{{ message.aliases|join|escape('js')|raw }}' !== aliases.join('')
+                        || '{{ message.content|escape('js')|raw }}' !== easyMDE.value()
                     );
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {

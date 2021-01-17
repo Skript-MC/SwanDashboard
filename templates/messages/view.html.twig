@@ -18,11 +18,11 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Nom</span>
                             </div>
-                            <input type="text" class="form-control" value="{{ request.newName }}" aria-label="Nom" aria-describedby="name" readonly>
+                            <input type="text" class="form-control" value="{{ previous.newName }}" aria-label="Nom" aria-describedby="name" readonly>
                         </div>
                         <div class="dropdown-divider mb-3"></div>
                         <div class="form-row" id="aliases">
-                            {% for alias in request.newAliases %}
+                            {% for alias in previous.newAliases %}
                                 <div class="form-group mr-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()" disabled>
@@ -83,11 +83,11 @@
         <script>
             const easyMDE = new window.easyMDE({
                 element: document.getElementById('easymde'),
-                initialValue: '{{ request.newContent|escape('js')|raw }}',
+                initialValue: '{{ previous.newContent|escape('js')|raw }}',
                 toolbar: []
             });
             const diff2html = window.diff2html;
-            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|escape('js')|raw }}\n\n{{ (request.message.content ?? '')|escape('js')|raw }}', 'Aliases:\n{{ request.newAliases|join('\\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
+            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|escape('js')|raw }}', '{{ previous.newName|escape('js')|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\n')|escape('js')|raw }}\n\n{{ (request.message.content ?? '')|escape('js')|raw }}', 'Aliases:\n{{ previous.newAliases|join('\n')|escape('js')|raw }}\n\n{{ previous.newContent|escape('js')|raw }}');
             const diffJson = diff2html.parse(diff);
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false
