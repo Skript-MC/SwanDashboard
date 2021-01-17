@@ -305,12 +305,25 @@ class MessageController extends AbstractController
         $messageId = $request->request->get('messageId');
         $isValidated = $request->request->getBoolean('validated');
         $message = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $messageId]);
+
         if (!$message || !isset($isValidated)) {
             $this->addFlash('error', 'Votre requête est invalide.');
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
         }
-        if (!$this->isGranted('ROLE_STAFF')) {
-            $this->addFlash('error', 'Vous n\'avez pas la permission d\'approuver ce message.');
+
+        if ($message->isValidated()) {
+            $this->addFlash('error', 'Ce message a déjà été validé.');
+            return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
+        }
+
+        /** @var User $reviewer */
+        $reviewer = $this->getUser();
+
+        /** @var User $author */
+        $author = $message->getUser();
+
+        if (!($this->isGranted('ROLE_STAFF') || ($reviewer->getId() == $author->getId() && !$isValidated))) {
+            $this->addFlash('error', 'Vous n\'avez pas la permission d\'approuver ce message.' . $reviewer->getId() . '->' . $reviewer->getId());
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
         }
         /** @var Message $targetMessage */
