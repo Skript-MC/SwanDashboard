@@ -106,8 +106,8 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-warning"><i class="fas fa-comment-slash"></i> Sanctionner</button>
-                                <a type="button" class="btn btn-info" target="_blank" rel="noopener noreferrer" href="{{ message.channel.id|discordLink(message.messageId) }}" {{ message.newContent is empty ? 'disabled' }}><i class="fas fa-external-link-alt"></i> Voir sur Discord</a>
+                                <button class="btn btn-warning"><i class="fas fa-comment-slash"></i> Sanctionner</button>
+                                <a class="btn btn-info" target="_blank" rel="noopener noreferrer" href="{{ message.channel.id|discordLink(message.messageId) }}" {{ message.newContent is empty ? 'disabled' }}><i class="fas fa-external-link-alt"></i> Voir sur Discord</a>
                             </div>
                         {% else %}
                             {% if app.request.attributes.get('_route') == 'history' %}
