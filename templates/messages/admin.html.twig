@@ -54,7 +54,7 @@
                                             {{ request.reviewer.username ?? '' }}
                                         </td>
                                         <td>
-                                            <a href="{{ path('messages:view', { messageId: request.id }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('messages:view', { messageId: request.id }) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                                         </td>
                                     </tr>
                                 {% endfor %}

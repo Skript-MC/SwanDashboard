@@ -27,7 +27,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onchange="generateDiff()" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-danger link-remove" type="button" disabled>
+                                            <button class="btn btn-outline-danger link-remove" disabled>
                                                 <i class="fas fa-times"></i>
                                             </button>
                                         </div>
@@ -36,7 +36,7 @@
                             {% endfor %}
                         </div>
                         <div class="mb-3">
-                            <button type="button" id="addAliasButton" class="btn btn-sm btn-success" disabled>
+                            <button id="addAliasButton" class="btn btn-sm btn-success" disabled>
                                 <i class="fas fa-plus"></i> Ajouter un alias
                             </button>
                         </div>
