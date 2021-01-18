@@ -25,6 +25,7 @@
     },
     "require": {
         "php": ">=7.4",
+        "ext-mongodb": "*",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/mongodb-odm-bundle": "^4.2",

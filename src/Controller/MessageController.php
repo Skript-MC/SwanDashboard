@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Document\Message;
 use App\Document\MessageEditRequest;
 use App\Document\User;
+use App\Service\MessageService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
@@ -133,7 +134,6 @@ class MessageController extends AbstractController
      */
     public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
-        // Prevent XSS attacks
         $name = $this->formatString($request->request->get('name'));
         $aliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
         $content = $this->formatContent(urldecode($request->request->get('content')));
@@ -172,7 +172,6 @@ class MessageController extends AbstractController
     {
         $messageId = $request->request->get('messageId');
 
-        // Prevent XSS attacks
         $newName = $this->formatString($request->request->get('name'));
         $newAliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
@@ -206,9 +205,10 @@ class MessageController extends AbstractController
      * @Route("/view/{messageId}", name="messages:view")
      * @param Request $request
      * @param DocumentManager $dm
+     * @param MessageService $messageService
      * @return Response
      */
-    public function viewEdit(Request $request, DocumentManager $dm): Response
+    public function viewEdit(Request $request, DocumentManager $dm, MessageService $messageService): Response
     {
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
@@ -222,7 +222,8 @@ class MessageController extends AbstractController
             return new RedirectResponse($this->generateUrl('messages'));
         }
         return $this->render('messages/view.html.twig', [
-            'request' => $messageRequest
+            'request' => $messageRequest,
+            'previous' => $messageService->getPreviousEdit($messageRequest)
         ]);
     }
 
@@ -304,18 +305,29 @@ class MessageController extends AbstractController
         $messageId = $request->request->get('messageId');
         $isValidated = $request->request->getBoolean('validated');
         $message = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $messageId]);
+
         if (!$message || !isset($isValidated)) {
             $this->addFlash('error', 'Votre requête est invalide.');
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
         }
-        if (!$this->isGranted('ROLE_STAFF')) {
-            $this->addFlash('error', 'Vous n\'avez pas la permission d\'approuver ce message.');
+
+        if ($message->isValidated()) {
+            $this->addFlash('error', 'Ce message a déjà été validé.');
+            return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
+        }
+
+        /** @var User $reviewer */
+        $reviewer = $this->getUser();
+
+        /** @var User $author */
+        $author = $message->getUser();
+
+        if (!($this->isGranted('ROLE_STAFF') || ($reviewer->getId() == $author->getId() && !$isValidated))) {
+            $this->addFlash('error', 'Vous n\'avez pas la permission d\'approuver ce message.' . $reviewer->getId() . '->' . $reviewer->getId());
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
         }
         /** @var Message $targetMessage */
         $targetMessage = $message->getMessage();
-        /** @var User $reviewer */
-        $reviewer = $this->getUser();
 
         if (!$targetMessage && $isValidated) { // It's a new message
             $newMessage = new Message();
@@ -325,6 +337,7 @@ class MessageController extends AbstractController
             $newMessage->setMessageType($message->getMessageType());
             $dm->persist($newMessage);
             $dm->flush();
+            $targetMessage = $newMessage;
         } else if ($isValidated) {
             $dm->createQueryBuilder(Message::class)
                 ->findAndUpdate()
@@ -340,10 +353,11 @@ class MessageController extends AbstractController
             ->field('_id')->equals($message->getId())
             ->field('validated')->set($isValidated)
             ->field('reviewer')->set($reviewer)
+            ->field('message')->set($targetMessage)
             ->getQuery()
             ->execute();
         $this->addFlash('success', 'Cette suggestion de modification a été marquée comme ' . ($isValidated ? 'validée' : 'refusée') . '.');
-        return $this->redirectToRoute('messages:waiting');
+        return $this->redirectToRoute('messages');
     }
 
     /**
@@ -362,7 +376,7 @@ class MessageController extends AbstractController
             ->getQuery()
             ->getSingleResult();
         return $this->render('messages/edit.html.twig', [
-            'addonPack' => $message,
+            'message' => $message,
             'editForbidden' => isset($messageEditRequest)
         ]);
     }

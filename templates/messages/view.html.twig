@@ -55,18 +55,26 @@
                     <div class="card-body">
                         <div id="diff"></div>
                         <div class="input-group">
-                            {% if is_granted('ROLE_STAFF') and not (request.validated ?? false) %}
-                                <form action="{{ path('messages:approve') }}" method="POST">
-                                    <input type="hidden" value="{{ request.id }}" name="messageId">
-                                    <input type="hidden" value=true name="validated">
-                                    <button type="submit" class="btn btn-success m-1"><i class="fas fa-check"></i> Accepter ces modifications</button>
-                                </form>
-                                <form action="{{ path('messages:approve') }}" method="POST">
-                                    <input type="hidden" value="{{ request.id }}" name="messageId">
-                                    <input type="hidden" value=false name="validated">
-                                    <button type="submit" class="btn btn-danger m-1"><i class="fas fa-times-circle"></i> Refuser ces modifications</button>
-                                </form>
-                            {% elseif (request.validated) %}
+                            {% if (request.validated) is null %}
+                                {% if is_granted('ROLE_STAFF') %}
+                                    <form action="{{ path('messages:approve') }}" method="POST">
+                                        <input type="hidden" value="{{ request.id }}" name="messageId">
+                                        <input type="hidden" value=true name="validated">
+                                        <button type="submit" class="btn btn-success m-1"><i class="fas fa-check"></i> Accepter ces modifications</button>
+                                    </form>
+                                {% else %}
+                                    <button type="submit" class="btn btn-success m-1" disabled><i class="fas fa-check"></i> Accepter ces modifications</button>
+                                {% endif %}
+                                {% if is_granted('ROLE_STAFF') or request.user.id == app.user.id %}
+                                    <form action="{{ path('messages:approve') }}" method="POST">
+                                        <input type="hidden" value="{{ request.id }}" name="messageId">
+                                        <input type="hidden" value=false name="validated">
+                                        <button type="submit" class="btn btn-danger m-1"><i class="fas fa-times-circle"></i> Refuser ces modifications</button>
+                                    </form>
+                                {% else %}
+                                    <button type="submit" class="btn btn-danger m-1" disabled><i class="fas fa-times-circle"></i> Refuser ces modifications</button>
+                                {% endif %}
+                            {% elseif request.validated is not null %}
                                 <p>Suggestion de modification {{ request.validated ? 'acceptée' : 'refusée' }} par {{ request.reviewer.username }}</p>
                             {% endif %}
                             {% for message in app.flashes('error') %}
@@ -87,7 +95,7 @@
                 toolbar: []
             });
             const diff2html = window.diff2html;
-            const diff = window.diff.createTwoFilesPatch('{{ (request.message.name ?? 'Sans nom')|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Aliases:\n{{ (request.message.aliases ?? [])|join('\\n')|escape('js')|raw }}\n\n{{ (request.message.content ?? '')|escape('js')|raw }}', 'Aliases:\n{{ request.newAliases|join('\\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
+            const diff = window.diff.createTwoFilesPatch('{{ (previous.newName)|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Aliases:\n{{ (previous.newAliases)|join('\n')|escape('js')|raw }}\n\n{{ (previous.newContent)|escape('js')|raw }}', 'Aliases:\n{{ request.newAliases|join('\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
             const diffJson = diff2html.parse(diff);
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false

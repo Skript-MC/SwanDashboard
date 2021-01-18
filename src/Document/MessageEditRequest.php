@@ -12,7 +12,7 @@ class MessageEditRequest
     /**
      * @MongoDB\Id
      */
-    protected $id;
+    protected string $id;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true)
@@ -50,22 +50,22 @@ class MessageEditRequest
     protected ?User $reviewer = null;
 
     /**
-     * @MongoDB\Field
+     * @MongoDB\Field(type="string")
      */
     protected ?string $messageType = null;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
-    public function setId($id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
