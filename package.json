@@ -3,7 +3,7 @@
         "@fortawesome/fontawesome-free": "^5.15.2",
         "@symfony/webpack-encore": "^0.33.0",
         "bootstrap": "^4.5.3",
-        "core-js": "^3.8.1",
+        "core-js": "^3.8.3",
         "diff": "^5.0.0",
         "diff2html": "^3.1.18",
         "easymde": "^2.13.0",
