@@ -1,0 +1,63 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Historique{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'history/partials/navbar.html.twig' %}
+            <div class="col-sm-9">
+                <div class="card shadow position-relative mb-3">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Message</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="discordUser" class="col-sm-2 col-form-label"><strong>Utilisateur</strong></label>
+                            <div class="col-sm-10">
+                                <p type="text" readonly class="form-control-plaintext" id="discordUser">{{ message.user.username }}</p>
+                                <p type="text" readonly class="form-control-plaintext mt-0 pt-0" id="discordUser">{{ message.user.id }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="discordChannel" class="col-sm-2 col-form-label"><strong>Salon</strong></label>
+                            <div class="col-sm-10">
+                                <p type="text" readonly class="form-control-plaintext mt-0 pt-0" id="discordChannel">{{ message.channelId }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="oldMessage" class="col-sm-2 col-form-label"><strong>Ancien message</strong></label>
+                            <div class="col-sm-10">
+                                <p type="text" readonly class="form-control-plaintext" id="oldMessage">{{ message.oldContent }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="messageEditions" class="col-sm-2 col-form-label"><strong>Éditions</strong></label>
+                            <div class="col-sm-10">
+                                {% if message.editions is not empty %}
+                                    {% for edit in message.editions %}
+                                        <p type="text" readonly class="form-control-plaintext" id="messageEditions">{{ edit }}</p>
+                                    {% endfor %}
+                                {% else %}
+                                    <p type="text" readonly class="form-control-plaintext" id="messageEditions">Ce message n'a pas été édité.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="newMessage" class="col-sm-2 col-form-label"><strong>Nouveau message</strong></label>
+                            <div class="col-sm-10">
+                                <code>{{ message.newContent }}</code>
+                                <p type="text" readonly class="form-control-plaintext" id="newMessage">{{ message.newContent is defined ? message.newContent : 'Ce message a été supprimé.' }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-warning"><i class="fas fa-comment-slash"></i> Sanctionner</button>
+                            <a type="button" class="btn btn-info" target="_blank" rel="noopener noreferrer" href="{{ message.channelId|discordLink(message.messageId) }}" {{ message.newContent is empty ? 'disabled' }}><i class="fas fa-external-link-alt"></i> Voir sur Discord</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

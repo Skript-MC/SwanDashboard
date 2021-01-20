@@ -1,0 +1,75 @@
+<div class="col-sm-3 mb-3">
+    <div class="card shadow position-relative">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Recherche et salons</h6>
+        </div>
+        <div class="list-group list-group-flush">
+            <form class="form-inline list-group-item" action="{{ path('history:search') }}" method="post">
+                <input class="form-control" id="query" name="query" type="search" placeholder="Recherche" aria-label="Recherche">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+            </form>
+            {% for category in allChannels %}
+                <div class="list-group-item bg-light">{{ category.name }}</div>
+                {% for channel in category.channels %}
+                    <a href="{{ path('history:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                #{{ channel.name }}
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
+                                    <label class="custom-control-label" for="{{ channel.id }}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModal"></h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="descriptionModal"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal">D'accord</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.custom-switch').forEach((el) => el.addEventListener('change', async (change) => {
+        const channelId = change.target.id;
+        const checked = change.target.checked;
+        const titleElement = document.getElementById('titleModal');
+        const descriptionElement = document.getElementById('descriptionModal');
+        const response = await fetch('/history/api/channels', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `channelId=${channelId}&checked=${checked}`
+        });
+
+        if (response.ok) {
+            titleElement.innerText = 'Modification effectué';
+            descriptionElement.innerText = `Désormais, les messages de ce salon ${checked ? 'seront sauvegardés et s\'afficheront ici' : 'ne seront plus sauvegardés'}.`;
+        } else {
+            const data = await response.json();
+            titleElement.innerText = 'Oups !';
+            descriptionElement.innerText = data.error ?? 'Une erreur inconnue est survenue.';
+            change.target.checked = !checked;
+        }
+        $('#historyModal').modal()
+    }));
+</script>

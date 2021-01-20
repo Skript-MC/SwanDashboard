@@ -17,6 +17,8 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 class SwanClient implements ServiceSubscriberInterface
 {
 
+    const CACHE_TTL = 60 * 10; // 10 minutes
+
     private HttpClientInterface $httpClient;
     private ContainerBagInterface $containerBag;
     private CacheInterface $cache;
@@ -30,8 +32,39 @@ class SwanClient implements ServiceSubscriberInterface
 
     public static function arrayToRoles(array $roles): array
     {
-        usort($roles, function (array $roleA, array $roleB): int { return $roleB['position'] - $roleA['position']; });
-        return array_map(function (array $role): DiscordRole  {return new DiscordRole($role); }, $roles);
+        usort($roles, function (array $roleA, array $roleB): int {
+            return $roleB['position'] - $roleA['position'];
+        });
+        return array_map(function (array $role): DiscordRole {
+            return new DiscordRole($role);
+        }, $roles);
+    }
+
+    public static function arrayToChannels(array $channels): array
+    {
+        $channels = array_map(function (array $channel): DiscordChannel {
+            return new DiscordChannel($channel);
+        }, $channels);
+        $categories = [];
+        foreach ($channels as $channel) {
+            if ($channel->getType() == 4)
+                $categories[$channel->getId()] = new DiscordCategory($channel->toArray());
+        }
+        foreach ($channels as $channel) {
+            if ($channel->getType() == 0) {
+                $categories[$channel->getParentId()]->addChannel($channel);
+            }
+        }
+        return $categories;
+    }
+
+    public function getRolesFromSnowflakes(array $snowflakes): array
+    {
+        $roles = $this->getRoles(true);
+        if (!isset($roles)) return [];
+        return self::arrayToRoles(array_map(function (int $snowflake) use ($roles) {
+            return $roles[array_search($snowflake, array_column($roles, 'id'))];
+        }, $snowflakes));
     }
 
     public function getMember(int $userId): ?DiscordMember
@@ -47,15 +80,6 @@ class SwanClient implements ServiceSubscriberInterface
         }
     }
 
-    public function getRolesFromSnowflakes(array $snowflakes): array
-    {
-        $roles = $this->getRoles(true);
-        if (!isset($roles)) return [];
-        return self::arrayToRoles(array_map(function (int $snowflake) use ($roles) {
-            return $roles[array_search($snowflake, array_column($roles, 'id'))];
-        }, $snowflakes));
-    }
-
     public function getRoles(bool $raw = false): ?array
     {
         try {
@@ -64,7 +88,7 @@ class SwanClient implements ServiceSubscriberInterface
                     'GET',
                     '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/roles'
                 );
-                $item->expiresAfter(300);
+                $item->expiresAfter(self::CACHE_TTL);
                 return $response->toArray();
             });
             return ($raw) ? $roles : self::arrayToRoles($roles);
@@ -81,10 +105,26 @@ class SwanClient implements ServiceSubscriberInterface
                     'GET',
                     '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/preview'
                 );
-                $item->expiresAfter(300);
+                $item->expiresAfter(self::CACHE_TTL);
                 return $response->toArray();
             });
             return new DiscordGuild($guild);
+        } catch (InvalidArgumentException $e) {
+            return null;
+        }
+    }
+
+    public function getChannels(bool $raw = false): ?array
+    {
+        try {
+            return $this->cache->get('discordGuild', function (CacheItem $item) use ($raw) {
+                $response = $this->httpClient->request(
+                    'GET',
+                    '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/channels'
+                );
+                $item->expiresAfter(self::CACHE_TTL);
+                return ($raw) ? $response->toArray() : self::arrayToChannels($response->toArray());
+            });
         } catch (InvalidArgumentException $e) {
             return null;
         }

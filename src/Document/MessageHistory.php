@@ -25,9 +25,9 @@ class MessageHistory
     protected int $messageId;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=Channel::class)
+     * @MongoDB\Field(type="int")
      */
-    protected Channel $channel;
+    protected int $channelId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -93,19 +93,19 @@ class MessageHistory
     }
 
     /**
-     * @return Channel
+     * @return int
      */
-    public function getChannel(): Channel
+    public function getChannelId(): int
     {
-        return $this->channel;
+        return $this->channelId;
     }
 
     /**
-     * @param Channel $channel
+     * @param int $channel
      */
-    public function setChannel(Channel $channel): void
+    public function setChannelId(int $channel): void
     {
-        $this->channel = $channel;
+        $this->channelId = $channel;
     }
 
     /**
