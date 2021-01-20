@@ -117,7 +117,7 @@ class SwanClient implements ServiceSubscriberInterface
     public function getChannels(bool $raw = false): ?array
     {
         try {
-            return $this->cache->get('discordGuild', function (CacheItem $item) use ($raw) {
+            return $this->cache->get('discordChannels', function (CacheItem $item) use ($raw) {
                 $response = $this->httpClient->request(
                     'GET',
                     '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/channels'
