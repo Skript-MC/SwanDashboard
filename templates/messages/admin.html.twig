@@ -42,13 +42,13 @@
                                 {% for request in requests %}
                                     <tr>
                                         <td>
-                                            {{ request.message.name ?? request.newName }}
+                                            {{ request.newName }}
                                         </td>
                                         <td>
                                             {{ request.user.username }}
                                         </td>
                                         <td>
-                                            {{ (request.message.content ?? request.newContent)|truncate }}
+                                            {{ (request.newContent)|truncate }}
                                         </td>
                                         <td>
                                             {{ request.reviewer.username ?? '' }}
