@@ -37,3 +37,7 @@ N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de
 #### 👥 Développeur
 
 - [Romitou](https://github.com/Romitou) (Romitou#9685)
+
+#### 👷 [Contributeurs](https://github.com/Romitou/SwanDashboard/graphs/contributors)
+
+- [noftaly](https://github.com/noftaly) (noftaly#0359)
