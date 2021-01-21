@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "978eaacefaeb202c660130d06124dc67",
+    "content-hash": "07fe2ecd043ceb0615021150c2547e69",
     "packages": [
         {
             "name": "clue/stream-filter",
             "version": "v1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/clue/php-stream-filter.git",
+                "url": "https://github.com/clue/stream-filter.git",
                 "reference": "aeb7d8ea49c7963d3b581378955dbf5bc49aa320"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/php-stream-filter/zipball/aeb7d8ea49c7963d3b581378955dbf5bc49aa320",
+                "url": "https://api.github.com/repos/clue/stream-filter/zipball/aeb7d8ea49c7963d3b581378955dbf5bc49aa320",
                 "reference": "aeb7d8ea49c7963d3b581378955dbf5bc49aa320",
                 "shasum": ""
             },
@@ -57,8 +57,8 @@
                 "stream_filter_register"
             ],
             "support": {
-                "issues": "https://github.com/clue/php-stream-filter/issues",
-                "source": "https://github.com/clue/php-stream-filter/tree/v1.5.0"
+                "issues": "https://github.com/clue/stream-filter/issues",
+                "source": "https://github.com/clue/stream-filter/tree/v1.5.0"
             },
             "funding": [
                 {
@@ -391,16 +391,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "9f3e3f3cc5399604c0325d5ffa92609d694d950d"
+                "reference": "2afde5a9844126bc311cd5f548b5475e75f800d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/9f3e3f3cc5399604c0325d5ffa92609d694d950d",
-                "reference": "9f3e3f3cc5399604c0325d5ffa92609d694d950d",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/2afde5a9844126bc311cd5f548b5475e75f800d3",
+                "reference": "2afde5a9844126bc311cd5f548b5475e75f800d3",
                 "shasum": ""
             },
             "require": {
@@ -460,7 +460,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/common/issues",
-                "source": "https://github.com/doctrine/common/tree/3.1.0"
+                "source": "https://github.com/doctrine/common/tree/3.1.1"
             },
             "funding": [
                 {
@@ -476,7 +476,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-03T21:02:31+00:00"
+            "time": "2021-01-20T19:58:05+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -2449,16 +2449,16 @@
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "2.11.0",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "0e23c12a51df3f6e225ae26a7bfe3d8dae4658e4"
+                "reference": "96bb91b7b52324080accf1d0137f491ff378ecf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/0e23c12a51df3f6e225ae26a7bfe3d8dae4658e4",
-                "reference": "0e23c12a51df3f6e225ae26a7bfe3d8dae4658e4",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/96bb91b7b52324080accf1d0137f491ff378ecf1",
+                "reference": "96bb91b7b52324080accf1d0137f491ff378ecf1",
                 "shasum": ""
             },
             "require": {
@@ -2524,7 +2524,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Ocramius/ProxyManager/issues",
-                "source": "https://github.com/Ocramius/ProxyManager/tree/2.11.0"
+                "source": "https://github.com/Ocramius/ProxyManager/tree/2.11.1"
             },
             "funding": [
                 {
@@ -2536,7 +2536,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-30T16:40:17+00:00"
+            "time": "2021-01-10T16:12:59+00:00"
         },
         {
             "name": "php-http/client-common",
@@ -3337,16 +3337,16 @@
         },
         {
             "name": "romitou/oauth2-discord",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Romitou/oauth2-discord.git",
-                "reference": "70c7710d26dbf968a04d6d3c3da23ec4a54c42fe"
+                "reference": "ac949bc3bffe87dc1c011f5459adc423bc375188"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Romitou/oauth2-discord/zipball/70c7710d26dbf968a04d6d3c3da23ec4a54c42fe",
-                "reference": "70c7710d26dbf968a04d6d3c3da23ec4a54c42fe",
+                "url": "https://api.github.com/repos/Romitou/oauth2-discord/zipball/ac949bc3bffe87dc1c011f5459adc423bc375188",
+                "reference": "ac949bc3bffe87dc1c011f5459adc423bc375188",
                 "shasum": ""
             },
             "require": {
@@ -3371,9 +3371,9 @@
             "description": "This package provides Discord's OAuth 2 and supports League's OAuth 2.0 client.",
             "support": {
                 "issues": "https://github.com/Romitou/oauth2-discord/issues",
-                "source": "https://github.com/Romitou/oauth2-discord/tree/1.0.0"
+                "source": "https://github.com/Romitou/oauth2-discord/tree/1.0.1"
             },
-            "time": "2021-01-07T13:49:34+00:00"
+            "time": "2021-01-21T22:05:46+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",

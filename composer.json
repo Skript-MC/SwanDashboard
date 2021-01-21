@@ -32,7 +32,7 @@
         "doctrine/orm": "^2.7",
         "knplabs/knp-paginator-bundle": "^5.3",
         "knpuniversity/oauth2-client-bundle": "^2.5",
-        "romitou/oauth2-discord": "^1.0.0",
+        "romitou/oauth2-discord": "^1.0.1",
         "sensio/framework-extra-bundle": "^5.6",
         "sentry/sentry-symfony": "^3.5",
         "symfony/asset": "5.2.*",
