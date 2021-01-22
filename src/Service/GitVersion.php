@@ -4,8 +4,11 @@ namespace App\Service;
 
 class GitVersion
 {
-    public static function getCommitHash(): string
+    public static function getCommitHash(): ?string
     {
-        return file_get_contents(__DIR__ . '/../../.git/refs/heads/master');
+        $filePath = __DIR__ . '/../../.git/refs/heads/m';
+        if (file_exists($filePath))
+            return file_get_contents($filePath);
+        return null;
     }
 }
