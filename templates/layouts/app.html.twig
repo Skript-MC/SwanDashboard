@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="fr">
-{% include 'layouts/head.html.twig' %}
+<head>
+    {% include 'layouts/head.html.twig' %}
+    <title>Swan - {% block title %}{% endblock %}</title>
+</head>
 <body class="bg-gradient-primary">
     <div class="container">
         <div class="row justify-content-center">

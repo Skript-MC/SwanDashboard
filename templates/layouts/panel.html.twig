@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="fr">
-{% include 'layouts/head.html.twig' %}
+<head>
+    {% include 'layouts/head.html.twig' %}
+    <title>Swan - {% block title %}{% endblock %}</title>
+</head>
 <body id="page-top">
     <div id="wrapper">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
