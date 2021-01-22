@@ -4,15 +4,18 @@
 {% block content %}
     <div class="p-5">
         <div class="text-center">
-            <a class="sidebar-brand d-flex justify-content-center" href="/">
+            <div class="d-flex justify-content-center">
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('build/images/swan-logo.png') }}" alt="Logo de Swan">
                 </div>
                 <h1 class="h4 text-gray-900 mb-3 ml-2">Swan</h1>
-            </a>
+            </div>
 
             <p>Merci de vous authentifier avec votre compte Discord afin d'accéder au panel de Swan.</p>
         </div>
         <a href="{{ path('login') }}" class="btn btn-facebook btn-block"><i class="fab fa-discord fa-fw mt-0"></i> Connexion avec Discord</a>
+        {% if app.request.session|targetPath('discord') is not null %}
+            <div class="text-gray-400 text-center small mt-2">Après votre connexion, vous serez redirigé vers {{ app.request.session|targetPath('discord') }}</div>
+        {% endif %}
     </div>
 {% endblock %}

@@ -119,6 +119,6 @@ class DiscordAuthenticator extends SocialAuthenticator
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
     {
         $this->saveTargetPath($request->getSession(), 'discord', $request->getRequestUri());
-        return new RedirectResponse($this->router->generate('login'));
+        return new RedirectResponse($this->router->generate('home'));
     }
 }
