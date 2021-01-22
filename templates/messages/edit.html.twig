@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <button id="addAliasButton" class="btn btn-sm btn-success">
+                                <button type="button" id="addAliasButton" class="btn btn-sm btn-success">
                                     <i class="fas fa-plus"></i> Ajouter un alias
                                 </button>
                             </div>
@@ -62,7 +62,7 @@
                                     <br/>Vous ne pouvez pas le modifier tant qu'elle n'aura pas été traitée.
                                 </div>
                             {% else %}
-                                <button type="submit" class="btn btn-info m-1" onclick="submit()" id="send"><i class="fas fa-check"></i> Suggérer mes modifications</button>
+                                <button type="submit" class="btn btn-info m-1" id="send"><i class="fas fa-check"></i> Suggérer mes modifications</button>
                             {% endif %}
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger mt-3">
