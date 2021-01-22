@@ -1,0 +1,16 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block title %}Méthode non autorisée{% endblock %}
+{% block content %}
+    <div class="p-5">
+        <div class="text-center">
+            <a class="sidebar-brand d-flex justify-content-center">
+                <h1 class="h4 text-gray-900 mb-3 ml-2">Méthode non autorisée</h1>
+            </a>
+            <p>
+                Il est impossible d'accéder à cette ressource via votre méthode de requête.
+            </p>
+        </div>
+        <a href="{{ path('home') }}" class="btn btn-facebook btn-block"><i class="fas fa-long-arrow-alt-left"></i> Retour à l'accueil</a>
+    </div>
+{% endblock %}
