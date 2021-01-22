@@ -6,6 +6,7 @@
 parameters:
     discordGuild: '%env(DISCORD_GUILD)%'
     discordSwanToken: '%env(DISCORD_SWAN_TOKEN)%'
+    discordLogsWebhook: '%env(DISCORD_LOGS_WEBHOOK)%'
 
 services:
     # default configuration for services in *this* file

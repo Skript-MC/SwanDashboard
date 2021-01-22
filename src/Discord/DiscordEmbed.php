@@ -29,7 +29,7 @@ class DiscordEmbed
     protected ?array $fields = null;
 
 
-    public function title(string $title, string $url = ''): self
+    public function title(string $title, ?string $url = ''): self
     {
         $this->title = $title;
         $this->url = $url;
@@ -77,7 +77,7 @@ class DiscordEmbed
         return $this;
     }
 
-    public function author(string $name, string $url = '', string $icon_url = ''): self
+    public function author(string $name, ?string $url = '', ?string $icon_url = ''): self
     {
         $this->author = [
             'name' => $name,
@@ -92,7 +92,7 @@ class DiscordEmbed
         $this->fields[] = [
             'name' => $name,
             'value' => $value,
-            'inline' => boolval($inline),
+            'inline' => $inline,
         ];
         return $this;
     }

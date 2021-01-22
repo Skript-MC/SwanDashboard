@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Discord\DiscordColor;
+use App\Discord\DiscordEmbed;
+use App\Discord\DiscordWebhook;
 use App\Document\Message;
 use App\Document\MessageEditRequest;
 use App\Document\User;
@@ -15,6 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Class MessageController
@@ -156,6 +160,17 @@ class MessageController extends AbstractController
         $dm->persist($request);
         $dm->flush();
 
+        DiscordWebhook::create($this->getParameter('discordLogsWebhook'))
+            ->addEmbed(
+                DiscordEmbed::create()
+                ->title('Nouvelle suggestion d\'ajout de message', $this->generateUrl('messages:view', ['messageId' => $request->getId()], UrlGenerator::ABSOLUTE_URL))
+                ->color(DiscordColor::DEFAULT)
+                ->author($user->getUsername(), null, $user->getAvatarUrl())
+                ->field('Nom du message', $request->getNewName(), true)
+                ->field('Catégorie', $request->getMessageType(), true)
+            )
+            ->send();
+
         $this->addFlash('success', 'Votre suggestion de nouveau message a été enregistrée. Elle sera traitée prochainement !');
         return $this->redirectToRoute('messages');
 
@@ -196,6 +211,17 @@ class MessageController extends AbstractController
         $edit->setNewContent($newContent);
         $dm->persist($edit);
         $dm->flush();
+
+        DiscordWebhook::create($this->getParameter('discordLogsWebhook'))
+            ->addEmbed(
+                DiscordEmbed::create()
+                    ->title('Nouvelle suggestion de modification de message', $this->generateUrl('messages:view', ['messageId' => $edit->getId()], UrlGenerator::ABSOLUTE_URL))
+                    ->color(DiscordColor::DEFAULT)
+                    ->author($user->getUsername(), null, $user->getAvatarUrl())
+                    ->field('Nom du message', $edit->getNewName(), true)
+                    ->field('Catégorie', $edit->getMessageType(), true)
+            )
+            ->send();
 
         $this->addFlash('success', 'Votre suggestion de modification a été enregistrée. Elle sera traitée prochainement !');
         return $this->redirectToRoute('messages');
@@ -356,6 +382,18 @@ class MessageController extends AbstractController
             ->field('message')->set($targetMessage)
             ->getQuery()
             ->execute();
+
+        DiscordWebhook::create($this->getParameter('discordLogsWebhook'))
+            ->addEmbed(
+                DiscordEmbed::create()
+                    ->title(($isValidated ? 'Acceptation' : 'Refus') . ' d\'une modification', $this->generateUrl('messages:view', ['messageId' => $message->getId()], UrlGenerator::ABSOLUTE_URL))
+                    ->color($isValidated ? DiscordColor::SUCCESS : DiscordColor::DANGER)
+                    ->author($reviewer->getUsername(), null, $reviewer->getAvatarUrl())
+                    ->field('Nom du message', $message->getNewName(), true)
+                    ->field('Catégorie', $targetMessage ? $targetMessage->getMessageType() : $message->getMessageType(), true)
+            )
+            ->send();
+
         $this->addFlash('success', 'Cette suggestion de modification a été marquée comme ' . ($isValidated ? 'validée' : 'refusée') . '.');
         return $this->redirectToRoute('messages');
     }

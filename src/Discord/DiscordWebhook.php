@@ -41,12 +41,12 @@ class DiscordWebhook
     }
 
     /**
-     * @param array $embeds
+     * @param DiscordEmbed $embeds
      * @return DiscordWebhook
      */
-    public function setEmbeds(array $embeds): self
+    public function addEmbed(DiscordEmbed $embeds): self
     {
-        $this->embeds = $embeds;
+        $this->embeds[] = $embeds;
         return $this;
     }
 
