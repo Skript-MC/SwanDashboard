@@ -1,0 +1,47 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Sanctions{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="card shadow position-relative">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Liste des sanctions</h6>
+            </div>
+            <div class="card-body">
+                {% include 'sanctions/components/searchbar.html.twig' %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Type de sanction</th>
+                            <th scope="col">Identifiant du membre</th>
+                            <th scope="col">Identifiant du modérateur</th>
+                            <th scope="col">Raison</th>
+                            <th scope="col">Début de la sanction</th>
+                            <th scope="col">Fin de la sanction</th>
+                            <th scope="col">Statut de la sanction</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for sanction in sanctions %}
+                            <tr>
+                                <td>{% include 'components/sanctionTypeBadge.html.twig' with {'badge': sanction.type} %}</td>
+                                <td>{{ sanction.memberId }}</td>
+                                <td>{{ sanction.moderator }}</td>
+                                <td>{{ sanction.reason|truncate(50) }}</td>
+                                <td>{{ sanction.start.format('d/m/Y à H:i') }}</td>
+                                <td>{{ sanction.finish == null ? 'Non défini' : sanction.finish.format('d/m/Y à H:i') }}</td>
+                                <td>{% include 'components/sanctionStatusBadge.html.twig' with {'isRevoked': sanction.revoked} %}</td>
+                                <td><a class="btn btn-info"><i class="fas fa-eye"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(sanctions) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -7,17 +7,17 @@ use Twig\TwigFilter;
 
 class TruncateExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('truncate', [$this, 'truncateString']),
         ];
     }
 
-    public function truncateString(string $string)
+    public function truncateString(string $string, int $position = 100): string
     {
-        if (strlen($string) >= 100)
-            return substr($string, 0, 97) . '...';
+        if (strlen($string) >= $position)
+            return substr($string, 0, $position - 3) . '...';
         return $string;
     }
 }

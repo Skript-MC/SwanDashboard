@@ -31,6 +31,12 @@
                         <span>Historique</span>
                     </a>
                 </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'sanctions' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('sanctions') }}">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Sanctions</span>
+                    </a>
+                </li>
             {% endif %}
             <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages' ? 'active' }}">
                 <a class="nav-link" href="{{ path('messages') }}">
