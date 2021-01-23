@@ -73,8 +73,8 @@
                 titleElement.innerText = 'Oups !';
                 descriptionElement.innerText = data.error ?? 'Une erreur inconnue est survenue.';
                 change.target.checked = !enabled;
+                $('#moduleModal').modal();
             }
-            $('#moduleModal').modal();
         }));
     </script>
 {% endblock %}
