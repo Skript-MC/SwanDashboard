@@ -67,8 +67,6 @@
             });
 
             if (response.ok) {
-                titleElement.innerText = 'Modification effectué';
-                descriptionElement.innerText = `Le module a bien été ${enabled ? 'activé' : 'désactivé'}.`;
                 window.location = window.location;
             } else {
                 const data = await response.json();
