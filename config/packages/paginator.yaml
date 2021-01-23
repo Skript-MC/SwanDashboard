@@ -8,4 +8,4 @@ knp_paginator:
     filter_field_name: filterField  # filter field query parameter name
     filter_value_name: filterValue  # filter value query parameter name
   template:
-    pagination: 'modules/paginate-selector.html.twig'
+    pagination: 'bundles/KnpPaginator/pagination.html.twig'
