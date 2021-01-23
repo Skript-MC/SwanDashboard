@@ -38,6 +38,12 @@
                     <span>Messages</span>
                 </a>
             </li>
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'modules' ? 'active' }}">
+                <a class="nav-link" href="{{ path('modules') }}">
+                    <i class="fas fa-plug"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
             {% if is_granted('ROLE_ADMIN') %}
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading">
