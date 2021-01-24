@@ -7,6 +7,7 @@ use App\Entity\SanctionQuery;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use MongoDB\BSON\Regex;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class SanctionController
  * @package App\Controller
  * @Route("/sanctions")
+ * @IsGranted("ROLE_STAFF")
  */
 class SanctionController extends AbstractController
 {
