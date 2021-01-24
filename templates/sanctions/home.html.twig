@@ -8,7 +8,7 @@
                 <h6 class="m-0 font-weight-bold text-primary">Liste des sanctions</h6>
             </div>
             <div class="card-body">
-                {% include 'sanctions/components/searchbar.html.twig' %}
+                {% include 'sanctions/components/searchbar.html.twig' with {'form': search} %}
                 <div class="table-responsive">
                     <table class="table">
                         <thead>

@@ -1,17 +1,17 @@
-<form action="{{ path('sanctions:search') }}" method="post">
+{{ form_start(search) }}
     <div class="row">
         <div class="col-lg-3">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="memberId">Identifiant du membre</span>
+                    <span class="input-group-text" id="moderatorId">Identifiant du membre</span>
                 </div>
-                <input type="text" name="memberId" class="form-control" aria-label="Identifiant du membre" aria-describedby="memberId">
+                {{ form_widget(form.memberId) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="moderatorId">Identifiant du modérateur</span>
                 </div>
-                <input type="text" name="moderatorId" class="form-control" aria-label="Identifiant du modérateur" aria-describedby="moderatorId">
+                {{ form_widget(form.moderatorId) }}
             </div>
         </div>
         <div class="col-lg-3 mb-3">
@@ -19,17 +19,13 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="reason">Raison</span>
                 </div>
-                <input type="text" name="reason" class="form-control" aria-label="Raison" aria-describedby="reason">
+                {{ form_widget(form.reason) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="sanctionStatus">Statut de la sanction</span>
                 </div>
-                <select class="form-control" name="sanctionStatus" aria-label="sanctionStatus">
-                    <option value=""></option>
-                    <option value="false">En cours</option>
-                    <option value="true">Terminée</option>
-                </select>
+                {{ form_widget(form.sanctionStatus) }}
             </div>
         </div>
         <div class="col-lg-3">
@@ -37,13 +33,13 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="afterDate">Appliquée après</span>
                 </div>
-                <input type="datetime-local" name="afterDate" class="form-control" aria-label="Appliquée après" aria-describedby="afterDate">
+                {{ form_widget(form.afterDate) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="beforeDate">Appliquée avant</span>
                 </div>
-                <input type="datetime-local" name="beforeDate" class="form-control" aria-label="Appliquée avant" aria-describedby="beforeDate">
+                {{ form_widget(form.beforeDate) }}
             </div>
         </div>
         <div class="col-lg-3">
@@ -51,15 +47,9 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="sanctionType">Type de sanction</span>
                 </div>
-                <select class="form-control" name="sanctionType" aria-label="sanctionType">
-                    <option value=""></option>
-                    <option value="hardban">Hardban</option>
-                    <option value="ban">Bannissement</option>
-                    <option value="mute">Mute</option>
-                    <option value="warn">Avertissement</option>
-                </select>
+                {{ form_widget(form.sanctionType) }}
             </div>
-            <button type="submit" class="btn btn-success btn-block">Rechercher</button>
+            {{ form_widget(form.submit) }}
         </div>
     </div>
-</form>
+{{ form_end(search) }}
