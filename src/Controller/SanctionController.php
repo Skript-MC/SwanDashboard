@@ -37,7 +37,7 @@ class SanctionController extends AbstractController
     {
 
         $sanctionQuery = new SanctionQuery();
-        $form = $this->createFormBuilder($sanctionQuery)
+        $form = $this->createFormBuilder($sanctionQuery, ['csrf_protection' => false])
             ->setMethod('GET')
             ->add('memberId', TextType::class, [
                 'required' => false
