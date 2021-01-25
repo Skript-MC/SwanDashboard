@@ -3,13 +3,13 @@
         <div class="col-lg-3">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="moderatorId">Identifiant du membre</span>
+                    <span class="input-group-text">Identifiant du membre</span>
                 </div>
                 {{ form_widget(form.memberId) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="moderatorId">Identifiant du modérateur</span>
+                    <span class="input-group-text">Identifiant du modérateur</span>
                 </div>
                 {{ form_widget(form.moderatorId) }}
             </div>
@@ -17,13 +17,13 @@
         <div class="col-lg-3 mb-3">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="reason">Raison</span>
+                    <span class="input-group-text">Raison</span>
                 </div>
                 {{ form_widget(form.reason) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="sanctionStatus">Statut de la sanction</span>
+                    <span class="input-group-text">Statut de la sanction</span>
                 </div>
                 {{ form_widget(form.sanctionStatus) }}
             </div>
@@ -31,13 +31,13 @@
         <div class="col-lg-3">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="afterDate">Appliquée après</span>
+                    <span class="input-group-text">Appliquée après</span>
                 </div>
                 {{ form_widget(form.afterDate) }}
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="beforeDate">Appliquée avant</span>
+                    <span class="input-group-text">Appliquée avant</span>
                 </div>
                 {{ form_widget(form.beforeDate) }}
             </div>
@@ -45,11 +45,11 @@
         <div class="col-lg-3">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="sanctionType">Type de sanction</span>
+                    <span class="input-group-text">Type de sanction</span>
                 </div>
                 {{ form_widget(form.sanctionType) }}
             </div>
-            {{ form_widget(form.submit) }}
+            <button class="btn btn-primary btn-block" type="submit">Rechercher</button>
         </div>
     </div>
 {{ form_end(search) }}

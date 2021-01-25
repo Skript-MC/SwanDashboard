@@ -4,28 +4,31 @@
             <h6 class="m-0 font-weight-bold text-primary">Recherche et salons</h6>
         </div>
         <div class="list-group list-group-flush">
-            <form class="form-inline list-group-item" action="{{ path('history:search') }}" method="post">
-                <input class="form-control" id="query" name="query" type="search" placeholder="Recherche" aria-label="Recherche">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
-            </form>
-            {% for category in allChannels %}
-                <div class="list-group-item bg-light">{{ category.name }}</div>
-                {% for channel in category.channels %}
-                    <a href="{{ path('history:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
-                        <div class="row">
-                            <div class="col-lg-10">
-                                #{{ channel.name }}
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
-                                    <label class="custom-control-label" for="{{ channel.id }}"></label>
+            {% if searchForm is defined %}
+                {% include 'history/components/searchbar.html.twig' with {'searchForm': searchForm} %}
+            {% else %}
+                <a href="{{ path('history:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
+            {% endif %}
+            {% if allChannels is defined %}
+                {% for category in allChannels %}
+                    <div class="list-group-item bg-light">{{ category.name }}</div>
+                    {% for channel in category.channels %}
+                        <a href="{{ path('history:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    #{{ channel.name }}
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
+                                        <label class="custom-control-label" for="{{ channel.id }}"></label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
+            {% endif %}
         </div>
     </div>
 </div>

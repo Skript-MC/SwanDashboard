@@ -5,11 +5,17 @@ namespace App\Controller;
 use App\Discord\SwanClient;
 use App\Document\MessageHistory;
 use App\Document\SharedConfig;
+use App\Entity\HistoryQuery;
+use App\Utils\DiscordUtils;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
+use MongoDB\BSON\Regex;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,23 +114,75 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/search", methods={"POST"}, name="history:search")
+     * @Route("/search", name="history:search")
      * @param Request $request
+     * @param DocumentManager $dm
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function searchMessages(Request $request): Response
+    public function searchMessages(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
-        $args = preg_split('/ /', $request->get('query'));
+        $form = $this->createFormBuilder(new HistoryQuery())
+            ->setMethod('GET')
+            ->add('userId', IntegerType::class, [
+                'required' => false
+            ])
+            ->add('beforeDate', DateTimeType::class, [
+                'required' => false,
+                'input' => 'timestamp',
+                'widget' => 'single_text'
+            ])
+            ->add('afterDate', DateTimeType::class, [
+                'required' => false,
+                'input' => 'timestamp',
+                'widget' => 'single_text'
+            ])
+            ->add('messageId', IntegerType::class, [
+                'required' => false
+            ])
+            ->add('oldContent', TextType::class, [
+                'required' => false
+            ])
+            ->add('newContent', TextType::class, [
+                'required' => false
+            ])
+            ->add('channelId', IntegerType::class, [
+                'required' => false
+            ])
+            ->getForm();
+        $form->handleRequest($request);
 
-        $channel = null;
-        $user = null;
+        $query = $dm->createQueryBuilder(MessageHistory::class)
+            ->find()
+            ->sort('_id', 'DESC');
 
-        foreach ($args as $arg) {
-            foreach (['channel', 'user'] as $item)
-                if (str_contains($arg, $item . ':'))
-                    $$item = preg_split('/' . $item . ':/', $arg)[1];
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var HistoryQuery $data */
+            $data = $form->getData();
+            if ($data->getUserId()) $query->field('user.id')->equals($data->getUserId());
+            if ($data->getAfterDate()) $query->field('messageId')->gte((DiscordUtils::getSnowflakeFromTimestamp($data->getAfterDate())));
+            if ($data->getBeforeDate()) $query->field('messageId')->lte((DiscordUtils::getSnowflakeFromTimestamp($data->getBeforeDate())));
+            if ($data->getMessageId()) $query->field('messageId')->equals($data->getMessageId());
+            if ($data->getOldContent()) $query->field('oldContent')->equals(new Regex('.*' . $data->getOldContent() . '.*', 'i'));
+            if ($data->getNewContent()) $query->field('newContent')->equals(new Regex('.*' . $data->getNewContent() . '.*', 'i'));
         }
-        return new Response($channel . ' - ' . $user);
+
+        $editions = $paginator->paginate(
+            $query->field('newContent')->notEqual(null)->getQuery(),
+            $request->query->getInt('page', 1)
+        );
+
+        $deletions = $paginator->paginate(
+            $query->field('newContent')->equals(null)->getQuery(),
+            $request->query->getInt('page', 1)
+        );
+
+        return $this->render('history/search.html.twig', [
+            'editions' => $editions,
+            'deletions' => $deletions,
+            'searchForm' => $form->createView()
+        ]);
+
     }
 
     /**
