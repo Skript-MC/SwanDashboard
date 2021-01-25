@@ -74,7 +74,6 @@ class SanctionController extends AbstractController
                     'Avertissement' => 'warn'
                 ]
             ])
-            ->add('submit', SubmitType::class, ['label' => 'Rechercher'])
             ->getForm();
 
         $form->handleRequest($request);
