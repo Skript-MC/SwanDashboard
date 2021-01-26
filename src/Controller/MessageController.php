@@ -56,16 +56,18 @@ class MessageController extends AbstractController
         $user = $this->getUser();
         $query = $dm->createQueryBuilder(MessageEditRequest::class)
                 ->sort( '_id', 'DESC');
-        $requests = $paginator->paginate(
-            $query->field('user.id')->equals($user->getId())->getQuery(),
-            $request->query->getInt('pageRequests', 1)
-        );
-        $requests->setPaginatorOptions(['pageParameterName' => 'pageRequests']);
 
         $editions = $paginator->paginate(
             $query->getQuery(),
             $request->query->getInt('pageEditions', 1)
         );
+
+        $requests = $paginator->paginate(
+            $query->field('user.id')->equals($user->getId())->getQuery(),
+            $request->query->getInt('pageRequests', 1)
+        );
+
+        $requests->setPaginatorOptions(['pageParameterName' => 'pageRequests']);
         $editions->setPaginatorOptions(['pageParameterName' => 'pageEditions']);
 
         return $this->render('messages/history.html.twig', [
