@@ -8,50 +8,35 @@
         <div class="row">
             <div class="col-sm-12 mb-3">
                 <div class="card shadow position-relative">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('messages') }}">Accueil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{{ path('messages:auto') }}">Messages</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('messages:new') }}"><i class="fas fa-pen"></i> Nouveau message</a>
-                            </li>
-                            {% if is_granted('ROLE_STAFF') %}
-                                <li class="nav-item">
-                                    <a class="nav-link text-info" href="{{ path('messages:waiting') }}"><i class="fas fa-thumbs-up"></i> Approbation</a>
-                                </li>
-                            {% endif %}
-                        </ul>
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des messages</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="nav flex-column nav-pills" aria-orientation="vertical">
                                     <a
-                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:auto' ? 'active' }}"
+                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:list:auto' ? 'active' }}"
                                         id="nav-automatic-messages-tab"
-                                        href="{{ path('messages:auto') }}"
+                                        href="{{ path('messages:list:auto') }}"
                                         role="tab"
-                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:auto' ? 'true' : 'false' }}">
+                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:auto' ? 'true' : 'false' }}">
                                         Messages rapides
                                     </a>
                                     <a
-                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:error' ? 'active' }}"
+                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:list:error' ? 'active' }}"
                                         id="nav-error-details-tab"
-                                        href="{{ path('messages:error') }}"
+                                        href="{{ path('messages:list:error') }}"
                                         role="tab"
-                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:error' ? 'true' : 'false' }}">
+                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:error' ? 'true' : 'false' }}">
                                         Détails erreur
                                     </a>
                                     <a
-                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:addonpack' ? 'active' }}"
+                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:list:addonpack' ? 'active' }}"
                                         id="nav-addonpack-tab"
-                                        href="{{ path('messages:addonpack') }}"
+                                        href="{{ path('messages:list:addonpack') }}"
                                         role="tab"
-                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:addonpack' ? 'true' : 'false' }}">
+                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:addonpack' ? 'true' : 'false' }}">
                                         Packs d'add-ons
                                     </a>
                                 </div>

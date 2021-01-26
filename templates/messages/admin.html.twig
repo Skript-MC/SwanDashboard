@@ -11,13 +11,13 @@
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:waiting' ? 'active' }}" href="{{ path('messages:waiting') }}">Modifications à approuver</a>
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:approbation:waiting' ? 'active' }}" href="{{ path('messages:approbation:waiting') }}">Modifications à approuver</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:accepted' ? 'active' }}" href="{{ path('messages:accepted') }}">Modifications acceptées</a>
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:approbation:accepted' ? 'active' }}" href="{{ path('messages:approbation:accepted') }}">Modifications acceptées</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:denied' ? 'active' }}" href="{{ path('messages:denied') }}">Modifications refusées</a>
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'messages:approbation:denied' ? 'active' }}" href="{{ path('messages:approbation:denied') }}">Modifications refusées</a>
                             </li>
                         </ul>
                     </div>

@@ -1,0 +1,119 @@
+{% extends 'layouts/panel.html.twig' %}
+
+{% block title %}Messages{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 mb-4">
+                <div class="card shadow position-relative">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Vos récentes modifications</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger mt-3">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Type du message</th>
+                                    <th scope="col">Aperçu du contenu</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for request in requests %}
+                                    <tr>
+                                        <td>
+                                            {{ request.message.name ?? request.newName }}
+                                        </td>
+                                        <td>
+                                            {{ request.messageType ?? request.message.messageType }}
+                                        </td>
+                                        <td>
+                                            {{ request.newContent|truncate }}
+                                        </td>
+                                        <td>
+                                            {% if request.validated is null %}
+                                                <span class="badge badge-secondary badge-pill">En attente</span>
+                                            {% elseif request.validated %}
+                                                <span class="badge badge-success badge-pill">Validée</span>
+                                            {% else %}
+                                                <span class="badge badge-danger badge-pill">Refusée</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('messages:view', { messageId: request.id }) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(requests) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card shadow position-relative">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Récentes modifications</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Auteur</th>
+                                    <th scope="col">Type du message</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for edition in editions %}
+                                    <tr>
+                                        <td>
+                                            {{ edition.message.name ?? edition.newName }}
+                                        </td>
+                                        <td>
+                                            {{ edition.user.username }}
+                                        </td>
+                                        <td>
+                                            {{ edition.messageType ?? edition.message.messageType }}
+                                        </td>
+                                        <td>
+                                            {% if edition.validated is null %}
+                                                <span class="badge badge-secondary badge-pill">En attente</span>
+                                            {% elseif edition.validated %}
+                                                <span class="badge badge-success badge-pill">Validée</span>
+                                            {% else %}
+                                                <span class="badge badge-danger badge-pill">Refusée</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('messages:view', { messageId: edition.id }) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(editions) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

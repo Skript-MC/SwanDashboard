@@ -44,7 +44,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("", name="messages")
+     * @Route("", name="messages:history")
      * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
@@ -54,20 +54,28 @@ class MessageController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        $query = $dm->createQueryBuilder(MessageEditRequest::class)
+                ->sort( '_id', 'DESC');
         $requests = $paginator->paginate(
-            $dm->createQueryBuilder(MessageEditRequest::class)
-                ->field('user.id')->equals($user->getId())
-                ->sort( '_id', 'DESC')
-                ->getQuery(),
-            $request->query->getInt('page', 1)
+            $query->field('user.id')->equals($user->getId())->getQuery(),
+            $request->query->getInt('pageRequests', 1)
         );
-        return $this->render('messages/home.html.twig', [
-            'requests' => $requests
+        $requests->setPaginatorOptions(['pageParameterName' => 'pageRequests']);
+
+        $editions = $paginator->paginate(
+            $query->getQuery(),
+            $request->query->getInt('pageEditions', 1)
+        );
+        $editions->setPaginatorOptions(['pageParameterName' => 'pageEditions']);
+
+        return $this->render('messages/history.html.twig', [
+            'requests' => $requests,
+            'editions' => $editions
         ]);
     }
 
     /**
-     * @Route("/auto", name="messages:auto")
+     * @Route("/auto", name="messages:list:auto")
      * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
@@ -85,7 +93,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/addonpack", name="messages:addonpack")
+     * @Route("/addonpack", name="messages:list:addonpack")
      * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
@@ -103,7 +111,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/error", name="messages:error")
+     * @Route("/error", name="messages:list:error")
      * @param Request $request
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
@@ -145,7 +153,7 @@ class MessageController extends AbstractController
 
         if (!$name || !$aliases || !$content || !in_array($messageType, ['auto', 'error', 'addonpack'])) {
             $this->addFlash('error', 'Certains champs sont incorrects, merci de réessayer votre édition.');
-            return $this->redirectToRoute('messages');
+            return $this->redirectToRoute('messages:history');
         }
 
         /** @var User $user */
@@ -172,7 +180,7 @@ class MessageController extends AbstractController
             ->send();
 
         $this->addFlash('success', 'Votre suggestion de nouveau message a été enregistrée. Elle sera traitée prochainement !');
-        return $this->redirectToRoute('messages');
+        return $this->redirectToRoute('messages:history');
 
     }
 
@@ -227,7 +235,7 @@ class MessageController extends AbstractController
             ->send();
 
         $this->addFlash('success', 'Votre suggestion de modification a été enregistrée. Elle sera traitée prochainement !');
-        return $this->redirectToRoute('messages');
+        return $this->redirectToRoute('messages:history');
     }
 
     /**
@@ -242,13 +250,7 @@ class MessageController extends AbstractController
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
             $this->addFlash('error', 'Nous n\'avons pas pu trouver de message correspondant à cet identifiant.');
-            return new RedirectResponse($this->generateUrl('messages'));
-        }
-        /** @var User $user */
-        $user = $this->getUser();
-        if (!$this->isGranted('ROLE_STAFF') && $messageRequest->getUser() != $user) {
-            $this->addFlash('error', 'Vous n\'avez pas accès à cette modification.');
-            return new RedirectResponse($this->generateUrl('messages'));
+            return new RedirectResponse($this->generateUrl('messages:history'));
         }
         return $this->render('messages/view.html.twig', [
             'request' => $messageRequest,
@@ -257,7 +259,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/waiting", name="messages:waiting")
+     * @Route("/waiting", name="messages:approbation:waiting")
      * @IsGranted("ROLE_STAFF")
      * @param Request $request
      * @param DocumentManager $dm
@@ -279,7 +281,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/accepted", name="messages:accepted")
+     * @Route("/accepted", name="messages:approbation:accepted")
      * @IsGranted("ROLE_STAFF")
      * @param Request $request
      * @param DocumentManager $dm
@@ -301,7 +303,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/denied", name="messages:denied")
+     * @Route("/denied", name="messages:approbation:denied")
      * @IsGranted("ROLE_STAFF")
      * @param Request $request
      * @param DocumentManager $dm
@@ -402,7 +404,7 @@ class MessageController extends AbstractController
             ->send();
 
         $this->addFlash('success', 'Cette suggestion de modification a été marquée comme ' . ($isValidated ? 'validée' : 'refusée') . '.');
-        return $this->redirectToRoute('messages');
+        return $this->redirectToRoute('messages:history');
     }
 
     /**
@@ -414,7 +416,7 @@ class MessageController extends AbstractController
     public function editMessage(Request $request, DocumentManager $dm): Response
     {
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
-        if (!$message) return new RedirectResponse($this->generateUrl('messages'));
+        if (!$message) return new RedirectResponse($this->generateUrl('messages:history'));
         $messageEditRequest = $dm->createQueryBuilder(MessageEditRequest::class)
             ->field('message.id')->equals($message->getId())
             ->field('validated')->equals(null)

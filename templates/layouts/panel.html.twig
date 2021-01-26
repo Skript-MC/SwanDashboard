@@ -22,6 +22,30 @@
             </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
+                Messages
+            </div>
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'messages:history' ? 'active' }}">
+                <a class="nav-link" href="{{ path('messages:history') }}">
+                    <i class="fas fa-list"></i>
+                    <span>Modifications récentes</span>
+                </a>
+            </li>
+            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages:list' ? 'active' }}">
+                <a class="nav-link" href="{{ path('messages:list:auto') }}">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            {% if is_granted('ROLE_STAFF') %}
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages:approbation' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('messages:approbation:waiting') }}">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Approbation</span>
+                    </a>
+                </li>
+            {% endif %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
                 Swan
             </div>
             {% if is_granted('ROLE_STAFF') %}
@@ -38,12 +62,6 @@
                     </a>
                 </li>
             {% endif %}
-            <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages' ? 'active' }}">
-                <a class="nav-link" href="{{ path('messages') }}">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
             <li class="nav-item {{ app.request.attributes.get('_route') starts with 'modules' ? 'active' }}">
                 <a class="nav-link" href="{{ path('modules') }}">
                     <i class="fas fa-plug"></i>

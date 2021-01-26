@@ -18,6 +18,7 @@ class MessageService
         $this->emptyEdit->setNewName('Sans nom');
         $this->emptyEdit->setNewAliases([]);
         $this->emptyEdit->setNewContent('');
+        $this->emptyEdit->setMessageType('');
     }
 
     public function getPreviousEdit(MessageEditRequest $currentEdit): ?MessageEditRequest
