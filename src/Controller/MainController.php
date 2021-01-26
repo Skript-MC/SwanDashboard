@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Discord\SwanClient;
+use App\Service\CacheService;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,16 +15,18 @@ class MainController extends AbstractController
     /**
      * @Route("", name="home")
      * @param SwanClient $swanClient
+     * @param CacheService $cache
      * @return Response
      */
-    public function home(SwanClient $swanClient): Response
+    public function home(SwanClient $swanClient, CacheService $cache): Response
     {
         if (!$this->isGranted('ROLE_USER'))
             return $this->render('welcome.html.twig');
         $guild = $swanClient->getGuild();
         return $this->render('dashboard.html.twig', [
             'discordMembers' => $guild->getMemberCount() ?? 'Inconnu',
-            'discordOnlineMembers' => $guild->getPresenceCount() ?? 'Inconnu'
+            'discordOnlineMembers' => $guild->getPresenceCount() ?? 'Inconnu',
+            'commandStats' => $cache->getCommandStats()
         ]);
     }
 
