@@ -19,6 +19,16 @@
                                 </div>
                                 <input type="text" class="form-control" aria-label="Nom" aria-describedby="name" id="name" name="name" onkeyup="generateDiff()">
                             </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Catégorie de message</span>
+                                </div>
+                                <select class="form-control" name="type">
+                                    <option value="auto">Message rapide</option>
+                                    <option value="error">Détails d'erreurs</option>
+                                    <option value="addonpack">Pack d'add-ons</option>
+                                </select>
+                            </div>
                             <div class="dropdown-divider mb-3"></div>
                             <div> {# Don't remove this empty node #}
                                 <div class="form-row" id="aliases">
@@ -33,13 +43,6 @@
                             <ul class="list-group list-group-flush">
                                 <input id="easymde" name="content">
                             </ul>
-                            <div class="dropdown-divider mb-3"></div>
-
-                            <select class="form-control" name="type">
-                                <option value="auto">Message rapide</option>
-                                <option value="error">Détails d'erreurs</option>
-                                <option value="addonpack">Pack d'add-ons</option>
-                            </select>
                         </div>
                     </div>
                 </div>

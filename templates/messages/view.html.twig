@@ -20,6 +20,16 @@
                             </div>
                             <input type="text" class="form-control" value="{{ request.newName }}" aria-label="Nom" aria-describedby="name" readonly>
                         </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Catégorie de message</span>
+                            </div>
+                            <select class="form-control" name="type" disabled>
+                                <option value="auto" {{ request.messageType == 'auto' ? 'selected' }}>Message rapide</option>
+                                <option value="error" {{ request.messageType == 'error' ? 'selected' }}>Détails d'erreurs</option>
+                                <option value="addonpack" {{ request.messageType == 'addonpack' ? 'selected' }}>Pack d'add-ons</option>
+                            </select>
+                        </div>
                         <div class="dropdown-divider mb-3"></div>
                         <div class="form-row" id="aliases">
                             {% for alias in request.newAliases %}
@@ -95,7 +105,7 @@
                 toolbar: []
             });
             const diff2html = window.diff2html;
-            const diff = window.diff.createTwoFilesPatch('{{ (previous.newName)|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Aliases:\n{{ (previous.newAliases)|join('\n')|escape('js')|raw }}\n\n{{ (previous.newContent)|escape('js')|raw }}', 'Aliases:\n{{ request.newAliases|join('\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
+            const diff = window.diff.createTwoFilesPatch('{{ (previous.newName)|escape('js')|raw }}', '{{ request.newName|escape('js')|raw }}', 'Catégorie: {{ previous.messageType ?? previous.message.messageType }}\nAliases:\n{{ (previous.newAliases)|join('\n')|escape('js')|raw }}\n\n{{ (previous.newContent)|escape('js')|raw }}', 'Catégorie: {{ request.messageType ?? request.message.messageType }}\nAliases:\n{{ request.newAliases|join('\n')|escape('js')|raw }}\n\n{{ request.newContent|escape('js')|raw }}');
             const diffJson = diff2html.parse(diff);
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false

@@ -190,6 +190,7 @@ class MessageController extends AbstractController
         $newName = $this->formatString($request->request->get('name'));
         $newAliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
+        $newType = $request->request->get('type');
 
         if (!$messageId || !$newName || !$newAliases || !$newContent) {
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
@@ -209,6 +210,8 @@ class MessageController extends AbstractController
         $edit->setNewName($newName);
         $edit->setNewAliases($newAliases);
         $edit->setNewContent($newContent);
+        if ($message->getMessageType() !== $newType)
+            $edit->setMessageType($newType);
         $dm->persist($edit);
         $dm->flush();
 
@@ -365,13 +368,17 @@ class MessageController extends AbstractController
             $dm->flush();
             $targetMessage = $newMessage;
         } else if ($isValidated) {
-            $dm->createQueryBuilder(Message::class)
+            $query = $dm->createQueryBuilder(Message::class)
                 ->findAndUpdate()
                 ->field('_id')->equals($targetMessage->getId())
                 ->field('name')->set($message->getNewName())
                 ->field('aliases')->set($message->getNewAliases())
-                ->field('content')->set($message->getNewContent())
-                ->getQuery()
+                ->field('content')->set($message->getNewContent());
+
+            if ($message->getMessageType() !== null) // A category changement was requested
+                $query->field('messageType')->set($message->getMessageType());
+
+            $query->getQuery()
                 ->execute();
         }
         $dm->createQueryBuilder(MessageEditRequest::class)
