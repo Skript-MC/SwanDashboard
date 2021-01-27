@@ -8,6 +8,7 @@
         "diff": "^5.0.0",
         "diff2html": "^3.2.0",
         "easymde": "^2.13.0",
+        "file-loader": "^6.2.0",
         "jquery": "^3.5.1",
         "node-sass": "^5.0.0",
         "popper.js": "^1.16.1",
