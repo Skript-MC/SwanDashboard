@@ -59,11 +59,7 @@
                     data: {{ commandStats[1]|json_encode|raw }}
                 }]
             },
-            options: {
-                onResize: (chart, size) => {
-                    commandStats.style.width = 1;
-                },
-            }
+            options: {}
         });
     </script>
 {% endblock %}

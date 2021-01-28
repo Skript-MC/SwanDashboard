@@ -22,7 +22,7 @@
                         <tbody>
                         {% for user in users %}
                             <tr>
-                                <td><img class="img-profile rounded-circle img-fluid h-25" src="{{ user.avatarUrl }}" alt="User avatar"> {{ user.username }}</td>
+                                <td><img class="img-profile rounded-circle img-fluid" width="25" height="25" src="{{ user.avatarUrl }}" alt="User avatar"> {{ user.username }}</td>
                                 <td>
                                     {{ user.roles|join(', ') }}
                                 </td>
