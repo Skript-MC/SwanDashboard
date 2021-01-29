@@ -40,6 +40,7 @@ class MessageController extends AbstractController
     public function formatContent(string $input): string
     {
         $input = str_replace("\\n", "\n", $input);
+        if (strlen($input) > 2000) $input = substr($input, 0, 1997) . '...';
         return $input;
     }
 
@@ -232,7 +233,7 @@ class MessageController extends AbstractController
                     ->color(DiscordColor::DEFAULT)
                     ->author($user->getUsername(), null, $user->getAvatarUrl())
                     ->field('Nom du message', $edit->getNewName(), true)
-                    ->field('Catégorie', $edit->getMessageType(), true)
+                    ->field('Catégorie', $edit->getMessageType() ?? $message->getMessageType(), true)
             )
             ->send();
 

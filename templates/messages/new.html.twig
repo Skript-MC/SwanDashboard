@@ -23,7 +23,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Catégorie de message</span>
                                 </div>
-                                <select class="form-control" name="type">
+                                <select class="form-control" name="type" id="type">
                                     <option value="auto">Message rapide</option>
                                     <option value="error">Détails d'erreurs</option>
                                     <option value="addonpack">Pack d'add-ons</option>
@@ -53,7 +53,9 @@
                         </div>
                         <div class="card-body">
                             <div id="diff"></div>
-                            <button type="submit" class="btn btn-info m-1" onclick="submit()"><i class="fas fa-check"></i> Suggérer mon nouveau message</button>
+                            <button type="submit" class="btn btn-info m-1" onclick="submit()" id="send"><i class="fas fa-check"></i> Suggérer mon nouveau message</button>
+                            <div class="alert alert-info mt-3" id="alert">
+                            </div>
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger mt-3">
                                     {{ message }}
@@ -104,12 +106,45 @@
 
                 function generateDiff() {
                     const name = document.getElementById('name').value || 'Sans nom';
+                    const type = document.getElementById('type').value;
                     const aliases = getAliases() || [];
+
+                    console.log(aliases.join('') === '', easyMDE.value() === '')
+                    checkChanges(name === 'Sans nom'
+                        && aliases.join('') === ''
+                        && easyMDE.value() === '',
+                        easyMDE.value().length > 2000
+                    );
+
                     const diff = window.diff.createTwoFilesPatch('Sans nom', name, 'Aliases:\n\n\n', `Aliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                         drawFileList: false
                     });
+                }
+
+                function checkChanges(isEmpty, isNotValid) {
+                    const valid = !isEmpty && !isNotValid;
+                    let msg;
+                    if (isEmpty) msg = 'Effectuez vos modifications et suggérez vos changements.';
+                    if (isNotValid) msg = 'Le contenu de votre message ne peut pas dépasser 2 000 caractères.';
+                    alertMessage(!valid, msg);
+                    toggleSubmitButton(valid);
+                }
+
+                function toggleSubmitButton(status) {
+                    const element = document.getElementById('send');
+                    if (!element) return;
+                    if (!status)
+                        element.setAttribute('disabled', 'true');
+                    else
+                        element.removeAttribute('disabled');
+                }
+
+                function alertMessage(status, message) {
+                    const alert = document.getElementById('alert');
+                    alert.style.display = (status ? 'block' : 'none');
+                    if (message) alert.innerText = message;
                 }
 
                 function getAliases() {
