@@ -1,4 +1,4 @@
-$<p align="center"><img width=400px src="https://skript-mc.fr/assets/images/logo.png"></p>
+<p align="center"><img width=400px src="https://skript-mc.fr/assets/images/logo.png"></p>
 <h2 align="center">Swan Dashboard</h2>
 <p align="center">
     Swan Dashboard est un panel de gestion spécialement développé pour <a href="https://github.com/Skript-MC/Swan">Swan</a> via Symfony et MongoDB.
