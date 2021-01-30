@@ -30,20 +30,6 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 class MessageController extends AbstractController
 {
 
-    public function formatString(string $input): string
-    {
-        $input = str_replace('\n', ' ', $input);
-        $input = str_replace('\t', ' ', $input);
-        return $input;
-    }
-
-    public function formatContent(string $input): string
-    {
-        $input = str_replace("\\n", "\n", $input);
-        if (strlen($input) > 2000) $input = substr($input, 0, 1997) . '...';
-        return $input;
-    }
-
     /**
      * @Route("", name="messages:history")
      * @param Request $request
@@ -56,7 +42,7 @@ class MessageController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $query = $dm->createQueryBuilder(MessageEditRequest::class)
-                ->sort( '_id', 'DESC');
+            ->sort('_id', 'DESC');
 
         $editions = $paginator->paginate(
             $query->getQuery(),
@@ -150,7 +136,9 @@ class MessageController extends AbstractController
     public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
         $name = $this->formatString($request->request->get('name'));
-        $aliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
+        $aliases = array_map(function (string $entry) {
+            return $this->formatString($entry);
+        }, $request->request->all('aliases'));
         $content = $this->formatContent(urldecode($request->request->get('content')));
         $messageType = $this->formatString($request->request->get('type'));
 
@@ -174,17 +162,31 @@ class MessageController extends AbstractController
         DiscordWebhook::create($this->getParameter('discordLogsWebhook'))
             ->addEmbed(
                 DiscordEmbed::create()
-                ->title('Nouvelle suggestion d\'ajout de message', $this->generateUrl('messages:view', ['messageId' => $request->getId()], UrlGenerator::ABSOLUTE_URL))
-                ->color(DiscordColor::DEFAULT)
-                ->author($user->getUsername(), null, $user->getAvatarUrl())
-                ->field('Nom du message', $request->getNewName(), true)
-                ->field('Catégorie', $request->getMessageType(), true)
+                    ->title('Nouvelle suggestion d\'ajout de message', $this->generateUrl('messages:view', ['messageId' => $request->getId()], UrlGenerator::ABSOLUTE_URL))
+                    ->color(DiscordColor::DEFAULT)
+                    ->author($user->getUsername(), null, $user->getAvatarUrl())
+                    ->field('Nom du message', $request->getNewName(), true)
+                    ->field('Catégorie', $request->getMessageType(), true)
             )
             ->send();
 
         $this->addFlash('success', 'Votre suggestion de nouveau message a été enregistrée. Elle sera traitée prochainement !');
         return $this->redirectToRoute('messages:history');
 
+    }
+
+    public function formatString(string $input): string
+    {
+        $input = str_replace('\n', ' ', $input);
+        $input = str_replace('\t', ' ', $input);
+        return $input;
+    }
+
+    public function formatContent(string $input): string
+    {
+        $input = str_replace("\\n", "\n", $input);
+        if (strlen($input) > 2000) $input = substr($input, 0, 1997) . '...';
+        return $input;
     }
 
     /**
@@ -199,7 +201,9 @@ class MessageController extends AbstractController
         $messageId = $request->request->get('messageId');
 
         $newName = $this->formatString($request->request->get('name'));
-        $newAliases = array_map(function (string $entry) { return $this->formatString($entry); }, $request->request->all('aliases'));
+        $newAliases = array_map(function (string $entry) {
+            return $this->formatString($entry);
+        }, $request->request->all('aliases'));
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
         $newType = $request->request->get('type');
 

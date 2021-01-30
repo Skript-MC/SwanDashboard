@@ -13,6 +13,7 @@ use Doctrine\ODM\MongoDB\PersistentCollection;
  */
 class Sanction
 {
+
     /**
      * @MongoDB\Id
      */

@@ -48,7 +48,7 @@ class DiscordRole
 
     public function getPosition(): ?int
     {
-        return  $this->getValueByKey($this->response, 'position');
+        return $this->getValueByKey($this->response, 'position');
     }
 
     // TODO: Implement others functions: https://discord.com/developers/docs/topics/permissions#role-object

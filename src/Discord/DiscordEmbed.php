@@ -28,6 +28,10 @@ class DiscordEmbed
 
     protected ?array $fields = null;
 
+    public static function create(): self
+    {
+        return new DiscordEmbed();
+    }
 
     public function title(string $title, ?string $url = ''): self
     {
@@ -95,11 +99,6 @@ class DiscordEmbed
             'inline' => $inline,
         ];
         return $this;
-    }
-
-    public static function create(): self
-    {
-        return new DiscordEmbed();
     }
 
     public function toArray(): array

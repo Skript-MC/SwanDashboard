@@ -74,7 +74,8 @@ class DiscordWebhook
 
         try {
             HttpClient::create()->request('POST', $this->url, ['json' => $payload]);
-        } catch (TransportExceptionInterface $e) {}
+        } catch (TransportExceptionInterface $e) {
+        }
     }
 
 }

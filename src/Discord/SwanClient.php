@@ -30,32 +30,16 @@ class SwanClient implements ServiceSubscriberInterface
         $this->cache = $swanCache;
     }
 
-    public static function arrayToRoles(array $roles): array
+    /**
+     * Returns an array of service types required by such instances, optionally keyed by the service names used internally.
+     *
+     * @return array The required service types, optionally keyed by service names
+     */
+    public static function getSubscribedServices(): array
     {
-        usort($roles, function (array $roleA, array $roleB): int {
-            return $roleB['position'] - $roleA['position'];
-        });
-        return array_map(function (array $role): DiscordRole {
-            return new DiscordRole($role);
-        }, $roles);
-    }
-
-    public static function arrayToChannels(array $channels): array
-    {
-        $channels = array_map(function (array $channel): DiscordChannel {
-            return new DiscordChannel($channel);
-        }, $channels);
-        $categories = [];
-        foreach ($channels as $channel) {
-            if ($channel->getType() == 4)
-                $categories[$channel->getId()] = new DiscordCategory($channel->toArray());
-        }
-        foreach ($channels as $channel) {
-            if ($channel->getType() == 0) {
-                $categories[$channel->getParentId()]->addChannel($channel);
-            }
-        }
-        return $categories;
+        return [
+            'parameter_bag' => '?' . ContainerBagInterface::class
+        ];
     }
 
     public function getRolesFromSnowflakes(array $snowflakes): array
@@ -65,19 +49,6 @@ class SwanClient implements ServiceSubscriberInterface
         return self::arrayToRoles(array_map(function (int $snowflake) use ($roles) {
             return $roles[array_search($snowflake, array_column($roles, 'id'))];
         }, $snowflakes));
-    }
-
-    public function getMember(int $userId): ?DiscordMember
-    {
-        try {
-            $response = $this->httpClient->request(
-                'GET',
-                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') .  '/members/' . $userId
-            );
-            return new DiscordMember($response->toArray());
-        } catch (RedirectionExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
-            return null;
-        }
     }
 
     public function getRoles(bool $raw = false): ?array
@@ -93,6 +64,29 @@ class SwanClient implements ServiceSubscriberInterface
             });
             return ($raw) ? $roles : self::arrayToRoles($roles);
         } catch (InvalidArgumentException $e) {
+            return null;
+        }
+    }
+
+    public static function arrayToRoles(array $roles): array
+    {
+        usort($roles, function (array $roleA, array $roleB): int {
+            return $roleB['position'] - $roleA['position'];
+        });
+        return array_map(function (array $role): DiscordRole {
+            return new DiscordRole($role);
+        }, $roles);
+    }
+
+    public function getMember(int $userId): ?DiscordMember
+    {
+        try {
+            $response = $this->httpClient->request(
+                'GET',
+                '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/members/' . $userId
+            );
+            return new DiscordMember($response->toArray());
+        } catch (RedirectionExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
             return null;
         }
     }
@@ -130,15 +124,21 @@ class SwanClient implements ServiceSubscriberInterface
         }
     }
 
-    /**
-     * Returns an array of service types required by such instances, optionally keyed by the service names used internally.
-     *
-     * @return array The required service types, optionally keyed by service names
-     */
-    public static function getSubscribedServices(): array
+    public static function arrayToChannels(array $channels): array
     {
-        return [
-            'parameter_bag' => '?'.ContainerBagInterface::class
-        ];
+        $channels = array_map(function (array $channel): DiscordChannel {
+            return new DiscordChannel($channel);
+        }, $channels);
+        $categories = [];
+        foreach ($channels as $channel) {
+            if ($channel->getType() == 4)
+                $categories[$channel->getId()] = new DiscordCategory($channel->toArray());
+        }
+        foreach ($channels as $channel) {
+            if ($channel->getType() == 0) {
+                $categories[$channel->getParentId()]->addChannel($channel);
+            }
+        }
+        return $categories;
     }
 }

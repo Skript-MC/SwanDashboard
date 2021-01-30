@@ -47,7 +47,7 @@ class DiscordMember
     }
 
     /**
-     * Returns 	whether the member is muted in voice channels.
+     * Returns whether the member is muted in voice channels.
      *
      * @return bool|null
      */
