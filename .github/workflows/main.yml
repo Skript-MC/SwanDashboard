@@ -53,6 +53,4 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
-        coverageCommand: php bin/phpunit --coverage-clover build/coverage-report
-        coverageLocations: |
-          ${{github.workspace}}/build/coverage-report.xml:clover
+        coverageCommand: php bin/phpunit --coverage-clover clover.xml
