@@ -48,10 +48,11 @@ jobs:
     - name: 👷 Run production build
       run: yarn build
 
-    - name: ✅ Run PHPUnit
-      run: php bin/phpunit --coverage-clover build/coverage-report
-
-    - name: 🤖 Publish code coverage
+    - name: ✅ Run PHPUnit and publish code coverage
       uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      with:
+        coverageCommand: php bin/phpunit --coverage-clover build/coverage-report
+        coverageLocations: |
+          ${{github.workspace}}/build/coverage-report.xml:clover
