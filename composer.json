@@ -24,7 +24,7 @@
         "source": "https://github.com/Romitou/SwanDashboard"
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-mongodb": "*",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.2",
