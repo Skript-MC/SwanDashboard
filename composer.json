@@ -34,7 +34,7 @@
         "knpuniversity/oauth2-client-bundle": "^2.5",
         "nyholm/psr7": "^1.3",
         "romitou/oauth2-discord": "^1.0.1",
-        "sensio/framework-extra-bundle": "^5.5.7",
+        "sensio/framework-extra-bundle": "^6.0.0",
         "sentry/sentry-symfony": "^4.0",
         "symfony/asset": "5.2.*",
         "symfony/dotenv": "5.2.*",
