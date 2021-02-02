@@ -27,6 +27,7 @@
         "php": ">=8.0",
         "ext-mongodb": "*",
         "doctrine/annotations": "^1.0",
+        "doctrine/data-fixtures": "^1.5",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/mongodb-odm-bundle": "^4.2",
         "doctrine/orm": "^2.7",
