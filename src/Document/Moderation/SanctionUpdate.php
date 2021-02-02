@@ -8,10 +8,17 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class SanctionUpdate
  * @package App\Document\Moderation
+ * @MongoDB\Document
  * @MongoDB\EmbedOne
  */
 class SanctionUpdate
 {
+
+    /**
+     * @MongoDB\Id
+     */
+    protected string $id;
+
     /**
      * @MongoDB\Field(type="date")
      */
