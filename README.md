@@ -31,6 +31,13 @@ Vous pouvez vous rendre dans le [menu des issues](https://github.com/Romitou/Swa
 Nos Pull Request sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Romitou/SwanDashboard/fork) (= une copie) de ce dépôt et y faire vos modifications. Veillez à ajoutez le moins de dépendances possibles.\
 N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.com/njSgX3w) !
 
+### ✅ Tests unitaires
+
+Afin de vérifier que toutes les modifications ne changent pas anormalement le bon fonctionnement de l'application, des tests unitaires ont été écrits via PHPUnit. N'oubliez pas de créer un `.env.test` et d'y remplir toutes les informations en prenant comme exemple `.env.example` et **en modifiant la base de donnée de façon à ce qu'elle ne soit pas identique à celle de développement ou de production** ! Pour réinitialiser et remplir votre base de donnée de test, exécutez `php bin/console doctrine:mongodb:fixtures:load --env=test`. Ensuite, pour lancer les tests unitaires, exécutez simplement `php bin/phpunit` à la racine du projet. N'oubliez pas de remplir à nouveau la base de donnée après chaque test.
+
+### 🤖 Couverture du code
+
+Chaque test unitaire génère un rapport de couverture de code. Celui-ci est un indicateur important faisant référence au nombre de ligne de code exécutées par les tests. En clair, il est nécessaire que chaque partie du code soit exécutée par des tests. Si vous venez à implémenter de nouvelles fonctionnalités, veillez à créer des tests correspondants.
 
 ## 🙏 Merci
 
