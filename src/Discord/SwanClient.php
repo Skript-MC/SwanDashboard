@@ -5,12 +5,10 @@ namespace App\Discord;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -63,7 +61,7 @@ class SwanClient implements ServiceSubscriberInterface
                 return $response->toArray();
             });
             return ($raw) ? $roles : self::arrayToRoles($roles);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException | ClientException $e) {
             return null;
         }
     }
@@ -86,7 +84,7 @@ class SwanClient implements ServiceSubscriberInterface
                 '/api/v8/guilds/' . $this->containerBag->get('discordGuild') . '/members/' . $userId
             );
             return new DiscordMember($response->toArray());
-        } catch (RedirectionExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+        } catch (HttpExceptionInterface | ExceptionInterface $e) {
             return null;
         }
     }
@@ -103,7 +101,7 @@ class SwanClient implements ServiceSubscriberInterface
                 return $response->toArray();
             });
             return new DiscordGuild($guild);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException | ClientException $e) {
             return null;
         }
     }
@@ -119,7 +117,7 @@ class SwanClient implements ServiceSubscriberInterface
                 $item->expiresAfter(self::CACHE_TTL);
                 return ($raw) ? $response->toArray() : self::arrayToChannels($response->toArray());
             });
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException | ClientException $e) {
             return null;
         }
     }
