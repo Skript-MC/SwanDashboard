@@ -53,10 +53,11 @@ jobs:
       with:
         envkey_MONGODB_URL: ${{ secrets.MONGODB_URL }}
         envkey_MONGODB_DB: ${{ secrets.MONGODB_DB }}
-        envkey_DATABASE_URL: ''
-        envkey_DISCORD_SWAN_TOKEN: ''
-        envkey_OAUTH_DISCORD_CLIENT_ID: ''
-        envkey_OAUTH_DISCORD_CLIENT_SECRET: ''
+        envkey_DATABASE_URL: 'null'
+        envkey_DISCORD_GUILD: 'null'
+        envkey_DISCORD_SWAN_TOKEN: 'null'
+        envkey_OAUTH_DISCORD_CLIENT_ID: 'null'
+        envkey_OAUTH_DISCORD_CLIENT_SECRET: 'null'
         file_name: .env.test
 
     - name: 🗃️ Load Doctrine fixtures
