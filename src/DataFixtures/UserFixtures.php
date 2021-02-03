@@ -17,7 +17,7 @@ class UserFixtures extends Fixture
     {
         $adminUser = new User();
         $adminUser->setId(191495299884122112);
-        $adminUser->setUsername('Romitou');
+        $adminUser->setUsername('Romitou#9685');
         $adminUser->setDiscordRoles([]);
         $adminUser->setRoles(['ROLE_ADMIN']);
         $adminUser->setHasMFA(true);
@@ -28,7 +28,7 @@ class UserFixtures extends Fixture
 
         $user = new User();
         $user->setId(752259261475586139);
-        $user->setUsername('Romi2');
+        $user->setUsername('Romi2#0000');
         $user->setDiscordRoles([]);
         $user->setRoles(['ROLE_USER']);
         $user->setHasMFA(false);

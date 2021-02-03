@@ -3,7 +3,6 @@
 namespace App\Tests\Controller;
 
 use App\Document\User;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -11,17 +10,16 @@ class ProfileControllerTest extends WebTestCase
 {
 
     private KernelBrowser $client;
-    private DocumentManager $dm;
     private User $user;
     private User $adminUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->adminUser = $this->dm->getRepository(User::class)
+        $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->adminUser = $dm->getRepository(User::class)
             ->findOneBy(['_id' => 191495299884122112]);
-        $this->user = $this->dm->getRepository(User::class)
+        $this->user = $dm->getRepository(User::class)
             ->findOneBy(['_id' => 752259261475586139]);
     }
 
@@ -51,11 +49,6 @@ class ProfileControllerTest extends WebTestCase
             ->filter('.alert-danger')
             ->text();
         $this->assertEquals('Les administrateurs ne peuvent pas supprimer leurs comptes.', $alert);
-
-        $user = $this->user;
-        $user->setRoles(['ROLE_USER']);
-        $this->dm->persist($user);
-        $this->dm->flush();
     }
 
     public function testAccountDelete(): void

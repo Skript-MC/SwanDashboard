@@ -213,8 +213,10 @@ class HistoryController extends AbstractController
                 ->field('value')->set($channels)
                 ->getQuery()
                 ->execute();
-        } catch (MongoDBException $e) {
+        } catch (MongoDBException) {
+            // @codeCoverageIgnoreStart - This catch cannot be unit tested.
             return new JsonResponse(['error' => 'Une erreur interne est survenue.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            // @codeCoverageIgnoreEnd
         }
 
         return new JsonResponse([

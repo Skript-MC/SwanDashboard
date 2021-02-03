@@ -12,7 +12,7 @@ class MessageHistory
     /**
      * @MongoDB\Id
      */
-    protected $id;
+    protected string $id;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class)
@@ -45,17 +45,17 @@ class MessageHistory
     protected ?string $newContent = null;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
-    public function setId($id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -101,11 +101,11 @@ class MessageHistory
     }
 
     /**
-     * @param int $channel
+     * @param int $channelId
      */
-    public function setChannelId(int $channel): void
+    public function setChannelId(int $channelId): void
     {
-        $this->channelId = $channel;
+        $this->channelId = $channelId;
     }
 
     /**
@@ -141,7 +141,7 @@ class MessageHistory
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getNewContent(): ?string
     {
@@ -149,9 +149,9 @@ class MessageHistory
     }
 
     /**
-     * @param string $newContent
+     * @param string|null $newContent
      */
-    public function setNewContent(string $newContent): void
+    public function setNewContent(?string $newContent): void
     {
         $this->newContent = $newContent;
     }
