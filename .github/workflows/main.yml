@@ -37,18 +37,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-node-
 
-    - name: ➕ Install Composer packages
-      if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: cp ./.env.example ./.env && composer install
+    - name: 🔒 Create default environment file
+      run: cp ./.env.example ./.env
 
-    - name: ➕ Install Node modules
-      if: steps.node-cache.outputs.cache-hit != 'true'
-      run: yarn
-
-    - name: 👷 Run production build
-      run: yarn build
-
-    - name: 🔒 Create environment file
+    - name: 🔒 Create test environment file
       uses: SpicyPizza/create-envfile@v1
       with:
         envkey_MONGODB_URL: ${{ secrets.MONGODB_URL }}
@@ -59,6 +51,17 @@ jobs:
         envkey_OAUTH_DISCORD_CLIENT_ID: 'null'
         envkey_OAUTH_DISCORD_CLIENT_SECRET: 'null'
         file_name: .env.test
+
+    - name: ➕ Install Composer packages
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install
+
+    - name: ➕ Install Node modules
+      if: steps.node-cache.outputs.cache-hit != 'true'
+      run: yarn
+
+    - name: 👷 Run production build
+      run: yarn build
 
     - name: 🗃️ Load Doctrine fixtures
       run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
