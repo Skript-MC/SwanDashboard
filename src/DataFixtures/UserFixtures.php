@@ -37,5 +37,16 @@ class UserFixtures extends Fixture
         $manager->persist($user);
         $manager->flush();
 
+        $temporaryUser = new User();
+        $temporaryUser->setId(191495299884122110);
+        $temporaryUser->setUsername('Romitwo#0002');
+        $temporaryUser->setDiscordRoles([]);
+        $temporaryUser->setRoles(['ROLE_USER']);
+        $temporaryUser->setHasMFA(false);
+        $temporaryUser->setAvatarUrl('https://cdn.discordapp.com/avatars/191495299884122112/be661ca87476ae6c9913190665db7e59.png');
+
+        $manager->persist($temporaryUser);
+        $manager->flush();
+
     }
 }

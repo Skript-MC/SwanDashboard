@@ -20,7 +20,7 @@ class ProfileControllerTest extends WebTestCase
         $this->adminUser = $dm->getRepository(User::class)
             ->findOneBy(['_id' => 191495299884122112]);
         $this->user = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 752259261475586139]);
+            ->findOneBy(['_id' => 191495299884122110]);
     }
 
     public function testAuthorization(): void

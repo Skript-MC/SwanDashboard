@@ -62,6 +62,7 @@ class DiscordAuthenticator extends SocialAuthenticator
      * @param UserProviderInterface $userProvider
      * @return User
      * @throws MongoDBException
+     * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
      */
     public function getUser($credentials, UserProviderInterface $userProvider): User
     {
@@ -96,12 +97,24 @@ class DiscordAuthenticator extends SocialAuthenticator
         return $user;
     }
 
+    /**
+     * @param Request $request
+     * @param TokenInterface $token
+     * @param string $providerKey
+     * @return RedirectResponse
+     * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
 
         return new RedirectResponse($this->getTargetPath($request->getSession(), 'discord') ?? $this->router->generate('home'));
     }
 
+    /**
+     * @param Request $request
+     * @param AuthenticationException $exception
+     * @return Response
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         return new RedirectResponse(
