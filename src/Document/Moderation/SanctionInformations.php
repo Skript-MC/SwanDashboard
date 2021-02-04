@@ -8,6 +8,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * Class SanctionInformations
  * @package App\Document\Moderation
  * @MongoDB\EmbeddedDocument()
+ * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class SanctionInformations
 {

@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+/**
+ * Class SanctionQuery
+ * @package App\Entity
+ * @codeCoverageIgnore Documents and entities should not be unit tested.
+ */
 class SanctionQuery
 {
 

@@ -9,6 +9,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * Class Module
  * @package App\Document
  * @MongoDB\Document(collection="modules")
+ * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class Module
 {

@@ -6,6 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
  * @MongoDB\Document(collection="sharedConfigs")
+ * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class SharedConfig
 {
