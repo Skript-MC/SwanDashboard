@@ -24,8 +24,8 @@ class DiscordService implements ServiceSubscriberInterface
     public function __construct(ContainerBagInterface $containerBag, CacheInterface $swanCache)
     {
         $this->discordClient = new DiscordClient(['token' => $containerBag->get('discordSwanToken')]);
-        $discordGuild = $containerBag->get('discordGuild');
-        $this->discordGuild = is_int($discordGuild) ? $discordGuild : 0;
+        $discordGuild = (int) $containerBag->get('discordGuild');
+        $this->discordGuild = $discordGuild;
         $this->cache = $swanCache;
     }
 
