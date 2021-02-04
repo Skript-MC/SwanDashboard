@@ -17,7 +17,7 @@ class DiscordService implements ServiceSubscriberInterface
     const CACHE_TTL = 60 * 10; // 10 minutes
 
     private DiscordClient $discordClient;
-    private int $discordGuild;
+    private string $discordGuild;
     private CacheInterface $cache;
 
     public function __construct(ContainerBagInterface $containerBag, CacheInterface $swanCache)
