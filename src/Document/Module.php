@@ -8,14 +8,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class Module
  * @package App\Document
- * @MongoDB\Document(collection="modules")
+ * @MongoDB\Document(collection="swanmodules")
  * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class Module
 {
 
     /**
-     * @MongoDB\Id(strategy="none", type="string")
+     * @MongoDB\Id
      */
     private string $id;
 
@@ -27,12 +27,12 @@ class Module
     /**
      * @MongoDB\Field(type="string")
      */
-    private string $description;
+    private ?string $description = null;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private string $type;
+    private string $handler;
 
     /**
      * @MongoDB\Field(type="bool")
@@ -42,7 +42,7 @@ class Module
     /**
      * @MongoDB\Field(type="date")
      */
-    private DateTime $modified;
+    private ?DateTime $modified = null;
 
     /**
      * @return string
@@ -77,17 +77,17 @@ class Module
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -95,17 +95,17 @@ class Module
     /**
      * @return string
      */
-    public function getType(): string
+    public function getHandler(): string
     {
-        return $this->type;
+        return $this->handler;
     }
 
     /**
-     * @param string $type
+     * @param string $handler
      */
-    public function setType(string $type): void
+    public function setHandler(string $handler): void
     {
-        $this->type = $type;
+        $this->handler = $handler;
     }
 
     /**
@@ -125,17 +125,17 @@ class Module
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getModified(): DateTime
+    public function getModified(): ?DateTime
     {
         return $this->modified;
     }
 
     /**
-     * @param DateTime $modified
+     * @param DateTime|null $modified
      */
-    public function setModified(DateTime $modified): void
+    public function setModified(?DateTime $modified): void
     {
         $this->modified = $modified;
     }

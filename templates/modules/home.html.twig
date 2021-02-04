@@ -10,7 +10,7 @@
                         <h5 class="card-title">
                             {{ module.name }}
                         </h5>
-                        <p>{{ module.description }}</p>
+                        <p>{{ module.description ?? '' }}</p>
 
                         <div class="row">
                             <div class="col-6">
@@ -28,7 +28,9 @@
                                 </div>
                             </div>
                         </div>
-                        <span><small>Dernière modification le {{ module.modified.format('d/m/Y à H:i') }}</small> </span>
+                        {% if module.modified is not null %}
+                            <span><small>Dernière modification le {{ module.modified.format('d/m/Y à H:i') }}</small> </span>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
