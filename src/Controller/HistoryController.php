@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Discord\SwanClient;
 use App\Document\MessageHistory;
 use App\Document\SharedConfig;
 use App\Entity\HistoryQuery;
+use App\Service\DiscordService;
 use App\Utils\DiscordUtils;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -32,13 +32,13 @@ class HistoryController extends AbstractController
     /**
      * @Route("", name="history")
      * @param DocumentManager $dm
-     * @param SwanClient $swanClient
+     * @param DiscordService $discordService
      * @return Response
      */
-    public function home(DocumentManager $dm, SwanClient $swanClient): Response
+    public function home(DocumentManager $dm, DiscordService $discordService): Response
     {
         return $this->render('history/home.html.twig', [
-            'allChannels' => $swanClient->getChannels(),
+            'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm)
         ]);
     }
@@ -56,10 +56,10 @@ class HistoryController extends AbstractController
      * @param DocumentManager $dm
      * @param PaginatorInterface $paginator
      * @param Request $request
-     * @param SwanClient $swanClient
+     * @param DiscordService $swanClient
      * @return Response
      */
-    public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request, SwanClient $swanClient): Response
+    public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request, DiscordService $swanClient): Response
     {
         $deletions = $paginator->paginate(
             $dm->createQueryBuilder(MessageHistory::class)
@@ -81,7 +81,7 @@ class HistoryController extends AbstractController
         $editions->setPaginatorOptions(['pageParameterName' => 'pageEditions']);
 
         return $this->render('history/channel.html.twig', [
-            'allChannels' => $swanClient->getChannels(),
+            'channels' => $swanClient->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm),
             'deletions' => $deletions,
             'editions' => $editions
@@ -92,10 +92,10 @@ class HistoryController extends AbstractController
      * @Route("/message/{messageId}", name="history:message")
      * @param int $messageId
      * @param DocumentManager $dm
-     * @param SwanClient $swanClient
+     * @param DiscordService $discordService
      * @return Response
      */
-    public function viewMessage(int $messageId, DocumentManager $dm, SwanClient $swanClient): Response
+    public function viewMessage(int $messageId, DocumentManager $dm, DiscordService $discordService): Response
     {
         $message = $dm->getRepository(MessageHistory::class)
             ->findOneBy(['messageId' => $messageId]);
@@ -107,7 +107,7 @@ class HistoryController extends AbstractController
             );
 
         return $this->render('history/message.html.twig', [
-            'allChannels' => $swanClient->getChannels(),
+            'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm),
             'message' => $message
         ]);
@@ -213,7 +213,7 @@ class HistoryController extends AbstractController
                 ->field('value')->set($channels)
                 ->getQuery()
                 ->execute();
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
         } catch (MongoDBException) {
             return new JsonResponse(['error' => 'Une erreur interne est survenue.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

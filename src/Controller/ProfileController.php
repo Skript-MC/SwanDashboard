@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Discord\SwanClient;
 use App\Document\User;
+use App\Service\DiscordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,15 +20,15 @@ class ProfileController extends AbstractController
 {
     /**
      * @Route("", name="profile")
-     * @param SwanClient $swanClient
+     * @param DiscordService $discordService
      * @return Response
      */
-    public function home(SwanClient $swanClient): Response
+    public function home(DiscordService $discordService): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         return $this->render('profile.html.twig', [
-            'discordRoles' => $swanClient->getRolesFromSnowflakes($user->getDiscordRoles())
+            'discordRoles' => $discordService->getRolesFromSnowflakes($user->getDiscordRoles())
         ]);
     }
 

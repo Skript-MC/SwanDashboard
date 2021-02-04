@@ -9,10 +9,10 @@
             {% else %}
                 <a href="{{ path('history:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
             {% endif %}
-            {% if allChannels is defined %}
-                {% for category in allChannels %}
+            {% if channels is defined %}
+                {% for category in channels[0] %}
                     <div class="list-group-item bg-light">{{ category.name }}</div>
-                    {% for channel in category.channels %}
+                    {% for channel in channels[1][category.id] %}
                         <a href="{{ path('history:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
                             <div class="row">
                                 <div class="col-lg-10">

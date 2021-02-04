@@ -16,69 +16,57 @@ class Sanction
 {
 
     /**
-     * @MongoDB\Id
-     */
-    private string $id;
-
-    /**
      * @MongoDB\Field(type="string")
      */
     protected string $memberId;
-
     /**
      * @MongoDB\ReferenceOne(targetDocument=ConvictedUser::class, storeAs="id")
      */
     protected ConvictedUser $user;
-
     /**
      * @MongoDB\Field(type="string")
      */
     protected string $type;
-
     /**
      * @MongoDB\Field(type="string")
      */
     protected string $moderator;
-
     /**
      * @MongoDB\Field(type="int")
      */
     protected int $start;
-
     /**
      * @MongoDB\Field(type="int", nullable=true)
      */
     protected ?int $duration = null;
-
     /**
      * @MongoDB\Field(type="int", nullable=true)
      */
     protected ?int $finish = null;
-
     /**
      * @MongoDB\Field(type="string")
      */
     protected string $reason;
-
     /**
      * @MongoDB\Field(type="bool")
      */
     protected bool $revoked;
-
     /**
      * @MongoDB\Field(type="string")
      */
     protected string $sanctionId;
-
     /**
      * @MongoDB\EmbedOne(targetDocument=SanctionInformations::class)
      */
     protected SanctionInformations $informations;
-
     /**
      * @MongoDB\EmbedMany(targetDocument=SanctionUpdate::class)
      */
     protected PersistentCollection $updates;
+    /**
+     * @MongoDB\Id
+     */
+    private string $id;
 
     /**
      * @return string

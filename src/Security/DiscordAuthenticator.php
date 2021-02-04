@@ -2,8 +2,8 @@
 
 namespace App\Security;
 
-use App\Discord\SwanClient;
 use App\Document\User;
+use App\Service\DiscordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -22,20 +22,19 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class DiscordAuthenticator extends SocialAuthenticator
 {
-
     use TargetPathTrait;
 
     private ClientRegistry $clientRegistry;
     private DocumentManager $dm;
     private RouterInterface $router;
-    private SwanClient $swanClient;
+    private DiscordService $discordService;
 
-    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router, SwanClient $swanClient)
+    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router, DiscordService $discordService)
     {
         $this->clientRegistry = $clientRegistry;
         $this->dm = $dm;
         $this->router = $router;
-        $this->swanClient = $swanClient;
+        $this->discordService = $discordService;
     }
 
     public function supports(Request $request): bool
@@ -78,7 +77,7 @@ class DiscordAuthenticator extends SocialAuthenticator
 
         // Merge existing user and new user, this will update the existing user if it is found
         $user = $existingUser ? $existingUser : new User();
-        $discordMember = $this->swanClient->getMember($discordUser->getId());
+        $discordMember = $this->discordService->getMember($discordUser->getId());
 
         // If we have an existing user, don't refresh these data.
         if (!$existingUser) {
@@ -87,8 +86,8 @@ class DiscordAuthenticator extends SocialAuthenticator
         }
 
         $user->setUsername($discordUser->getCompleteUsername());
-        $user->setAvatarUrl($discordUser->getAvatarUrl() ?? "https://www.atelierdeschefs.com/media/recette-e793-gratin-dauphinois.jpg");
-        $user->setDiscordRoles($discordMember ? $discordMember->getRoles() ?? [] : []); // The discordMember can be null if the API is unavailable, so give no roles
+        $user->setAvatarUrl($discordUser->getAvatarUrl() ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
+        $user->setDiscordRoles($discordMember?->roles ?? []); // The discordMember can be null if the API is unavailable, so give no roles
         $user->setHasMFA($discordUser->hasMfaEnabled());
 
         $this->dm->persist($user);

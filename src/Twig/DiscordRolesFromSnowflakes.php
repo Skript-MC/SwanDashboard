@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Discord\SwanClient;
+use App\Service\DiscordService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -13,11 +13,11 @@ use Twig\TwigFilter;
  */
 class DiscordRolesFromSnowflakes extends AbstractExtension
 {
-    private SwanClient $swanClient;
+    private DiscordService $discordService;
 
-    public function __construct(SwanClient $swanClient)
+    public function __construct(DiscordService $discordService)
     {
-        $this->swanClient = $swanClient;
+        $this->discordService = $discordService;
     }
 
     public function getFilters(): array
@@ -29,6 +29,6 @@ class DiscordRolesFromSnowflakes extends AbstractExtension
 
     public function discordRolesFromSnowflakes(array $snowflakes): array
     {
-        return $this->swanClient->getRolesFromSnowflakes($snowflakes);
+        return $this->discordService->getRolesFromSnowflakes($snowflakes);
     }
 }

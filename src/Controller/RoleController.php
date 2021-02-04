@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Discord\SwanClient;
+use App\Service\DiscordService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,14 +17,14 @@ class RoleController extends AbstractController
 
     /**
      * @Route("", name="roles")
-     * @param SwanClient $swanClient
+     * @param DiscordService $discordService
      * @return Response
      */
-    public function home(SwanClient $swanClient): Response
+    public function home(DiscordService $discordService): Response
     {
         return $this->render('roles/home.html.twig', [
-            'discordRoles' => $swanClient->getRoles(),
-            'symfonyRoles' => $this->getParameter('security.role_hierarchy.roles')
+            'discordRoles' => $discordService->getRoles(),
+            'symfonyRoles' => $this->getParameter('security.role_hierarchy.roles') ?? []
         ]);
     }
 
