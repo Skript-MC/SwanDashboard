@@ -1,13 +1,16 @@
 <?php
 
-
 namespace App\Twig;
-
 
 use App\Discord\SwanClient;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
+/**
+ * Class DiscordRolesFromSnowflakes
+ * @package App\Twig
+ * @codeCoverageIgnore This extension requires Discord API.
+ */
 class DiscordRolesFromSnowflakes extends AbstractExtension
 {
     private SwanClient $swanClient;

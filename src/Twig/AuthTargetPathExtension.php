@@ -8,6 +8,10 @@ use Twig\TwigFilter;
 
 class AuthTargetPathExtension extends AbstractExtension
 {
+    /**
+     * @return TwigFilter[]
+     * @codeCoverageIgnore
+     */
     public function getFilters(): array
     {
         return [

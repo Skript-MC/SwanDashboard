@@ -10,6 +10,10 @@ class GitCommitExtension extends AbstractExtension
 {
     const GITHUB_REPO = "https://github.com/Romitou/SwanDashboard/commit/";
 
+    /**
+     * @return TwigFunction[]
+     * @codeCoverageIgnore
+     */
     public function getFunctions(): array
     {
         return [
