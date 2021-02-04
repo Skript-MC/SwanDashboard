@@ -9,7 +9,7 @@
             {% else %}
                 <a href="{{ path('history:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
             {% endif %}
-            {% if channels is defined %}
+            {% if (channels is defined) and (channels|length == 2) %}
                 {% for category in channels[0] %}
                     <div class="list-group-item bg-light">{{ category.name }}</div>
                     {% for channel in channels[1][category.id] %}

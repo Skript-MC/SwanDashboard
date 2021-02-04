@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use GuzzleHttp\Command\Exception\CommandClientException;
 use Psr\Cache\InvalidArgumentException;
 use RestCord\DiscordClient;
 use RestCord\Model\Guild\Guild;
@@ -17,13 +18,14 @@ class DiscordService implements ServiceSubscriberInterface
     const CACHE_TTL = 60 * 10; // 10 minutes
 
     private DiscordClient $discordClient;
-    private string $discordGuild;
+    private int $discordGuild;
     private CacheInterface $cache;
 
     public function __construct(ContainerBagInterface $containerBag, CacheInterface $swanCache)
     {
         $this->discordClient = new DiscordClient(['token' => $containerBag->get('discordSwanToken')]);
-        $this->discordGuild = $containerBag->get('discordGuild');
+        $discordGuild = $containerBag->get('discordGuild');
+        $this->discordGuild = is_int($discordGuild) ? $discordGuild : 0;
         $this->cache = $swanCache;
     }
 
@@ -55,7 +57,7 @@ class DiscordService implements ServiceSubscriberInterface
                 $item->expiresAfter(self::CACHE_TTL);
                 return $this->discordClient->guild->getGuildRoles(['guild.id' => $this->discordGuild]);
             });
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException | CommandClientException) {
             return [];
         }
     }
@@ -79,7 +81,7 @@ class DiscordService implements ServiceSubscriberInterface
                     if ($channel->type == 0) $channels[$channel->parent_id][] = $channel;
                 return [$categories, $channels];
             });
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException | CommandClientException) {
             return [];
         }
     }
@@ -91,7 +93,7 @@ class DiscordService implements ServiceSubscriberInterface
                 $item->expiresAfter(self::CACHE_TTL);
                 return $this->discordClient->guild->getGuild(['guild.id' => $this->discordGuild]);
             });
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException | CommandClientException) {
             return null;
         }
     }

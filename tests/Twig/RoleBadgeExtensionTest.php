@@ -2,8 +2,8 @@
 
 namespace App\Tests\Twig;
 
-use App\Discord\DiscordRole;
 use App\Twig\RoleBadgeExtension;
+use RestCord\Model\Permissions\Role;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RoleBadgeExtensionTest extends WebTestCase
@@ -15,7 +15,7 @@ class RoleBadgeExtensionTest extends WebTestCase
      */
     function testTruncateString(array $data): void
     {
-        $discordRole = new DiscordRole([
+        $discordRole = new Role([
             'id' => 'pineapple',
             'name' => $data[0],
             'color' => $data[1],
