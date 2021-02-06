@@ -5,28 +5,33 @@
     colors="true"
     bootstrap="tests/bootstrap.php"
 >
-  <php>
-    <ini name="error_reporting" value="-1"/>
-    <server name="APP_ENV" value="test" force="true"/>
-    <server name="SHELL_VERBOSITY" value="-1"/>
-    <server name="SYMFONY_PHPUNIT_VERSION" value="9"/>
-    <env name="KERNEL_CLASS" value="App\Kernel" />
-    <env name="XDEBUG_MODE" value="coverage" />
-    <env name="APP_ENV" value="test"/>
-  </php>
+    <php>
+      <ini name="error_reporting" value="-1"/>
+        <server name="APP_ENV" value="test" force="true"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9"/>
+        <env name="KERNEL_CLASS" value="App\Kernel" />
+        <env name="XDEBUG_MODE" value="coverage" />
+        <env name="APP_ENV" value="test"/>
+    </php>
 
-  <testsuites>
-    <testsuite name="Project Test Suite">
-      <directory>tests</directory>
-    </testsuite>
-  </testsuites>
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
 
     <coverage>
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">src/Document</directory>
+            <directory suffix=".php">src/DataFixtures</directory>
+        </exclude>
     </coverage>
-  <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-  </listeners>
+
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+    </listeners>
 </phpunit>

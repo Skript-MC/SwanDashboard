@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Class UserFixtures
  * @package App\DataFixtures
- * @codeCoverageIgnore
  */
 class UserFixtures extends Fixture
 {

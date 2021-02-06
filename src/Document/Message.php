@@ -6,7 +6,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
  * @MongoDB\Document(collection="messages")
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class Message
 {

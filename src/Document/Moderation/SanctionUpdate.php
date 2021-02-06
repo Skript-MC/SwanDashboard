@@ -10,7 +10,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * @package App\Document\Moderation
  * @MongoDB\Document
  * @MongoDB\EmbedOne
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class SanctionUpdate
 {

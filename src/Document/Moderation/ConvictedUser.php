@@ -8,7 +8,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * Class ConvictedUser
  * @package App\Document
  * @MongoDB\Document(collection="convictedusers")
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class ConvictedUser
 {

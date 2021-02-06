@@ -10,7 +10,6 @@ use Doctrine\ODM\MongoDB\PersistentCollection;
  * Class Sanction
  * @package App\Document
  * @MongoDB\Document(collection="sanctions")
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class Sanction
 {

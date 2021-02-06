@@ -11,7 +11,6 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Class MessageHistoryFixtures
  * @package App\DataFixtures
- * @codeCoverageIgnore
  */
 class MessageHistoryFixtures extends Fixture implements DependentFixtureInterface
 {

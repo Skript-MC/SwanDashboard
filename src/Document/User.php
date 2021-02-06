@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @MongoDB\Document(collection="users")
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class User implements UserInterface
 {

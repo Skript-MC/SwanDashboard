@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Class SharedConfigFixtures
  * @package App\DataFixtures
- * @codeCoverageIgnore
  */
 class SharedConfigFixtures extends Fixture
 {

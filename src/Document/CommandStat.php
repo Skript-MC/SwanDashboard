@@ -8,7 +8,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * Class CommandStat
  * @package App\Document
  * @MongoDB\Document(collection="commandstats")
- * @codeCoverageIgnore Documents and entities should not be unit tested.
  */
 class CommandStat
 {
