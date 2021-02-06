@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
+/**
+ * Class DiscordService
+ * @package App\Service
+ */
 class DiscordService implements ServiceSubscriberInterface
 {
 
@@ -46,7 +50,7 @@ class DiscordService implements ServiceSubscriberInterface
         $roles = $this->getRoles();
         if (!isset($roles)) return [];
         return array_map(function (int $snowflake) use ($roles) {
-            return $roles[array_search($snowflake, array_column($roles, 'id'))];
+            return $roles[array_search($snowflake, array_column($roles, 'id'))]; // @codeCoverageIgnore
         }, $snowflakes);
     }
 
@@ -62,6 +66,11 @@ class DiscordService implements ServiceSubscriberInterface
         }
     }
 
+    /**
+     * @param int $userId
+     * @return GuildMember|null
+     * @codeCoverageIgnore This method will never be called since authentication is not unit tested.
+     */
     public function getMember(int $userId): ?GuildMember
     {
         return $this->discordClient->guild->getGuildMember(['guild.id' => $this->discordGuild, 'user.id' => $userId]);
@@ -73,6 +82,7 @@ class DiscordService implements ServiceSubscriberInterface
             return $this->cache->get('discordChannels', function (CacheItem $item) {
                 $item->expiresAfter(self::CACHE_TTL);
                 $discordChannels = $this->discordClient->guild->getGuildChannels(['guild.id' => $this->discordGuild]);
+                // @codeCoverageIgnoreStart
                 $categories = [];
                 $channels = [];
                 foreach ($discordChannels as $channel)
@@ -80,6 +90,7 @@ class DiscordService implements ServiceSubscriberInterface
                 foreach ($discordChannels as $channel)
                     if ($channel->type == 0) $channels[$channel->parent_id][] = $channel;
                 return [$categories, $channels];
+                // @codeCoverageIgnoreStop
             });
         } catch (InvalidArgumentException | CommandClientException) {
             return [];
