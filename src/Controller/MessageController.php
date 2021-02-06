@@ -199,7 +199,7 @@ class MessageController extends AbstractController
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $messageId]);
         if (!$message) {
             $this->addFlash('error', 'Le message avec identifiant ' . $messageId . ' n\'a pas été trouvé dans nos bases de données.');
-            return $this->redirectToRoute('messages:edit', ['messageId' => $messageId]);
+            return $this->redirectToRoute('messages:history', ['messageId' => $messageId]);
         }
         /** @var User $user */
         $user = $this->getUser();
