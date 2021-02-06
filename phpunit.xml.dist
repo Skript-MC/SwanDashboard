@@ -26,8 +26,9 @@
             <directory suffix=".php">src</directory>
         </include>
         <exclude>
-            <directory suffix=".php">src/Document</directory>
             <directory suffix=".php">src/DataFixtures</directory>
+            <directory suffix=".php">src/Document</directory>
+            <directory suffix=".php">src/Entity</directory>
         </exclude>
     </coverage>
 
