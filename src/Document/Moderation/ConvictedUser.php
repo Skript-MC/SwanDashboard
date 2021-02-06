@@ -25,12 +25,12 @@ class ConvictedUser
     /**
      * @MongoDB\Field(type="string")
      */
-    private string $lastBanId;
+    private ?string $currentBanId = null;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private string $lastMuteId;
+    private ?string $currentMuteId = null;
 
     /**
      * @MongoDB\Field(type="int")
@@ -70,35 +70,35 @@ class ConvictedUser
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLastBanId(): string
+    public function getCurrentBanId(): ?string
     {
-        return $this->lastBanId;
+        return $this->currentBanId;
     }
 
     /**
-     * @param string $lastBanId
+     * @param string|null $currentBanId
      */
-    public function setLastBanId(string $lastBanId): void
+    public function setCurrentBanId(?string $currentBanId): void
     {
-        $this->lastBanId = $lastBanId;
+        $this->currentBanId = $currentBanId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLastMuteId(): string
+    public function getCurrentMuteId(): ?string
     {
-        return $this->lastMuteId;
+        return $this->currentMuteId;
     }
 
     /**
-     * @param string $lastMuteId
+     * @param string|null $currentMuteId
      */
-    public function setLastMuteId(string $lastMuteId): void
+    public function setCurrentMuteId(?string $currentMuteId): void
     {
-        $this->lastMuteId = $lastMuteId;
+        $this->currentMuteId = $currentMuteId;
     }
 
     /**
