@@ -29,7 +29,7 @@ class UserFixtures extends Fixture
         $user->setId(752259261475586139);
         $user->setUsername('Romi2#0000');
         $user->setDiscordRoles([]);
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(['ROLE_STAFF']);
         $user->setHasMFA(false);
         $user->setAvatarUrl('https://cdn.discordapp.com/avatars/191495299884122112/be661ca87476ae6c9913190665db7e59.png');
 

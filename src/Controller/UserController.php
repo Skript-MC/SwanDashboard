@@ -68,10 +68,11 @@ class UserController extends AbstractController
             return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
         }
 
-        if (!$this->isGranted($dashboardRole)) {
-            $this->addFlash('error', 'Vous n\'avez pas la permission de modifier cet utilisateur.');
-            return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
-        }
+        // For the moment, only admins can access to this page, so check permissions is useless.
+        // if (!$this->isGranted($dashboardRole)) {
+        //     $this->addFlash('error', 'Vous n\'avez pas la permission de modifier cet utilisateur.');
+        //     return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
+        // }
 
         $targetUser->setUsername($username);
         $targetUser->setAvatarUrl($avatarUrl);
