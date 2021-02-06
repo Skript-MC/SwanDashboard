@@ -40,11 +40,13 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="dashRoles">Rôles du panel</span>
+                                <span class="input-group-text" id="dashRoles">Rôle Dashboard</span>
                             </div>
-                            <span class="input-group-text" id="dashRoles">
-                                {{ app.user.roles|join(', ') }}
-                            </span>
+                            <select class="custom-select" disabled>
+                                <option value="ROLE_USER" {{ 'ROLE_USER' in app.user.roles ? 'selected' }}>Utilisateur</option>
+                                <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in app.user.roles ? 'selected' }}>Staff</option>
+                                <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in app.user.roles ? 'selected' }}>Administrateur</option>
+                            </select>
                         </div>
                         <div class="input-group">
                             <form method="post" action="{{ path('profile:delete') }}">

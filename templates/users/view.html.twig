@@ -12,12 +12,12 @@
                     <div class="card-body">
 
                         {% for message in app.flashes('success') %}
-                            <div class="alert alert-success mt-3">
+                            <div class="alert alert-success">
                                 {{ message }}
                             </div>
                         {% endfor %}
                         {% for message in app.flashes('error') %}
-                            <div class="alert alert-danger mt-3">
+                            <div class="alert alert-danger">
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -25,7 +25,7 @@
                         <form method="POST">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="discordId">Identifiant</span>
+                                    <span class="input-group-text">Identifiant</span>
                                 </div>
                                 <input type="text" name="discordId" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
                             </div>
@@ -42,6 +42,17 @@
                                 <input type="text" name="discordAvatar" class="form-control" value="{{ user.avatarUrl }}" aria-label="Avatar" aria-describedby="discordAvatar">
                             </div>
 
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="dashboardRole">Rôle Dashboard</span>
+                                </div>
+                                <select class="custom-select" name="dashboardRole">
+                                    <option value="ROLE_USER" {{ 'ROLE_USER' in app.user.roles ? 'selected' }}>Utilisateur</option>
+                                    <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in app.user.roles ? 'selected' }}>Staff</option>
+                                    <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in app.user.roles ? 'selected' }}>Administrateur</option>
+                                </select>
+                            </div>
+
                             <button type="submit" class="btn btn-info"><i class="fas fa-save"></i> Sauvegarder les modifications</button>
                         </form>
                     </div>
@@ -50,7 +61,7 @@
             <div class="col-lg-6">
                 <div class="card shadow position-relative mb-3">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Données de l'utilisateur</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Informations Discord</h6>
                     </div>
                     <div class="card-body">
                         <div class="input-group mb-3">
