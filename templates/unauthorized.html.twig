@@ -18,14 +18,15 @@
         const embed = document.getElementById('embed');
 
         const videos = [
-            'wTZ2UCcoz_o?',
-            'qMQ-y9dHE2k?',
-            'dQw4w9WgXcQ?',
-            'uwmeH6Rnj2E?'
+            'wTZ2UCcoz_o',
+            'qMQ-y9dHE2k',
+            'dQw4w9WgXcQ',
+            'uwmeH6Rnj2E',
+            'jeg_TJvkSjg'
         ];
 
         const video = videos[Math.floor(Math.random() * videos.length)];
 
-        embed.setAttribute('src', `https://www.youtube.com/embed/${video}&autoplay=1`);
+        embed.setAttribute('src', `https://www.youtube.com/embed/${video}?&autoplay=1`);
     </script>
 {% endblock %}
