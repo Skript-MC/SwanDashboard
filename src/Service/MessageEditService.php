@@ -6,7 +6,7 @@ use App\Document\MessageEditRequest;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use MongoDB\BSON\ObjectId;
 
-class MessageService
+class MessageEditService
 {
     private DocumentManager $documentManager;
     private MessageEditRequest $emptyEdit;

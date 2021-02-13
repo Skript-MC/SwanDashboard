@@ -44,7 +44,7 @@ class CacheService
                 $item->expiresAfter(self::CACHE_TTL);
                 return [$names, $values];
             });
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
         } catch (InvalidArgumentException) {
             return [];
         }

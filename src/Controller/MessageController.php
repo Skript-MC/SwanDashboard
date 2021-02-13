@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Document\Message;
 use App\Document\MessageEditRequest;
 use App\Document\User;
-use App\Service\MessageService;
+use App\Service\MessageEditService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
@@ -223,10 +223,10 @@ class MessageController extends AbstractController
      * @Route("/view/{messageId}", name="messages:view")
      * @param Request $request
      * @param DocumentManager $dm
-     * @param MessageService $messageService
+     * @param MessageEditService $messageService
      * @return Response
      */
-    public function viewEdit(Request $request, DocumentManager $dm, MessageService $messageService): Response
+    public function viewEdit(Request $request, DocumentManager $dm, MessageEditService $messageService): Response
     {
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
