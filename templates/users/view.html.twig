@@ -47,9 +47,9 @@
                                     <span class="input-group-text" id="dashboardRole">Rôle Dashboard</span>
                                 </div>
                                 <select class="custom-select" name="dashboardRole">
-                                    <option value="ROLE_USER" {{ 'ROLE_USER' in app.user.roles ? 'selected' }}>Utilisateur</option>
-                                    <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in app.user.roles ? 'selected' }}>Staff</option>
-                                    <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in app.user.roles ? 'selected' }}>Administrateur</option>
+                                    <option value="ROLE_USER" {{ 'ROLE_USER' in user.roles ? 'selected' }}>Utilisateur</option>
+                                    <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in user.roles ? 'selected' }}>Staff</option>
+                                    <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' }}>Administrateur</option>
                                 </select>
                             </div>
 
