@@ -24,7 +24,7 @@ class MainController extends AbstractController
             return $this->render('welcome.html.twig');
         $guild = $discordService->getGuild();
         return $this->render('dashboard.html.twig', [
-            'discordMembers' => $guild?->member_count ?? 'Inconnu',
+            'discordMembers' => $guild?->approximate_member_count ?? 'Inconnu',
             'discordOnlineMembers' => $guild?->approximate_presence_count ?? 'Inconnu',
             'commandStats' => $cache->getCommandStats()
         ]);

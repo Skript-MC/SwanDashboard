@@ -27,8 +27,11 @@ class DiscordService implements ServiceSubscriberInterface
 
     public function __construct(ContainerBagInterface $containerBag, CacheInterface $swanCache)
     {
-        $this->discordClient = new DiscordClient(['token' => $containerBag->get('discordSwanToken')]);
-        $discordGuild = (int) $containerBag->get('discordGuild');
+        $this->discordClient = new DiscordClient([
+            'token' => $containerBag->get('discordSwanToken'),
+            'apiUrl' => 'https://discord.com/api/v8/'
+        ]);
+        $discordGuild = (int)$containerBag->get('discordGuild');
         $this->discordGuild = $discordGuild;
         $this->cache = $swanCache;
     }
@@ -102,7 +105,7 @@ class DiscordService implements ServiceSubscriberInterface
         try {
             return $this->cache->get('discordGuild', function (CacheItem $item) {
                 $item->expiresAfter(self::CACHE_TTL);
-                return $this->discordClient->guild->getGuild(['guild.id' => $this->discordGuild]);
+                return $this->discordClient->guild->getGuild(['guild.id' => $this->discordGuild, 'with_counts' => true]);
             });
         } catch (InvalidArgumentException | CommandClientException) {
             return null;
