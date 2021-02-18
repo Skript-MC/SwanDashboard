@@ -8,7 +8,7 @@ use Twig\TwigFunction;
 
 class GitCommitExtension extends AbstractExtension
 {
-    const GITHUB_REPO = "https://github.com/Romitou/SwanDashboard/commit/";
+    const GITHUB_REPO = "https://github.com/Skript-MC/SwanDashboard/commit/";
 
     /**
      * @return TwigFunction[]
