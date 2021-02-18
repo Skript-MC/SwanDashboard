@@ -16,22 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Class SanctionController
- * @package App\Controller
- * @Route("/sanctions")
- * @IsGranted("ROLE_STAFF")
- */
+#[Route('/sanctions')]
+#[IsGranted('ROLE_STAFF')]
 class SanctionController extends AbstractController
 {
-
-    /**
-     * @Route("", name="sanctions")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('', name: 'sanctions')]
     public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
 

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,19 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/users")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route('/users')]
+#[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
-    /**
-     * @Route("", name="users")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('', name: 'users')]
     public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         return $this->render('users/home.html.twig', [
@@ -36,12 +27,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{userId}", name="users:view", methods={"GET"})
-     * @param int $userId
-     * @param DocumentManager $dm
-     * @return Response
-     */
+    #[Route('/{userId}', name: 'users:view', methods: ['GET'])]
     public function viewUser(int $userId, DocumentManager $dm): Response
     {
         return $this->render('users/view.html.twig', [
@@ -49,14 +35,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{userId}", name="users:edit", methods={"POST"})
-     * @param int $userId
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     * @throws MongoDBException
-     */
+    #[Route('/{userId}', name: 'users:edit', methods: ['POST'])]
     public function editUser(int $userId, Request $request, DocumentManager $dm): Response
     {
         $username = $request->request->get('discordUsername');

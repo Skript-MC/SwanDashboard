@@ -12,12 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    /**
-     * @Route("", name="home")
-     * @param DiscordService $discordService
-     * @param CacheService $cache
-     * @return Response
-     */
+    #[Route('', name: 'home')]
     public function home(DiscordService $discordService, CacheService $cache): Response
     {
         if (!$this->isGranted('ROLE_USER'))
@@ -30,11 +25,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/login", name="login")
-     * @param ClientRegistry $registry
-     * @return Response
-     */
+    #[Route('/login', name: 'login')]
     public function login(ClientRegistry $registry): Response
     {
         return $registry
@@ -42,11 +33,7 @@ class MainController extends AbstractController
             ->redirect(['identify'], ['prompt' => 'none']);
     }
 
-    /**
-     * @Route("/error", name="error")
-     * @param Request $request
-     * @return Response
-     */
+    #[Route('/error', name: 'error')]
     public function error(Request $request): Response
     {
         return $this->render('error.html.twig', [

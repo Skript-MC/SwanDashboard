@@ -8,18 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/roles")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route('/roles')]
+#[IsGranted('ROLE_ADMIN')]
 class RoleController extends AbstractController
 {
-
-    /**
-     * @Route("", name="roles")
-     * @param DiscordService $discordService
-     * @return Response
-     */
+    #[Route('', name: 'roles')]
     public function home(DiscordService $discordService): Response
     {
         return $this->render('roles/home.html.twig', [

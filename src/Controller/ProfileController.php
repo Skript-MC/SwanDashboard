@@ -5,24 +5,17 @@ namespace App\Controller;
 use App\Document\User;
 use App\Service\DiscordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/profile")
- * @IsGranted("ROLE_USER")
- */
+#[Route('/profile')]
+#[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
-    /**
-     * @Route("", name="profile")
-     * @param DiscordService $discordService
-     * @return Response
-     */
+    #[Route('', name: 'profile')]
     public function home(DiscordService $discordService): Response
     {
         /** @var User $user */
@@ -32,12 +25,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/delete", name="profile:delete", methods={"POST"})
-     * @param DocumentManager $dm
-     * @return Response
-     * @throws MongoDBException
-     */
+    #[Route('/delete', name: 'profile:delete', methods: ['POST'])]
     public function deleteAccount(DocumentManager $dm): Response
     {
         if ($this->isGranted("ROLE_ADMIN")) {

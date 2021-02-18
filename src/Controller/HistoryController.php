@@ -22,19 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/history")
- * @IsGranted("ROLE_STAFF")
- */
+#[Route('/history')]
+#[IsGranted('ROLE_STAFF')]
 class HistoryController extends AbstractController
 {
 
-    /**
-     * @Route("", name="history")
-     * @param DocumentManager $dm
-     * @param DiscordService $discordService
-     * @return Response
-     */
+    #[Route('', name: 'history')]
     public function home(DocumentManager $dm, DiscordService $discordService): Response
     {
         return $this->render('history/home.html.twig', [
@@ -50,15 +43,7 @@ class HistoryController extends AbstractController
         return isset($channels) ? $channels->getValue() : [];
     }
 
-    /**
-     * @Route("/channel/{channelId}", name="history:channel")
-     * @param int $channelId
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @param Request $request
-     * @param DiscordService $swanClient
-     * @return Response
-     */
+    #[Route('/channel/{channelId}', name: 'history:channel')]
     public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request, DiscordService $swanClient): Response
     {
         $deletions = $paginator->paginate(
@@ -88,13 +73,7 @@ class HistoryController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/message/{messageId}", name="history:message")
-     * @param int $messageId
-     * @param DocumentManager $dm
-     * @param DiscordService $discordService
-     * @return Response
-     */
+    #[Route('/message/{messageId}', name: 'history:message')]
     public function viewMessage(int $messageId, DocumentManager $dm, DiscordService $discordService): Response
     {
         $message = $dm->getRepository(MessageHistory::class)
@@ -113,13 +92,7 @@ class HistoryController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/search", name="history:search")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/search', name: 'history:search')]
     public function searchMessages(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $form = $this->createFormBuilder(new HistoryQuery())
@@ -185,12 +158,7 @@ class HistoryController extends AbstractController
 
     }
 
-    /**
-     * @Route("/api/channels", methods={"POST"})
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return JsonResponse
-     */
+    #[Route('/api/channels', methods: ['POST'])]
     public function changeLoggingState(Request $request, DocumentManager $dm): JsonResponse
     {
         $channelId = $request->request->getInt('channelId');

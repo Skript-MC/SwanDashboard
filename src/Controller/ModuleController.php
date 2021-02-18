@@ -14,21 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Class ModuleController
- * @package App\Controller
- *
- * @Route("/modules")
- * @IsGranted("ROLE_USER")
- */
+#[Route('/modules')]
+#[IsGranted('ROLE_USER')]
 class ModuleController extends AbstractController
 {
-
-    /**
-     * @Route("", name="modules")
-     * @param DocumentManager $dm
-     * @return Response
-     */
+    #[Route('', name: 'modules')]
     public function home(DocumentManager $dm): Response
     {
         return $this->render('modules/home.html.twig', [
@@ -36,12 +26,7 @@ class ModuleController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/api", methods={"POST"})
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     */
+    #[Route('/api', methods: ['POST'])]
     public function api(Request $request, DocumentManager $dm): Response
     {
         if (!$this->isGranted('ROLE_STAFF'))
@@ -60,7 +45,7 @@ class ModuleController extends AbstractController
                 ->field('modified')->set(new UTCDateTime(new DateTime()))
                 ->getQuery()
                 ->execute();
-        } catch (MongoDBException $e) {
+        } catch (MongoDBException) {
             return new JsonResponse(['error' => 'Une erreur interne est survenue.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

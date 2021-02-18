@@ -7,7 +7,6 @@ use App\Document\MessageEditRequest;
 use App\Document\User;
 use App\Service\MessageEditService;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,23 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Class MessageController
- * @package App\Controller
- *
- * @IsGranted("ROLE_USER")
- * @Route("/messages")
- */
+#[Route('/messages')]
+#[IsGranted('ROLE_USER')]
 class MessageController extends AbstractController
 {
-
-    /**
-     * @Route("", name="messages:history")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('', name: 'messages:history')]
     public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         /** @var User $user */
@@ -59,13 +46,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/auto", name="messages:list:auto")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/auto', name: 'messages:list:auto')]
     public function automaticMessages(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         return $this->render('messages/list.html.twig', [
@@ -77,13 +58,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/addonpack", name="messages:list:addonpack")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/addonpack', name: 'messages:list:addonpack')]
     public function addonPacks(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         return $this->render('messages/list.html.twig', [
@@ -95,13 +70,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/error", name="messages:list:error")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/error', name: 'messages:list:error')]
     public function errorDetails(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         return $this->render('messages/list.html.twig', [
@@ -113,22 +82,13 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="messages:new", methods={"GET"})
-     * @return Response
-     */
+    #[Route('/new', name: 'messages:new', methods: ['GET'])]
     public function newMessage(): Response
     {
         return $this->render('messages/new.html.twig');
     }
 
-    /**
-     * @Route("/new", name="messages:postNew")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     * @throws MongoDBException
-     */
+    #[Route('/new', name: 'messages:postNew', methods: ['POST'])]
     public function postNewMessage(Request $request, DocumentManager $dm): Response
     {
         $name = $this->formatString($request->request->get('name'));
@@ -174,13 +134,7 @@ class MessageController extends AbstractController
         return $input;
     }
 
-    /**
-     * @Route("/edit", name="messages:postEdit", methods={"POST"})
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     * @throws MongoDBException
-     */
+    #[Route('/edit', name: 'messages:postEdit', methods: ['POST'])]
     public function postEdit(Request $request, DocumentManager $dm): Response
     {
         $messageId = $request->request->get('messageId');
@@ -219,13 +173,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('messages:history');
     }
 
-    /**
-     * @Route("/view/{messageId}", name="messages:view")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param MessageEditService $messageService
-     * @return Response
-     */
+    #[Route('/view/{messageId}', name: 'messages:view')]
     public function viewEdit(Request $request, DocumentManager $dm, MessageEditService $messageService): Response
     {
         $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
@@ -239,14 +187,8 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/waiting", name="messages:approbation:waiting")
-     * @IsGranted("ROLE_STAFF")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/waiting', name: 'messages:approbation:waiting')]
+    #[IsGranted('ROLE_STAFF')]
     public function waitingRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
@@ -261,14 +203,8 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/accepted", name="messages:approbation:accepted")
-     * @IsGranted("ROLE_STAFF")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/accepted', name: 'messages:approbation:accepted')]
+    #[IsGranted('ROLE_STAFF')]
     public function acceptedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
@@ -283,14 +219,8 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/denied", name="messages:approbation:denied")
-     * @IsGranted("ROLE_STAFF")
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @param PaginatorInterface $paginator
-     * @return Response
-     */
+    #[Route('/denied', name: 'messages:approbation:denied')]
+    #[IsGranted('ROLE_STAFF')]
     public function deniedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
         $messages = $paginator->paginate(
@@ -305,13 +235,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/approve", name="messages:approve", methods={"POST"})
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     * @throws MongoDBException
-     */
+    #[Route('/approve', name: 'messages:approve', methods: ['POST'])]
     public function approveEdit(Request $request, DocumentManager $dm): Response
     {
         $messageId = $request->request->get('messageId');
@@ -377,12 +301,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('messages:history');
     }
 
-    /**
-     * @Route("/{messageId}", name="messages:edit", methods={"GET"})
-     * @param Request $request
-     * @param DocumentManager $dm
-     * @return Response
-     */
+    #[Route('/{messageId}', name: 'messages:edit', methods: ['GET'])]
     public function editMessage(Request $request, DocumentManager $dm): Response
     {
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
