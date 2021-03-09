@@ -17,7 +17,7 @@ class MessageHistoryFixtures extends Fixture implements DependentFixtureInterfac
 
     public function load(ObjectManager $manager)
     {
-        $user = $manager->getRepository(User::class)->findOneBy(['_id' => 191495299884122112]);
+        $user = $manager->getRepository(User::class)->findOneBy(['discordId' => 191495299884122112]);
 
         $deletedMessage = new MessageHistory();
         $deletedMessage->setUser($user);

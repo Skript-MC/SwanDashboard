@@ -33,7 +33,7 @@ class MessageController extends AbstractController
         );
 
         $requests = $paginator->paginate(
-            $query->field('user.id')->equals($user->getId())->getQuery(),
+            $query->field('user')->equals($user->getId())->getQuery(),
             $request->query->getInt('pageRequests', 1)
         );
 

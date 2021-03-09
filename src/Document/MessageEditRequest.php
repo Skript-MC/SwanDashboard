@@ -71,7 +71,7 @@ class MessageEditRequest
     }
 
     /**
-     * @return Message
+     * @return Message|null
      */
     public function getMessage(): ?Message
     {

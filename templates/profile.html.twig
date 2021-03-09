@@ -12,9 +12,15 @@
                     <div class="card-body">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="discordId">Identifiant</span>
+                                <span class="input-group-text" id="discordId">Identifiant panel</span>
                             </div>
                             <input type="text" class="form-control" value="{{ app.user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="discordId">Identifiant Discord</span>
+                            </div>
+                            <input type="text" class="form-control" value="{{ app.user.discordId }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">

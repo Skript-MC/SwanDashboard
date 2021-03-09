@@ -73,7 +73,7 @@ class DiscordAuthenticator extends SocialAuthenticator
         /* @var $existingUser User */
         $existingUser = $this->dm
             ->getRepository(User::class)
-            ->findOneBy(['_id' => $discordUser->getId()]);
+            ->findOneBy(['discordId' => $discordUser->getId()]);
 
         // Merge existing user and new user, this will update the existing user if it is found
         $user = $existingUser ? $existingUser : new User();
@@ -81,7 +81,7 @@ class DiscordAuthenticator extends SocialAuthenticator
 
         // If we have an existing user, don't refresh these data.
         if (!$existingUser) {
-            $user->setId($discordUser->getId());
+            $user->setDiscordId($discordUser->getId());
             $user->setRoles(['ROLE_USER']);
         }
 

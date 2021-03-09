@@ -11,9 +11,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     /**
-     * @MongoDB\Id(strategy="none", type="int")
+     * @MongoDB\Id(type="string")
      */
-    protected int $id;
+    protected string $id;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    protected int $discordId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -41,19 +46,35 @@ class User implements UserInterface
     protected array $discordRoles = [];
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param string $id
      */
-    public function setId(int $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscordId(): int
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param int $discordId
+     */
+    public function setDiscordId(int $discordId): void
+    {
+        $this->discordId = $discordId;
     }
 
     /**

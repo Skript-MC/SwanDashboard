@@ -28,20 +28,23 @@ class UserController extends AbstractController
     }
 
     #[Route('/{userId}', name: 'users:view', methods: ['GET'])]
-    public function viewUser(int $userId, DocumentManager $dm): Response
+    public function viewUser(string $userId, DocumentManager $dm): Response
     {
+        $user = $dm->getRepository(User::class)->findOneBy(['discordId' => $userId]);
+        if (!$user)
+            return new RedirectResponse($this->generateUrl('users'));
         return $this->render('users/view.html.twig', [
-            'user' => $dm->getRepository(User::class)->findOneBy(['_id' => $userId])
+            'user' => $user
         ]);
     }
 
     #[Route('/{userId}', name: 'users:edit', methods: ['POST'])]
-    public function editUser(int $userId, Request $request, DocumentManager $dm): Response
+    public function editUser(string $userId, Request $request, DocumentManager $dm): Response
     {
         $username = $request->request->get('discordUsername');
         $avatarUrl = $request->request->get('discordAvatar');
         $dashboardRole = $request->request->get('dashboardRole');
-        $targetUser = $dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+        $targetUser = $dm->getRepository(User::class)->findOneBy(['discordId' => $userId]);
         if (!$username || !$avatarUrl || !$dashboardRole || !$targetUser || !in_array($dashboardRole, ['ROLE_USER', 'ROLE_STAFF', 'ROLE_ADMIN'])) {
             $this->addFlash('error', 'Certains champs sont vides ou incorrects.');
             return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));

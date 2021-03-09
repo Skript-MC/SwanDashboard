@@ -15,7 +15,7 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $adminUser = new User();
-        $adminUser->setId(191495299884122112);
+        $adminUser->setDiscordId(191495299884122112);
         $adminUser->setUsername('Romitou#9685');
         $adminUser->setDiscordRoles([]);
         $adminUser->setRoles(['ROLE_ADMIN']);
@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
         $manager->flush();
 
         $user = new User();
-        $user->setId(752259261475586139);
+        $user->setDiscordId(752259261475586139);
         $user->setUsername('Romi2#0000');
         $user->setDiscordRoles([]);
         $user->setRoles(['ROLE_STAFF']);
@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
         $manager->flush();
 
         $temporaryUser = new User();
-        $temporaryUser->setId(191495299884122110);
+        $temporaryUser->setDiscordId(191495299884122110);
         $temporaryUser->setUsername('Romitwo#0002');
         $temporaryUser->setDiscordRoles([]);
         $temporaryUser->setRoles(['ROLE_USER']);

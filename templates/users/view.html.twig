@@ -25,9 +25,15 @@
                         <form method="POST">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">Identifiant</span>
+                                    <span class="input-group-text" id="discordId">Identifiant panel</span>
                                 </div>
-                                <input type="text" name="discordId" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                                <input type="text" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="discordId">Identifiant Discord</span>
+                                </div>
+                                <input type="text" name="discordId" class="form-control" value="{{ user.discordId }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">

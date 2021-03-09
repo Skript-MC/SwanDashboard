@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Document\MessageHistory;
 use App\Document\SharedConfig;
+use App\Document\User;
 use App\Entity\HistoryQuery;
 use App\Service\DiscordService;
 use App\Utils\DiscordUtils;
@@ -132,7 +133,10 @@ class HistoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var HistoryQuery $data */
             $data = $form->getData();
-            if ($data->getUserId()) $query->field('user.id')->equals($data->getUserId());
+            if ($data->getUserId()) {
+                $userId = $dm->getRepository(User::class)->findOneBy(['discordId' => $data->getUserId()]);
+                $query->field('user')->equals($userId->getId());
+            }
             if ($data->getAfterDate()) $query->field('messageId')->gte((DiscordUtils::getSnowflakeFromTimestamp($data->getAfterDate())));
             if ($data->getBeforeDate()) $query->field('messageId')->lte((DiscordUtils::getSnowflakeFromTimestamp($data->getBeforeDate())));
             if ($data->getMessageId()) $query->field('messageId')->equals($data->getMessageId());
