@@ -233,10 +233,7 @@ class MessageControllerTest extends WebTestCase
         return [
             ['auto'],
             ['error'],
-            ['addonpack'],
-            ['waiting'],
-            ['accepted'],
-            ['denied']
+            ['addonpack']
         ];
     }
 
