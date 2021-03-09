@@ -15,7 +15,7 @@ class MessageHistory
     protected string $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class)
+     * @MongoDB\ReferenceOne(targetDocument=User::class, storeAs="id")
      */
     protected User $user;
 

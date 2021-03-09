@@ -15,12 +15,12 @@ class MessageEditRequest
     protected string $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true)
+     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true, storeAs="id")
      */
     protected ?Message $message = null;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class)
+     * @MongoDB\ReferenceOne(targetDocument=User::class, storeAs="id")
      */
     protected User $user;
 
@@ -45,7 +45,7 @@ class MessageEditRequest
     protected ?bool $validated = null;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class, nullable=true)
+     * @MongoDB\ReferenceOne(targetDocument=User::class, nullable=true, storeAs="id")
      */
     protected ?User $reviewer = null;
 
