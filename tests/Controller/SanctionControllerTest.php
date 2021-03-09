@@ -16,7 +16,7 @@ class SanctionControllerTest extends WebTestCase
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->adminUser = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 191495299884122112]);
+            ->findOneBy(['discordId' => 191495299884122112]);
     }
 
     public function testAuthorization(): void

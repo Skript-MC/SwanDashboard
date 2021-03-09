@@ -16,7 +16,7 @@ class MessageControllerTest extends WebTestCase
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->staffUser = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 752259261475586139]);
+            ->findOneBy(['discordId' => 752259261475586139]);
     }
 
     public function testAuthorization(): void
@@ -76,7 +76,7 @@ class MessageControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->staffUser);
 
-        $crawler = $this->client->request('GET', '/messages/waiting');
+        $crawler = $this->client->request('GET', '/messages');
         $link = $crawler->filter('tbody')
             ->filter('td')
             ->filter('a')
@@ -189,7 +189,7 @@ class MessageControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->staffUser);
 
-        $crawler = $this->client->request('GET', '/messages/waiting');
+        $crawler = $this->client->request('GET', '/messages');
         $link = $crawler->filter('tbody')
             ->filter('td')
             ->filter('a')

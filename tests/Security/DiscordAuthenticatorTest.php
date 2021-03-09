@@ -17,7 +17,7 @@ class DiscordAuthenticatorTest extends WebTestCase
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->user = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 752259261475586139]);
+            ->findOneBy(['discordId' => 752259261475586139]);
     }
 
     function testAuthenticationFailure(): void
