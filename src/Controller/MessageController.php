@@ -187,54 +187,6 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/waiting', name: 'messages:approbation:waiting')]
-    #[IsGranted('ROLE_STAFF')]
-    public function waitingRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
-    {
-        $messages = $paginator->paginate(
-            $dm->createQueryBuilder(MessageEditRequest::class)
-                ->field('validated')->equals(null)
-                ->getQuery(),
-            $request->query->getInt('page', 1)
-        );
-        return $this->render('messages/admin.html.twig', [
-            'title' => 'Messages en attente',
-            'requests' => $messages
-        ]);
-    }
-
-    #[Route('/accepted', name: 'messages:approbation:accepted')]
-    #[IsGranted('ROLE_STAFF')]
-    public function acceptedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
-    {
-        $messages = $paginator->paginate(
-            $dm->createQueryBuilder(MessageEditRequest::class)
-                ->field('validated')->equals(true)
-                ->getQuery(),
-            $request->query->getInt('page', 1)
-        );
-        return $this->render('messages/admin.html.twig', [
-            'title' => 'Messages acceptés',
-            'requests' => $messages
-        ]);
-    }
-
-    #[Route('/denied', name: 'messages:approbation:denied')]
-    #[IsGranted('ROLE_STAFF')]
-    public function deniedRequests(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
-    {
-        $messages = $paginator->paginate(
-            $dm->createQueryBuilder(MessageEditRequest::class)
-                ->field('validated')->equals(false)
-                ->getQuery(),
-            $request->query->getInt('page', 1)
-        );
-        return $this->render('messages/admin.html.twig', [
-            'title' => 'Messages refusés',
-            'requests' => $messages
-        ]);
-    }
-
     #[Route('/approve', name: 'messages:approve', methods: ['POST'])]
     public function approveEdit(Request $request, DocumentManager $dm): Response
     {

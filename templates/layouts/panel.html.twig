@@ -42,14 +42,6 @@
                     <span>Nouveau message</span>
                 </a>
             </li>
-            {% if is_granted('ROLE_STAFF') %}
-                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages:approbation' ? 'active' }}">
-                    <a class="nav-link" href="{{ path('messages:approbation:waiting') }}">
-                        <i class="fas fa-vote-yea"></i>
-                        <span>Approbation</span>
-                    </a>
-                </li>
-            {% endif %}
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Swan
