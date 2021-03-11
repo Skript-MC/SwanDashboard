@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Document\Message;
-use App\Document\MessageEditRequest;
-use App\Document\User;
+use App\Document\MessageEdit;
+use App\Document\DiscordUser;
 use App\Service\MessageEditService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
@@ -19,12 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_USER')]
 class MessageController extends AbstractController
 {
-    #[Route('', name: 'messages:history')]
+    #[Route('', name: 'messages:logs')]
     public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
-        /** @var User $user */
+        /** @var DiscordUser $user */
         $user = $this->getUser();
-        $query = $dm->createQueryBuilder(MessageEditRequest::class)
+        $query = $dm->createQueryBuilder(MessageEdit::class)
             ->sort('_id', 'DESC');
 
         $editions = $paginator->paginate(
@@ -103,10 +103,10 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('messages:history');
         }
 
-        /** @var User $user */
+        /** @var DiscordUser $user */
         $user = $this->getUser();
 
-        $request = new MessageEditRequest();
+        $request = new MessageEdit();
         $request->setNewName($name);
         $request->setNewAliases($aliases);
         $request->setNewContent($content);
@@ -155,10 +155,10 @@ class MessageController extends AbstractController
             $this->addFlash('error', 'Le message avec identifiant ' . $messageId . ' n\'a pas été trouvé dans nos bases de données.');
             return $this->redirectToRoute('messages:history', ['messageId' => $messageId]);
         }
-        /** @var User $user */
+        /** @var DiscordUser $user */
         $user = $this->getUser();
 
-        $edit = new MessageEditRequest();
+        $edit = new MessageEdit();
         $edit->setUser($user);
         $edit->setMessage($message);
         $edit->setNewName($newName);
@@ -176,7 +176,7 @@ class MessageController extends AbstractController
     #[Route('/view/{messageId}', name: 'messages:view')]
     public function viewEdit(Request $request, DocumentManager $dm, MessageEditService $messageService): Response
     {
-        $messageRequest = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $request->get('messageId')]);
+        $messageRequest = $dm->getRepository(MessageEdit::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
             $this->addFlash('error', 'Nous n\'avons pas pu trouver de message correspondant à cet identifiant.');
             return new RedirectResponse($this->generateUrl('messages:history'));
@@ -192,7 +192,7 @@ class MessageController extends AbstractController
     {
         $messageId = $request->request->get('messageId');
         $isValidated = $request->request->getBoolean('validated');
-        $message = $dm->getRepository(MessageEditRequest::class)->findOneBy(['_id' => $messageId]);
+        $message = $dm->getRepository(MessageEdit::class)->findOneBy(['_id' => $messageId]);
 
         if (!$message || !isset($isValidated)) {
             $this->addFlash('error', 'Votre requête est invalide.');
@@ -204,10 +204,10 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
         }
 
-        /** @var User $reviewer */
+        /** @var DiscordUser $reviewer */
         $reviewer = $this->getUser();
 
-        /** @var User $author */
+        /** @var DiscordUser $author */
         $author = $message->getUser();
 
         if (!($this->isGranted('ROLE_STAFF') || ($reviewer->getId() == $author->getId() && !$isValidated))) {
@@ -240,7 +240,7 @@ class MessageController extends AbstractController
             $query->getQuery()
                 ->execute();
         }
-        $dm->createQueryBuilder(MessageEditRequest::class)
+        $dm->createQueryBuilder(MessageEdit::class)
             ->findAndUpdate()
             ->field('_id')->equals($message->getId())
             ->field('validated')->set($isValidated)
@@ -258,7 +258,7 @@ class MessageController extends AbstractController
     {
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$message) return new RedirectResponse($this->generateUrl('messages:history'));
-        $messageEditRequest = $dm->createQueryBuilder(MessageEditRequest::class)
+        $messageEditRequest = $dm->createQueryBuilder(MessageEdit::class)
             ->field('message.id')->equals($message->getId())
             ->field('validated')->equals(null)
             ->getQuery()

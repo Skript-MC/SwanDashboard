@@ -5,6 +5,8 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
+ * Class Message
+ * @package App\Document
  * @MongoDB\Document(collection="messages")
  */
 class Message

@@ -2,20 +2,20 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MessageControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private User $staffUser;
+    private DiscordUser $staffUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->staffUser = $dm->getRepository(User::class)
+        $this->staffUser = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['discordId' => 752259261475586139]);
     }
 
