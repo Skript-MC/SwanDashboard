@@ -16,7 +16,7 @@ class MessageControllerTest extends WebTestCase
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->staffUser = $dm->getRepository(DiscordUser::class)
-            ->findOneBy(['discordId' => 752259261475586139]);
+            ->findOneBy(['userId' => 752259261475586139]);
     }
 
     public function testAuthorization(): void

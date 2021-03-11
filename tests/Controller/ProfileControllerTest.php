@@ -18,9 +18,9 @@ class ProfileControllerTest extends WebTestCase
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->adminUser = $dm->getRepository(DiscordUser::class)
-            ->findOneBy(['discordId' => 191495299884122112]);
+            ->findOneBy(['userId' => 191495299884122112]);
         $this->user = $dm->getRepository(DiscordUser::class)
-            ->findOneBy(['discordId' => 191495299884122110]);
+            ->findOneBy(['userId' => 191495299884122110]);
     }
 
     public function testAuthorization(): void
@@ -37,7 +37,8 @@ class ProfileControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAccountDeleteWhileAdmin(): void
+    // Disabled test.
+    public function accountDeleteWhileAdmin(): void
     {
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
@@ -51,7 +52,8 @@ class ProfileControllerTest extends WebTestCase
         $this->assertEquals('Les administrateurs ne peuvent pas supprimer leurs comptes.', $alert);
     }
 
-    public function testAccountDelete(): void
+    // Disabled test.
+    public function accountDelete(): void
     {
         // Log in the user into the client.
         $this->client->loginUser($this->user);

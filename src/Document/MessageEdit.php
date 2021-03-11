@@ -52,6 +52,11 @@ class MessageEdit
     protected ?DiscordUser $reviewer = null;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    protected ?string $messageType = null;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -177,6 +182,22 @@ class MessageEdit
     public function setReviewer(?DiscordUser $reviewer): void
     {
         $this->reviewer = $reviewer;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMessageType(): ?string
+    {
+        return $this->messageType;
+    }
+
+    /**
+     * @param string|null $messageType
+     */
+    public function setMessageType(?string $messageType): void
+    {
+        $this->messageType = $messageType;
     }
 
 }

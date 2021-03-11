@@ -44,7 +44,7 @@ class LogController extends AbstractController
         return isset($channels) ? $channels->getValue() : [];
     }
 
-    #[Route('/logs/{channelId}', name: 'logs:channel')]
+    #[Route('/channel/{channelId}', name: 'logs:channel')]
     public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request, DiscordService $swanClient): Response
     {
         $deletions = $paginator->paginate(

@@ -40,7 +40,7 @@ class MessageController extends AbstractController
         $requests->setPaginatorOptions(['pageParameterName' => 'pageRequests']);
         $editions->setPaginatorOptions(['pageParameterName' => 'pageEditions']);
 
-        return $this->render('messages/history.html.twig', [
+        return $this->render('messages/logs.html.twig', [
             'requests' => $requests,
             'editions' => $editions
         ]);
@@ -100,7 +100,7 @@ class MessageController extends AbstractController
 
         if (!$name || !$aliases || !$content || !in_array($messageType, ['auto', 'error', 'addonpack'])) {
             $this->addFlash('error', 'Certains champs sont incorrects, merci de réessayer votre édition.');
-            return $this->redirectToRoute('messages:history');
+            return $this->redirectToRoute('messages:logs');
         }
 
         /** @var DiscordUser $user */
@@ -116,7 +116,7 @@ class MessageController extends AbstractController
         $dm->flush();
 
         $this->addFlash('success', 'Votre suggestion de nouveau message a été enregistrée. Elle sera traitée prochainement !');
-        return $this->redirectToRoute('messages:history');
+        return $this->redirectToRoute('messages:logs');
 
     }
 
@@ -153,7 +153,7 @@ class MessageController extends AbstractController
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $messageId]);
         if (!$message) {
             $this->addFlash('error', 'Le message avec identifiant ' . $messageId . ' n\'a pas été trouvé dans nos bases de données.');
-            return $this->redirectToRoute('messages:history', ['messageId' => $messageId]);
+            return $this->redirectToRoute('messages:logs', ['messageId' => $messageId]);
         }
         /** @var DiscordUser $user */
         $user = $this->getUser();
@@ -170,7 +170,7 @@ class MessageController extends AbstractController
         $dm->flush();
 
         $this->addFlash('success', 'Votre suggestion de modification a été enregistrée. Elle sera traitée prochainement !');
-        return $this->redirectToRoute('messages:history');
+        return $this->redirectToRoute('messages:logs');
     }
 
     #[Route('/view/{messageId}', name: 'messages:view')]
@@ -179,7 +179,7 @@ class MessageController extends AbstractController
         $messageRequest = $dm->getRepository(MessageEdit::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {
             $this->addFlash('error', 'Nous n\'avons pas pu trouver de message correspondant à cet identifiant.');
-            return new RedirectResponse($this->generateUrl('messages:history'));
+            return new RedirectResponse($this->generateUrl('messages:logs'));
         }
         return $this->render('messages/view.html.twig', [
             'request' => $messageRequest,
@@ -250,14 +250,14 @@ class MessageController extends AbstractController
             ->execute();
 
         $this->addFlash('success', 'Cette suggestion de modification a été marquée comme ' . ($isValidated ? 'validée' : 'refusée') . '.');
-        return $this->redirectToRoute('messages:history');
+        return $this->redirectToRoute('messages:logs');
     }
 
     #[Route('/{messageId}', name: 'messages:edit', methods: ['GET'])]
     public function editMessage(Request $request, DocumentManager $dm): Response
     {
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
-        if (!$message) return new RedirectResponse($this->generateUrl('messages:history'));
+        if (!$message) return new RedirectResponse($this->generateUrl('messages:logs'));
         $messageEditRequest = $dm->createQueryBuilder(MessageEdit::class)
             ->field('message.id')->equals($message->getId())
             ->field('validated')->equals(null)

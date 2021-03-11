@@ -29,7 +29,7 @@ class MainControllerTest extends WebTestCase
 
         // Log in the user into the client.
         $user = $this->dm->getRepository(DiscordUser::class)
-            ->findOneBy(['discordId' => 191495299884122112]);
+            ->findOneBy(['userId' => 191495299884122112]);
         $this->client->loginUser($user);
 
         // The request should have been authorized and return the dashboard page.

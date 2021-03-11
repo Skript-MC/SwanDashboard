@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Tests\Controller;
-
 
 use App\Document\SharedConfig;
 use App\Document\DiscordUser;
@@ -21,7 +19,7 @@ class LogControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->adminUser = $this->dm->getRepository(DiscordUser::class)
-            ->findOneBy(['discordId' => 191495299884122112]);
+            ->findOneBy(['userId' => 191495299884122112]);
     }
 
     public function testAuthorization(): void
@@ -108,7 +106,7 @@ class LogControllerTest extends WebTestCase
 
     function testSwitchChannel(): void
     {
-        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'archived-channels']);
+        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'logged-channels']);
         $this->assertEquals([780877192753184868], $channels->getValue());
 
         // Log in the user into the client.
@@ -126,7 +124,7 @@ class LogControllerTest extends WebTestCase
         ]);
         $this->assertEquals('{"status":"OK"}', $this->client->getResponse()->getContent());
 
-        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'archived-channels']);
+        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'logged-channels']);
         $this->assertEquals([780877192753184868], $channels->getValue());
     }
 
