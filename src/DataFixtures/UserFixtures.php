@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Doctrine\Bundle\MongoDBBundle\Fixture\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -14,8 +14,8 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $adminUser = new User();
-        $adminUser->setDiscordId(191495299884122112);
+        $adminUser = new DiscordUser();
+        $adminUser->setUserId(191495299884122112);
         $adminUser->setUsername('Romitou#9685');
         $adminUser->setDiscordRoles([]);
         $adminUser->setRoles(['ROLE_ADMIN']);
@@ -25,8 +25,8 @@ class UserFixtures extends Fixture
         $manager->persist($adminUser);
         $manager->flush();
 
-        $user = new User();
-        $user->setDiscordId(752259261475586139);
+        $user = new DiscordUser();
+        $user->setUserId(752259261475586139);
         $user->setUsername('Romi2#0000');
         $user->setDiscordRoles([]);
         $user->setRoles(['ROLE_STAFF']);
@@ -36,8 +36,8 @@ class UserFixtures extends Fixture
         $manager->persist($user);
         $manager->flush();
 
-        $temporaryUser = new User();
-        $temporaryUser->setDiscordId(191495299884122110);
+        $temporaryUser = new DiscordUser();
+        $temporaryUser->setUserId(191495299884122110);
         $temporaryUser->setUsername('Romitwo#0002');
         $temporaryUser->setDiscordRoles([]);
         $temporaryUser->setRoles(['ROLE_USER']);

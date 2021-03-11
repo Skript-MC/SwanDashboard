@@ -6,9 +6,11 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @MongoDB\Document(collection="users")
+ * Class DiscordUser
+ * @package App\Document
+ * @MongoDB\Document(collection="discordusers")
  */
-class User implements UserInterface
+class DiscordUser implements UserInterface
 {
     /**
      * @MongoDB\Id(type="string")
@@ -16,9 +18,9 @@ class User implements UserInterface
     protected string $id;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\Field(type="string")
      */
-    protected int $discordId;
+    protected string $userId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -62,19 +64,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getDiscordId(): int
+    public function getUserId(): string
     {
-        return $this->discordId;
+        return $this->userId;
     }
 
     /**
-     * @param int $discordId
+     * @param string $userId
      */
-    public function setDiscordId(int $discordId): void
+    public function setUserId(string $userId): void
     {
-        $this->discordId = $discordId;
+        $this->userId = $userId;
     }
 
     /**
@@ -130,7 +132,10 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     /**

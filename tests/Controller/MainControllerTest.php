@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -28,7 +28,7 @@ class MainControllerTest extends WebTestCase
         $this->assertEquals('Swan - Accueil', $pageTitle);
 
         // Log in the user into the client.
-        $user = $this->dm->getRepository(User::class)
+        $user = $this->dm->getRepository(DiscordUser::class)
             ->findOneBy(['discordId' => 191495299884122112]);
         $this->client->loginUser($user);
 
@@ -62,7 +62,7 @@ class MainControllerTest extends WebTestCase
         return [
             ['/profile'],
             ['/messages'],
-            ['/history']
+            ['/logs']
         ];
     }
 

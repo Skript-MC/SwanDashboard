@@ -3,8 +3,8 @@ security:
     providers:
         mongo_provider:
             mongodb:
-                class: App\Document\User
-                property: discordId
+                class: App\Document\DiscordUser
+                property: id
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

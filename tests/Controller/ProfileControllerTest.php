@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -10,16 +10,16 @@ class ProfileControllerTest extends WebTestCase
 {
 
     private KernelBrowser $client;
-    private User $user;
-    private User $adminUser;
+    private DiscordUser $user;
+    private DiscordUser $adminUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->adminUser = $dm->getRepository(User::class)
+        $this->adminUser = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['discordId' => 191495299884122112]);
-        $this->user = $dm->getRepository(User::class)
+        $this->user = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['discordId' => 191495299884122110]);
     }
 

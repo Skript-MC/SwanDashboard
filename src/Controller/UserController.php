@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,7 +21,7 @@ class UserController extends AbstractController
     {
         return $this->render('users/home.html.twig', [
             'users' => $paginator->paginate(
-                $dm->getRepository(User::class)->findAll(),
+                $dm->getRepository(DiscordUser::class)->findAll(),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -30,7 +30,7 @@ class UserController extends AbstractController
     #[Route('/{userId}', name: 'users:view', methods: ['GET'])]
     public function viewUser(string $userId, DocumentManager $dm): Response
     {
-        $user = $dm->getRepository(User::class)->findOneBy(['discordId' => $userId]);
+        $user = $dm->getRepository(DiscordUser::class)->findOneBy(['userId' => $userId]);
         if (!$user)
             return new RedirectResponse($this->generateUrl('users'));
         return $this->render('users/view.html.twig', [
@@ -44,7 +44,7 @@ class UserController extends AbstractController
         $username = $request->request->get('discordUsername');
         $avatarUrl = $request->request->get('discordAvatar');
         $dashboardRole = $request->request->get('dashboardRole');
-        $targetUser = $dm->getRepository(User::class)->findOneBy(['discordId' => $userId]);
+        $targetUser = $dm->getRepository(DiscordUser::class)->findOneBy(['userId' => $userId]);
         if (!$username || !$avatarUrl || !$dashboardRole || !$targetUser || !in_array($dashboardRole, ['ROLE_USER', 'ROLE_STAFF', 'ROLE_ADMIN'])) {
             $this->addFlash('error', 'Certains champs sont vides ou incorrects.');
             return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
@@ -60,9 +60,9 @@ class UserController extends AbstractController
         $targetUser->setAvatarUrl($avatarUrl);
         $targetUser->setDiscordRoles([$dashboardRole]);
 
-        $dm->createQueryBuilder(User::class)
+        $dm->createQueryBuilder(DiscordUser::class)
             ->updateOne()
-            ->field('_id')->equals($userId)
+            ->field('userId')->equals($userId)
             ->field('username')->set($username)
             ->field('avatarUrl')->set($avatarUrl)
             ->field('roles')->set([$dashboardRole])

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Security;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -10,13 +10,13 @@ class DiscordAuthenticatorTest extends WebTestCase
 {
 
     private KernelBrowser $client;
-    private User $user;
+    private DiscordUser $user;
 
     public function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->user = $dm->getRepository(User::class)
+        $this->user = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['discordId' => 752259261475586139]);
     }
 

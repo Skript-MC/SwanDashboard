@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use App\Service\DiscordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -59,31 +59,29 @@ class DiscordAuthenticator extends SocialAuthenticator
     /**
      * @param $credentials
      * @param UserProviderInterface $userProvider
-     * @return User
+     * @return DiscordUser
      * @throws MongoDBException
      * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
      */
-    public function getUser($credentials, UserProviderInterface $userProvider): User
+    public function getUser($credentials, UserProviderInterface $userProvider): DiscordUser
     {
         /** @var DiscordRessourceOwner $discordUser */
         $discordUser = $this
             ->getDiscordClient()
             ->fetchUserFromToken($credentials);
 
-        /* @var $existingUser User */
+        /* @var $existingUser DiscordUser */
         $existingUser = $this->dm
-            ->getRepository(User::class)
-            ->findOneBy(['discordId' => $discordUser->getId()]);
+            ->getRepository(DiscordUser::class)
+            ->findOneBy(['userId' => ''.$discordUser->getId()]);
 
         // Merge existing user and new user, this will update the existing user if it is found
-        $user = $existingUser ? $existingUser : new User();
+        $user = $existingUser ? $existingUser : new DiscordUser();
         $discordMember = $this->discordService->getMember($discordUser->getId());
 
         // If we have an existing user, don't refresh these data.
-        if (!$existingUser) {
-            $user->setDiscordId($discordUser->getId());
-            $user->setRoles(['ROLE_USER']);
-        }
+        if (!$existingUser)
+            $user->setUserId(''.$discordUser->getId());
 
         $user->setUsername($discordUser->getCompleteUsername());
         $user->setAvatarUrl($discordUser->getAvatarUrl() ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
