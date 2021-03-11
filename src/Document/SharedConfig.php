@@ -5,7 +5,9 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document(collection="sharedConfigs")
+ * Class SharedConfig
+ * @package App\Document
+ * @MongoDB\Document(collection="sharedconfigs")
  */
 class SharedConfig
 {
@@ -20,14 +22,14 @@ class SharedConfig
     protected string $name;
 
     /**
-     * @MongoDB\Field(type="collection")
+     * @MongoDB\Field(type="raw")
      */
-    protected array $value;
+    protected mixed $value;
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->id;
     }
@@ -35,7 +37,7 @@ class SharedConfig
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId(mixed $id): void
     {
         $this->id = $id;
     }
@@ -57,17 +59,17 @@ class SharedConfig
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function getValue(): array
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
     /**
-     * @param array $value
+     * @param mixed $value
      */
-    public function setValue(array $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }

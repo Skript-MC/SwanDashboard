@@ -15,7 +15,7 @@ class SharedConfigFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $archivedChannels = new SharedConfig();
-        $archivedChannels->setName('archived-channels');
+        $archivedChannels->setName('logged-channels');
         $archivedChannels->setValue([780877192753184868]);
 
         $manager->persist($archivedChannels);

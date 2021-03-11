@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Document\Module;
+use App\Document\SwanModule;
 use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -22,7 +22,7 @@ class ModuleController extends AbstractController
     public function home(DocumentManager $dm): Response
     {
         return $this->render('modules/home.html.twig', [
-            'modules' => $dm->getRepository(Module::class)->findAll()
+            'modules' => $dm->getRepository(SwanModule::class)->findAll()
         ]);
     }
 
@@ -38,7 +38,7 @@ class ModuleController extends AbstractController
             return new JsonResponse(['error' => 'Votre requête est invalide.'], Response::HTTP_BAD_REQUEST);
 
         try {
-            $dm->createQueryBuilder(Module::class)
+            $dm->createQueryBuilder(SwanModule::class)
                 ->findAndUpdate()
                 ->field('_id')->equals($moduleId)
                 ->field('enabled')->set($enabled)
