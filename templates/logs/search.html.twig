@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            {% include 'history/components/navbar.html.twig' %}
+            {% include 'logs/components/navbar.html.twig' with {'searchForm': searchForm} %}
             <div class="col-sm-9">
                 <div class="card shadow position-relative mb-3">
                     <div class="card-header py-3">
@@ -31,7 +31,7 @@
                                                 {{ edition.oldContent|truncate }}
                                             </td>
                                             <td>
-                                                <a href="{{ path('history:message', { messageId: edition.messageId }) }}"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ path('logs:message', { messageId: edition.messageId }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -61,21 +61,21 @@
                                         <th scope="col">Actions</th>
                                     </tr>
                                     </thead>
-                                        <tbody>
-                                            {% for deletion in deletions %}
-                                                <tr>
-                                                    <td>
-                                                        {{ deletion.user.username }}
-                                                    </td>
-                                                    <td>
-                                                        {{ deletion.oldContent|truncate }}
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ path('history:message', { messageId: deletion.messageId }) }}"><i class="fas fa-eye"></i></a>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
+                                    <tbody>
+                                    {% for deletion in deletions %}
+                                        <tr>
+                                            <td>
+                                                {{ deletion.user.username }}
+                                            </td>
+                                            <td>
+                                                {{ deletion.oldContent|truncate }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('logs:message', { messageId: deletion.messageId }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
                                 </table>
                             {% else %}
                                 <p class="text-center">

@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Document\MessageHistory;
+use App\Document\MessageLog;
 use App\Document\SharedConfig;
-use App\Document\User;
-use App\Entity\HistoryQuery;
+use App\Document\DiscordUser;
+use App\Entity\LogQuery;
 use App\Service\DiscordService;
 use App\Utils\DiscordUtils;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -23,15 +23,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/history')]
+#[Route('/logs')]
 #[IsGranted('ROLE_STAFF')]
-class HistoryController extends AbstractController
+class LogController extends AbstractController
 {
 
-    #[Route('', name: 'history')]
+    #[Route('', name: 'logs')]
     public function home(DocumentManager $dm, DiscordService $discordService): Response
     {
-        return $this->render('history/home.html.twig', [
+        return $this->render('logs/home.html.twig', [
             'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm)
         ]);
@@ -40,15 +40,15 @@ class HistoryController extends AbstractController
     private function getLoggedChannels(DocumentManager $dm): array
     {
         $channels = $dm->getRepository(SharedConfig::class)
-            ->findOneBy(['name' => 'archived-channels']);
+            ->findOneBy(['name' => 'logged-channels']);
         return isset($channels) ? $channels->getValue() : [];
     }
 
-    #[Route('/channel/{channelId}', name: 'history:channel')]
+    #[Route('/logs/{channelId}', name: 'logs:channel')]
     public function viewChannel(int $channelId, DocumentManager $dm, PaginatorInterface $paginator, Request $request, DiscordService $swanClient): Response
     {
         $deletions = $paginator->paginate(
-            $dm->createQueryBuilder(MessageHistory::class)
+            $dm->createQueryBuilder(MessageLog::class)
                 ->field('channelId')->equals($channelId)
                 ->field('newContent')->equals(null)
                 ->sort('messageId', 'DESC')
@@ -58,7 +58,7 @@ class HistoryController extends AbstractController
         $deletions->setPaginatorOptions(['pageParameterName' => 'pageDeletions']);
 
         $editions = $paginator->paginate(
-            $dm->createQueryBuilder(MessageHistory::class)
+            $dm->createQueryBuilder(MessageLog::class)
                 ->field('channelId')->equals($channelId)
                 ->field('newContent')->notEqual(null)
                 ->sort('messageId', 'DESC'),
@@ -66,7 +66,7 @@ class HistoryController extends AbstractController
         );
         $editions->setPaginatorOptions(['pageParameterName' => 'pageEditions']);
 
-        return $this->render('history/channel.html.twig', [
+        return $this->render('logs/channel.html.twig', [
             'channels' => $swanClient->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm),
             'deletions' => $deletions,
@@ -74,29 +74,29 @@ class HistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/message/{messageId}', name: 'history:message')]
+    #[Route('/message/{messageId}', name: 'logs:message')]
     public function viewMessage(int $messageId, DocumentManager $dm, DiscordService $discordService): Response
     {
-        $message = $dm->getRepository(MessageHistory::class)
+        $message = $dm->getRepository(MessageLog::class)
             ->findOneBy(['messageId' => $messageId]);
 
         if (!$message)
             return new RedirectResponse(
-                $this->generateUrl('history'),
+                $this->generateUrl('logs'),
                 Response::HTTP_SEE_OTHER
             );
 
-        return $this->render('history/message.html.twig', [
+        return $this->render('logs/message.html.twig', [
             'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels($dm),
             'message' => $message
         ]);
     }
 
-    #[Route('/search', name: 'history:search')]
+    #[Route('/search', name: 'logs:search')]
     public function searchMessages(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
     {
-        $form = $this->createFormBuilder(new HistoryQuery())
+        $form = $this->createFormBuilder(new LogQuery())
             ->setMethod('GET')
             ->add('userId', IntegerType::class, [
                 'required' => false
@@ -126,15 +126,15 @@ class HistoryController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
 
-        $query = $dm->createQueryBuilder(MessageHistory::class)
+        $query = $dm->createQueryBuilder(MessageLog::class)
             ->find()
             ->sort('_id', 'DESC');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var HistoryQuery $data */
+            /** @var LogQuery $data */
             $data = $form->getData();
             if ($data->getUserId()) {
-                $userId = $dm->getRepository(User::class)->findOneBy(['discordId' => $data->getUserId()]);
+                $userId = $dm->getRepository(DiscordUser::class)->findOneBy(['userId' => $data->getUserId()]);
                 $query->field('user')->equals($userId->getId());
             }
             if ($data->getAfterDate()) $query->field('messageId')->gte((DiscordUtils::getSnowflakeFromTimestamp($data->getAfterDate())));
@@ -154,7 +154,7 @@ class HistoryController extends AbstractController
             $request->query->getInt('page', 1)
         );
 
-        return $this->render('history/search.html.twig', [
+        return $this->render('logs/search.html.twig', [
             'editions' => $editions,
             'deletions' => $deletions,
             'searchForm' => $form->createView()
@@ -165,7 +165,7 @@ class HistoryController extends AbstractController
     #[Route('/api/channels', methods: ['POST'])]
     public function changeLoggingState(Request $request, DocumentManager $dm): JsonResponse
     {
-        $channelId = $request->request->getInt('channelId');
+        $channelId = $request->request->getAlnum('channelId');
         $checked = $request->request->getBoolean('checked');
         if (!$channelId || !isset($checked)) return new JsonResponse(['error' => 'Votre requête est invalide.'], Response::HTTP_BAD_REQUEST);
 
@@ -181,7 +181,7 @@ class HistoryController extends AbstractController
         try {
             $dm->createQueryBuilder(SharedConfig::class)
                 ->findAndUpdate()
-                ->field('name')->equals('archived-channels')
+                ->field('name')->equals('logged-channels')
                 ->field('value')->set($channels)
                 ->getQuery()
                 ->execute();

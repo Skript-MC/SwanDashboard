@@ -24,8 +24,8 @@
             <div class="sidebar-heading">
                 Messages
             </div>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'messages:history' ? 'active' }}">
-                <a class="nav-link" href="{{ path('messages:history') }}">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'messages:logs' ? 'active' }}">
+                <a class="nav-link" href="{{ path('messages:logs') }}">
                     <i class="fas fa-list"></i>
                     <span>Modifications récentes</span>
                 </a>
@@ -47,8 +47,8 @@
                 Swan
             </div>
             {% if is_granted('ROLE_STAFF') %}
-                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'history' ? 'active' }}">
-                    <a class="nav-link" href="{{ path('history') }}">
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'logs' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('logs') }}">
                         <i class="fas fa-history"></i>
                         <span>Historique</span>
                     </a>

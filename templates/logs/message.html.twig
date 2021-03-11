@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            {% include 'history/components/navbar.html.twig' %}
+            {% include 'logs/components/navbar.html.twig' %}
             <div class="col-sm-9">
                 <div class="card shadow position-relative mb-3">
                     <div class="card-header py-3">
@@ -15,7 +15,7 @@
                             <label for="discordUser" class="col-sm-2 col-form-label"><strong>Utilisateur</strong></label>
                             <div class="col-sm-10">
                                 <p type="text" readonly class="form-control-plaintext" id="discordUser">{{ message.user.username }}</p>
-                                <p type="text" readonly class="form-control-plaintext mt-0 pt-0" id="discordUser">({{ message.user.discordId }})</p>
+                                <p type="text" readonly class="form-control-plaintext mt-0 pt-0" id="discordUser">({{ message.user.userId }})</p>
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>

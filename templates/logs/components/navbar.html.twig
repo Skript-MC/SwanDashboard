@@ -5,15 +5,15 @@
         </div>
         <div class="list-group list-group-flush">
             {% if searchForm is defined %}
-                {% include 'history/components/searchbar.html.twig' with {'searchForm': searchForm} %}
+                {% include 'logs/components/searchbar.html.twig' with {'searchForm': searchForm} %}
             {% else %}
-                <a href="{{ path('history:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
+                <a href="{{ path('logs:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
             {% endif %}
             {% if (channels is defined) and (channels|length == 2) %}
                 {% for category in channels[0] %}
                     <div class="list-group-item bg-light">{{ category.name }}</div>
                     {% for channel in channels[1][category.id] %}
-                        <a href="{{ path('history:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
+                        <a href="{{ path('logs:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
                             <div class="row">
                                 <div class="col-lg-10">
                                     #{{ channel.name }}
@@ -32,7 +32,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="historyModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="log Modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -56,7 +56,7 @@
         const checked = change.target.checked;
         const titleElement = document.getElementById('titleModal');
         const descriptionElement = document.getElementById('descriptionModal');
-        const response = await fetch('/history/api/channels', {
+        const response = await fetch('/logs/api/channels', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -73,6 +73,6 @@
             descriptionElement.innerText = data.error ?? 'Une erreur inconnue est survenue.';
             change.target.checked = !checked;
         }
-        $('#historyModal').modal()
+        $('#logModal').modal()
     }));
 </script>
