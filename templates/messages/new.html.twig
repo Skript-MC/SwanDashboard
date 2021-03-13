@@ -23,21 +23,25 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Catégorie de message</span>
                                 </div>
-                                <select class="form-control" name="type" id="type">
-                                    <option value="auto">Message rapide</option>
-                                    <option value="error">Détails d'erreurs</option>
-                                    <option value="addonpack">Pack d'add-ons</option>
+                                <select class="form-control" name="type" id="type" onchange="generateDiff()">
+                                    <option value="auto">💬 Message rapide</option>
+                                    <option value="error">💬 Détail d'erreur</option>
+                                    <option value="addonpack">💬 Pack d'add-ons</option>
+                                    <option value="rule">💬 Règle</option>
+                                    <option value="joke">🤡 Blague</option>
                                 </select>
                             </div>
-                            <div class="dropdown-divider mb-3"></div>
-                            <div> {# Don't remove this empty node #}
-                                <div class="form-row" id="aliases">
+                            <div id="aliases-block">
+                                <div class="dropdown-divider mb-3"></div>
+                                <div> {# Don't remove this empty node #}
+                                    <div class="form-row" id="aliases">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="mb-3">
-                                <button type="button" id="addAliasButton" class="btn btn-sm btn-success">
-                                    <i class="fas fa-plus"></i> Ajouter un alias
-                                </button>
+                                <div class="mb-3">
+                                    <button type="button" id="addAliasButton" class="btn btn-sm btn-success">
+                                        <i class="fas fa-plus"></i> Ajouter un alias
+                                    </button>
+                                </div>
                             </div>
                             <div class="dropdown-divider mb-3"></div>
                             <ul class="list-group list-group-flush">
@@ -63,7 +67,13 @@
                             {% endfor %}
                         </div>
                     </div>
-
+                    <div class="card shadow position-relative mt-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Guide de contribution</h6>
+                        </div>
+                        <div class="card-body" id="guidelines">
+                        </div>
+                    </div>
                 </div>
             </div>
             <script>
@@ -98,7 +108,6 @@
                     linkRemove.addEventListener('click', () => {
                         const element = linkRemove.parentNode.parentNode;
                         element.parentNode.removeChild(element);
-
                         generateDiff();
                     });
 
@@ -106,10 +115,10 @@
 
                 function generateDiff() {
                     const name = document.getElementById('name').value || 'Sans nom';
-                    const type = document.getElementById('type').value;
+                    const type = document.getElementById('type').value || 'auto';
                     const aliases = getAliases() || [];
 
-                    console.log(aliases.join('') === '', easyMDE.value() === '')
+                    fitWithType(type);
                     checkChanges(name === 'Sans nom'
                         && aliases.join('') === ''
                         && easyMDE.value() === '',
@@ -121,6 +130,28 @@
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                         drawFileList: false
                     });
+                }
+
+                function fitWithType(type) {
+                    const guidelines = document.getElementById('guidelines');
+                    const aliases = document.getElementById('aliases-block');
+                    console.log(aliases, guidelines);
+                    switch (type) {
+                        case 'addonpack':
+                        case 'auto':
+                        case 'error':
+                        case 'rule':
+                            aliases.style.display = 'block';
+                            guidelines.innerHTML = 'Vous souhaitez ajouter un message à Swan ? Super ! Une fois que vous aurez suggéré votre nouveau message, l\'équipe de modération devra l\'approuver avant qu\'il puisse être utilisé avec Swan. Cependant, voici quelques conventions à respecter afin que nos messages soient cohérents : <ul class="mt-3"> <li>✒️ <strong>Règles de français</strong> : veillez à ce que votre message ne comporte aucune faute de français (orthographe, conjugaison, grammaire, syntaxe...) et qu\'il soit correctement construit ;</li><li>🔎 <strong>Informations essentielles</strong> : essayez de faire ressortir les informations importantes de votre message, de manière à ce que les utilisateurs puissent trouver rapidement ce dont ils ont besoin ;</li><li>📰 <strong>Markdown</strong> : les messages Discord utilisant Markdown, vous devez utiliser cette mise en forme pour vos messages. L\'éditeur supporte ce formatage. Si vous avez besoin d\'aide, consultez ce <a href="https://support.discord.com/hc/fr/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-">tutoriel</a>.</li></ul>'
+                            break;
+                        case 'joke':
+                            aliases.style.display = 'none';
+                            document.getElementById('aliases').querySelectorAll('.form-group').forEach((el) => el.remove());
+                            guidelines.innerHTML = 'Vous souhaitez ajouter une blague à Swan ? Super ! Une fois que vous aurez suggéré votre nouvelle blague, l\'équipe de modération devra l\'approuver avant qu\'elle puisse être utilisé avec Swan. Cependant, veillez à ce que votre blague reste adaptée à tout public. Pour terminer, merci d\'être drôle.'
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 function checkChanges(isEmpty, isNotValid) {

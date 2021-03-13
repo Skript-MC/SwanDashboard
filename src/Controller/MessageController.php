@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Document\Message;
 use App\Document\MessageEdit;
 use App\Document\DiscordUser;
-use App\Service\MessageEditService;
+use App\Service\MessageService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -82,6 +82,30 @@ class MessageController extends AbstractController
         ]);
     }
 
+    #[Route('/rules', name: 'messages:list:rule')]
+    public function rules(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
+    {
+        return $this->render('messages/list.html.twig', [
+            'title' => 'Règles',
+            'messages' => $paginator->paginate(
+                $dm->getRepository(Message::class)->findBy(['messageType' => 'rule']),
+                $request->query->getInt('page', 1)
+            )
+        ]);
+    }
+
+    #[Route('/jokes', name: 'messages:list:joke')]
+    public function jokes(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
+    {
+        return $this->render('messages/list.html.twig', [
+            'title' => 'Blagues',
+            'messages' => $paginator->paginate(
+                $dm->getRepository(Message::class)->findBy(['messageType' => 'joke']),
+                $request->query->getInt('page', 1)
+            )
+        ]);
+    }
+
     #[Route('/new', name: 'messages:new', methods: ['GET'])]
     public function newMessage(): Response
     {
@@ -98,7 +122,7 @@ class MessageController extends AbstractController
         $content = $this->formatContent(urldecode($request->request->get('content')));
         $messageType = $this->formatString($request->request->get('type'));
 
-        if (!$name || !$aliases || !$content || !in_array($messageType, ['auto', 'error', 'addonpack'])) {
+        if (!$name || !$content || !in_array($messageType, ['auto', 'error', 'addonpack', 'rule', 'joke'])) {
             $this->addFlash('error', 'Certains champs sont incorrects, merci de réessayer votre édition.');
             return $this->redirectToRoute('messages:logs');
         }
@@ -146,7 +170,7 @@ class MessageController extends AbstractController
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
         $newType = $request->request->get('type');
 
-        if (!$messageId || !$newName || !$newAliases || !$newContent) {
+        if (!$messageId || !$newName || !$newContent) {
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
             return $this->redirectToRoute('messages:edit', ['messageId' => $messageId]);
         }
@@ -174,7 +198,7 @@ class MessageController extends AbstractController
     }
 
     #[Route('/view/{messageId}', name: 'messages:view')]
-    public function viewEdit(Request $request, DocumentManager $dm, MessageEditService $messageService): Response
+    public function viewEdit(Request $request, DocumentManager $dm, MessageService $messageService): Response
     {
         $messageRequest = $dm->getRepository(MessageEdit::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$messageRequest) {

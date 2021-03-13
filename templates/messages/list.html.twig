@@ -39,6 +39,22 @@
                                         aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:addonpack' ? 'true' : 'false' }}">
                                         Packs d'add-ons
                                     </a>
+                                    <a
+                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:list:rule' ? 'active' }}"
+                                        id="nav-addonpack-tab"
+                                        href="{{ path('messages:list:rule') }}"
+                                        role="tab"
+                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:rule' ? 'true' : 'false' }}">
+                                        Règles
+                                    </a>
+                                    <a
+                                        class="nav-link {{ app.request.attributes.get('_route') == 'messages:list:joke' ? 'active' }}"
+                                        id="nav-addonpack-tab"
+                                        href="{{ path('messages:list:joke') }}"
+                                        role="tab"
+                                        aria-selected="{{ app.request.attributes.get('_route') == 'messages:list:joke' ? 'true' : 'false' }}">
+                                        Blagues
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-lg-10 align-self-center">
