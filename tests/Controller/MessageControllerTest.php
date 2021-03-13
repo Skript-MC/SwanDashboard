@@ -158,7 +158,7 @@ class MessageControllerTest extends WebTestCase
         // Test with an invalid message
         $this->client->request('POST', '/messages/edit', [
             'messageId' => $messageId,
-            'name' => 'This an auto message',
+            'name' => '',
             'aliases' => ['autotest', 'testmsg'],
             'type' => 'addonpack'
         ]);
