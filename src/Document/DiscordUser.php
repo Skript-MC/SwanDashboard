@@ -35,7 +35,7 @@ class DiscordUser implements UserInterface
     /**
      * @MongoDB\Field(type="bool")
      */
-    protected bool $hasMFA;
+    protected ?bool $hasMFA = null;
 
     /**
      * @MongoDB\Field(type="collection")
@@ -112,17 +112,17 @@ class DiscordUser implements UserInterface
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isHasMFA(): bool
+    public function hasMFA(): ?bool
     {
         return $this->hasMFA;
     }
 
     /**
-     * @param bool $hasMFA
+     * @param bool|null $hasMFA
      */
-    public function setHasMFA(bool $hasMFA): void
+    public function setHasMFA(?bool $hasMFA): void
     {
         $this->hasMFA = $hasMFA;
     }
