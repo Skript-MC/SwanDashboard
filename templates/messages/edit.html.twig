@@ -153,6 +153,7 @@
                         && '{{ message.content|escape('js')|raw }}' === easyMDE.value(),
                         easyMDE.value().length > 2000
                     );
+                    alertMessage(easyMDE.value() === '', 'Attention : vous vous apprêtez à suggérer la suppression de ce message.')
 
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {

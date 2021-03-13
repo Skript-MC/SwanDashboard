@@ -170,7 +170,7 @@ class MessageController extends AbstractController
         $newContent = $this->formatContent(urldecode($request->request->get('content')));
         $newType = $request->request->get('type');
 
-        if (!$messageId || !$newName || !$newContent) {
+        if (!$messageId || !$newName) {
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
             return $this->redirectToRoute('messages:edit', ['messageId' => $messageId]);
         }
@@ -251,21 +251,33 @@ class MessageController extends AbstractController
             $dm->flush();
             $targetMessage = $newMessage;
         } else if ($isValidated) {
-            $query = $dm->createQueryBuilder(Message::class)
-                ->findAndUpdate()
-                ->field('_id')->equals($targetMessage->getId())
-                ->field('name')->set($message->getNewName())
-                ->field('aliases')->set($message->getNewAliases())
-                ->field('content')->set($message->getNewContent());
+            if ($message->getNewContent() === '') { // It's a deletion request
+                $dm->createQueryBuilder(MessageEdit::class)
+                    ->remove()
+                    ->field('message')->equals($targetMessage->getId())
+                    ->getQuery()
+                    ->execute();
+                $dm->createQueryBuilder(Message::class)
+                    ->remove()
+                    ->field('_id')->equals($targetMessage->getId())
+                    ->getQuery()
+                    ->execute();
+            } else {
+                $query = $dm->createQueryBuilder(Message::class)
+                    ->updateOne()
+                    ->field('_id')->equals($targetMessage->getId())
+                    ->field('name')->set($message->getNewName())
+                    ->field('aliases')->set($message->getNewAliases())
+                    ->field('content')->set($message->getNewContent());
 
-            if ($message->getMessageType() !== null) // A category changement was requested
-                $query->field('messageType')->set($message->getMessageType());
+                if ($message->getMessageType() !== null) // A category changement was requested
+                    $query->field('messageType')->set($message->getMessageType());
 
-            $query->getQuery()
-                ->execute();
+                $query->getQuery()->execute();
+            }
         }
         $dm->createQueryBuilder(MessageEdit::class)
-            ->findAndUpdate()
+            ->updateOne()
             ->field('_id')->equals($message->getId())
             ->field('validated')->set($isValidated)
             ->field('reviewer')->set($reviewer)
