@@ -295,7 +295,7 @@ class MessageController extends AbstractController
         $message = $dm->getRepository(Message::class)->findOneBy(['_id' => $request->get('messageId')]);
         if (!$message) return new RedirectResponse($this->generateUrl('messages:logs'));
         $messageEditRequest = $dm->createQueryBuilder(MessageEdit::class)
-            ->field('message.id')->equals($message->getId())
+            ->field('message')->equals($message->getId())
             ->field('validated')->equals(null)
             ->getQuery()
             ->getSingleResult();
