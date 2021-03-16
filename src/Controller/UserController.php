@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Document\DiscordUser;
+use App\Repository\DiscordUserRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -16,21 +17,30 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
+    private DiscordUserRepository $repository;
+    private PaginatorInterface $paginator;
+
+    public function __construct(DocumentManager $dm, PaginatorInterface $paginator)
+    {
+        $this->repository = $dm->getRepository(DiscordUser::class);
+        $this->paginator = $paginator;
+    }
+
     #[Route('', name: 'users')]
-    public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
+    public function home(Request $request): Response
     {
         return $this->render('users/home.html.twig', [
-            'users' => $paginator->paginate(
-                $dm->getRepository(DiscordUser::class)->findAll(),
+            'users' => $this->paginator->paginate(
+                $this->repository->findAll(),
                 $request->query->getInt('page', 1)
             )
         ]);
     }
 
     #[Route('/{userId}', name: 'users:view', methods: ['GET'])]
-    public function viewUser(string $userId, DocumentManager $dm): Response
+    public function viewUser(string $userId): Response
     {
-        $user = $dm->getRepository(DiscordUser::class)->findOneBy(['userId' => $userId]);
+        $user = $this->repository->findOneById($userId);
         if (!$user)
             return new RedirectResponse($this->generateUrl('users'));
         return $this->render('users/view.html.twig', [
@@ -39,38 +49,21 @@ class UserController extends AbstractController
     }
 
     #[Route('/{userId}', name: 'users:edit', methods: ['POST'])]
-    public function editUser(string $userId, Request $request, DocumentManager $dm): Response
+    public function editUser(string $userId, Request $request): Response
     {
         $username = $request->request->get('discordUsername');
         $avatarUrl = $request->request->get('discordAvatar');
         $dashboardRole = $request->request->get('dashboardRole');
-        $targetUser = $dm->getRepository(DiscordUser::class)->findOneBy(['userId' => $userId]);
+        $targetUser = $this->repository->findOneById($userId);
         if (!$username || !$avatarUrl || !$dashboardRole || !$targetUser || !in_array($dashboardRole, ['ROLE_USER', 'ROLE_STAFF', 'ROLE_ADMIN'])) {
             $this->addFlash('error', 'Certains champs sont vides ou incorrects.');
             return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
         }
-
-        // For the moment, only admins can access to this page, so check permissions is useless.
-        // if (!$this->isGranted($dashboardRole)) {
-        //     $this->addFlash('error', 'Vous n\'avez pas la permission de modifier cet utilisateur.');
-        //     return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
-        // }
-
         $targetUser->setUsername($username);
         $targetUser->setAvatarUrl($avatarUrl);
-        $targetUser->setDiscordRoles([$dashboardRole]);
-
-        $dm->createQueryBuilder(DiscordUser::class)
-            ->updateOne()
-            ->field('userId')->equals($userId)
-            ->field('username')->set($username)
-            ->field('avatarUrl')->set($avatarUrl)
-            ->field('roles')->set([$dashboardRole])
-            ->getQuery()
-            ->execute();
-
+        $targetUser->setRoles([$dashboardRole]);
+        $this->repository->updateUser($targetUser);
         $this->addFlash('success', 'Vos modifications ont bien été enregistrées.');
         return new RedirectResponse($this->generateUrl('users:view', ['userId' => $userId]));
     }
-
 }

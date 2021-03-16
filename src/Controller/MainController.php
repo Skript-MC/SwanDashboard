@@ -12,25 +12,36 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+    private DiscordService $discordService;
+    private CacheService $cacheService;
+    private ClientRegistry $clientRegistry;
+
+    public function __construct(DiscordService $discordService, CacheService $cacheService, ClientRegistry $clientRegistry)
+    {
+        $this->discordService = $discordService;
+        $this->cacheService = $cacheService;
+        $this->clientRegistry = $clientRegistry;
+    }
+
     #[Route('', name: 'home')]
-    public function home(DiscordService $discordService, CacheService $cache): Response
+    public function home(): Response
     {
         if (!$this->isGranted('ROLE_USER'))
             return $this->render('welcome.html.twig');
-        $guild = $discordService->getGuild();
+        $guild = $this->discordService->getGuild();
         return $this->render('dashboard.html.twig', [
             'discordMembers' => $guild?->approximate_member_count ?? 'Inconnu',
             'discordOnlineMembers' => $guild?->approximate_presence_count ?? 'Inconnu',
-            'commandStats' => $cache->getCommandStats()
+            'commandStats' => $this->cacheService->getCommandStats()
         ]);
     }
 
     #[Route('/login', name: 'login')]
-    public function login(ClientRegistry $registry): Response
+    public function login(): Response
     {
-        return $registry
+        return $this->clientRegistry
             ->getClient('discord')
-            ->redirect(['identify'], ['prompt' => 'none']);
+            ->redirect(['identify'], []);
     }
 
     #[Route('/error', name: 'error')]
@@ -42,5 +53,4 @@ class MainController extends AbstractController
             'message' => ($request->get('message') ?? 'Nous ne savons pas exactement ce qu\'il s\'est passé.') . ' Si le problème persiste, n\'hésitez pas à nous contacter sur Discord.'
         ]);
     }
-
 }

@@ -3,15 +3,13 @@
 namespace App\Controller;
 
 use App\Document\Moderation\Sanction;
-use App\Entity\SanctionQuery;
+use App\Entity\SanctionSearch;
+use App\Form\SanctionSearchType;
+use App\Repository\SanctionRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
-use MongoDB\BSON\Regex;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,74 +18,27 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_STAFF')]
 class SanctionController extends AbstractController
 {
-    #[Route('', name: 'sanctions')]
-    public function home(Request $request, DocumentManager $dm, PaginatorInterface $paginator): Response
+    private SanctionRepository $repository;
+    private PaginatorInterface $paginator;
+
+    public function __construct(DocumentManager $dm, PaginatorInterface $paginator)
     {
+        $this->repository = $dm->getRepository(Sanction::class);
+        $this->paginator = $paginator;
+    }
 
-        $sanctionQuery = new SanctionQuery();
-        $form = $this->createFormBuilder($sanctionQuery, ['csrf_protection' => false])
-            ->setMethod('GET')
-            ->add('memberId', TextType::class, [
-                'required' => false
-            ])
-            ->add('moderatorId', TextType::class, [
-                'required' => false
-            ])
-            ->add('reason', TextType::class, [
-                'required' => false
-            ])
-            ->add('sanctionStatus', ChoiceType::class, [
-                'required' => false,
-                'choices' => [
-                    'Terminée' => true,
-                    'En cours' => false
-                ]
-            ])
-            ->add('beforeDate', DateTimeType::class, [
-                'required' => false,
-                'input' => 'timestamp',
-                'widget' => 'single_text'
-            ])
-            ->add('afterDate', DateTimeType::class, [
-                'required' => false,
-                'input' => 'timestamp',
-                'widget' => 'single_text'
-            ])
-            ->add('sanctionType', ChoiceType::class, [
-                'required' => false,
-                'choices' => [
-                    'Bannissement Discord' => 'hardban',
-                    'Bannissement' => 'ban',
-                    'Mute' => 'mute',
-                    'Avertissement' => 'warn'
-                ]
-            ])
-            ->getForm();
-
-        $form->handleRequest($request);
-        $query = $dm->createQueryBuilder(Sanction::class)
-            ->find()
-            ->sort('_id', 'DESC');
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var SanctionQuery $data */
-            $data = $form->getData();
-            if ($data->getMemberId()) $query->field('memberId')->equals($data->getMemberId());
-            if ($data->getModeratorId()) $query->field('moderator')->equals($data->getModeratorId());
-            if ($data->getReason()) $query->field('reason')->equals(new Regex('/' . $data->getReason() . '/'));
-            if ($data->getSanctionStatus() !== null) $query->field('revoked')->equals($data->getSanctionStatus());
-            if ($data->getSanctionType()) $query->field('type')->equals($data->getSanctionType());
-            if ($data->getSanctionId()) $query->field('sanctionId')->equals($data->getSanctionId());
-            if ($data->getAfterDate()) $query->field('start')->gte($data->getAfterDate() * 1000);
-            if ($data->getBeforeDate()) $query->field('start')->lte($data->getBeforeDate() * 1000);
-        }
+    #[Route('', name: 'sanctions')]
+    public function home(Request $request): Response
+    {
+        $search = new SanctionSearch();
+        $form = $this->createForm(SanctionSearchType::class, $search)
+            ->handleRequest($request);
         return $this->render('sanctions/home.html.twig', [
-            'sanctions' => $paginator->paginate(
-                $query->getQuery(),
+            'sanctions' => $this->paginator->paginate(
+                $this->repository->search($search),
                 $request->query->getInt('page', 1)
             ),
             'search' => $form->createView()
         ]);
     }
-
 }

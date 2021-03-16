@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class SharedConfig
  * @package App\Document
- * @MongoDB\Document(collection="sharedconfigs")
+ * @MongoDB\Document(collection="sharedconfigs", repositoryClass="App\Repository\SharedConfigRepository")
  */
 class SharedConfig
 {

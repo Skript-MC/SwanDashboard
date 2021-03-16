@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Document\SwanModule;
-use DateTime;
+use App\Repository\SwanModuleRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
-use MongoDB\BSON\UTCDateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,41 +16,33 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_USER')]
 class ModuleController extends AbstractController
 {
+    private SwanModuleRepository $repository;
+
+    public function __construct(DocumentManager $dm)
+    {
+        $this->repository = $dm->getRepository(SwanModule::class);
+    }
+
     #[Route('', name: 'modules')]
-    public function home(DocumentManager $dm): Response
+    public function home(): Response
     {
         return $this->render('modules/home.html.twig', [
-            'modules' => $dm->getRepository(SwanModule::class)->findAll()
+            'modules' => $this->repository->findAll()
         ]);
     }
 
     #[Route('/api', methods: ['POST'])]
-    public function api(Request $request, DocumentManager $dm): Response
+    public function api(Request $request): Response
     {
         if (!$this->isGranted('ROLE_STAFF'))
             return new JsonResponse(['error' => 'Vous n\'avez pas la permission de modifier l\'état de ce module.'], Response::HTTP_FORBIDDEN);
-
         $moduleId = $request->request->getAlnum('moduleId');
         $enabled = $request->request->getBoolean('enabled');
         if (!$moduleId || !isset($enabled))
             return new JsonResponse(['error' => 'Votre requête est invalide.'], Response::HTTP_BAD_REQUEST);
-
-        try {
-            $dm->createQueryBuilder(SwanModule::class)
-                ->findAndUpdate()
-                ->field('_id')->equals($moduleId)
-                ->field('enabled')->set($enabled)
-                ->field('modified')->set(new UTCDateTime(new DateTime()))
-                ->getQuery()
-                ->execute();
-        } catch (MongoDBException) {
-            return new JsonResponse(['error' => 'Une erreur interne est survenue.'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
+        $this->repository->changeModuleState($moduleId, $enabled);
         return new JsonResponse([
             'status' => 'OK'
         ], Response::HTTP_OK);
-
     }
-
 }

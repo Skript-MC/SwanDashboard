@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class MessageEdit
  * @package App\Document
- * @MongoDB\Document(collection="messageedits")
+ * @MongoDB\Document(collection="messageedits", repositoryClass="App\Repository\MessageEditRepository")
  */
 class MessageEdit
 {
@@ -198,6 +198,20 @@ class MessageEdit
     public function setMessageType(?string $messageType): void
     {
         $this->messageType = $messageType;
+    }
+
+    /**
+     * Used for make a diff with an empty edit and a simple edit.
+     * @return $this
+     */
+    public static function getEmptyEdit(): self
+    {
+        $emptyEdit = new self();
+        $emptyEdit->setNewName('Sans nom');
+        $emptyEdit->setNewAliases([]);
+        $emptyEdit->setNewContent('');
+        $emptyEdit->setMessageType('');
+        return $emptyEdit;
     }
 
 }

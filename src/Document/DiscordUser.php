@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Class DiscordUser
  * @package App\Document
- * @MongoDB\Document(collection="discordusers")
+ * @MongoDB\Document(collection="discordusers", repositoryClass="App\Repository\DiscordUserRepository")
  */
 class DiscordUser implements UserInterface
 {

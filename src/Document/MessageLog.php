@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class MessageLog
  * @package App\Document
- * @MongoDB\Document(collection="messagelogs")
+ * @MongoDB\Document(collection="messagelogs", repositoryClass="App\Repository\MessageLogRepository")
  */
 class MessageLog
 {

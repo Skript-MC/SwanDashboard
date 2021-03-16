@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 /**
- * Class SanctionQuery
+ * Class SanctionSearch
  * @package App\Entity
  */
-class SanctionQuery
+class SanctionSearch
 {
 
     protected ?string $memberId = null;

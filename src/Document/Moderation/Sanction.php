@@ -9,7 +9,7 @@ use Doctrine\ODM\MongoDB\PersistentCollection;
 /**
  * Class Sanction
  * @package App\Document
- * @MongoDB\Document(collection="sanctions")
+ * @MongoDB\Document(collection="sanctions", repositoryClass="App\Repository\SanctionRepository")
  */
 class Sanction
 {
