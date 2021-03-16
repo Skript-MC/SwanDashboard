@@ -61,7 +61,7 @@ class MessageEditRepository extends DocumentRepository
             ->execute();
     }
 
-    public function findOneById(string $id): MessageEdit
+    public function findOneById(string $id): ?MessageEdit
     {
         return $this->findOneBy(['_id' => $id]);
     }
@@ -72,16 +72,9 @@ class MessageEditRepository extends DocumentRepository
             ->sort('_id', 'DESC');
     }
 
-    public function findAllEditsByUser(string $userId)
+    public function findAllEditsByUser(string $userId): Builder
     {
         return $this->findAllEdits()
             ->field('user')->equals($userId);
     }
-
-    public function findByMessageType(string $messageType): Builder
-    {
-        return $this->createQueryBuilder()
-            ->field('messageType')->equals($messageType);
-    }
-
 }

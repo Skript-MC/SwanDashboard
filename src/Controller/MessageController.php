@@ -6,6 +6,7 @@ use App\Document\Message;
 use App\Document\MessageEdit;
 use App\Document\DiscordUser;
 use App\Repository\MessageEditRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,13 +21,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class MessageController extends AbstractController
 {
     private DocumentManager $dm;
-    private MessageEditRepository $repository;
+    private MessageEditRepository $messageEditRepository;
+    private MessageRepository $messageRepository;
     private PaginatorInterface $paginator;
 
     public function __construct(DocumentManager $dm, PaginatorInterface $paginator)
     {
         $this->dm = $dm;
-        $this->repository = $dm->getRepository(MessageEdit::class);
+        $this->messageEditRepository = $dm->getRepository(MessageEdit::class);
+        $this->messageRepository = $dm->getRepository(Message::class);
         $this->paginator = $paginator;
     }
 
@@ -50,13 +53,13 @@ class MessageController extends AbstractController
         /** @var DiscordUser $user */
         $user = $this->getUser();
         $editions = $this->paginator->paginate(
-            $this->repository->findAllEdits(),
+            $this->messageEditRepository->findAllEdits(),
             $request->query->getInt('pageEditions', 1),
             10,
             ['pageParameterName' => 'pageRequests']
         );
         $requests = $this->paginator->paginate(
-            $this->repository->findAllEditsByUser($user->getId()),
+            $this->messageEditRepository->findAllEditsByUser($user->getId()),
             $request->query->getInt('pageRequests', 1),
             10,
             ['pageParameterName' => 'pageEditions']
@@ -73,7 +76,7 @@ class MessageController extends AbstractController
         return $this->render('messages/list.html.twig', [
             'title' => 'Messages rapides',
             'messages' => $this->paginator->paginate(
-                $this->repository->findByMessageType('auto'),
+                $this->messageRepository->findByMessageType('auto'),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -85,7 +88,7 @@ class MessageController extends AbstractController
         return $this->render('messages/list.html.twig', [
             'title' => 'Packs d\'add-ons',
             'messages' => $this->paginator->paginate(
-                $this->repository->findByMessageType('addonpack'),
+                $this->messageRepository->findByMessageType('addonpack'),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -97,7 +100,7 @@ class MessageController extends AbstractController
         return $this->render('messages/list.html.twig', [
             'title' => 'Détails erreurs',
             'messages' => $this->paginator->paginate(
-                $this->repository->findByMessageType('error'),
+                $this->messageRepository->findByMessageType('error'),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -109,7 +112,7 @@ class MessageController extends AbstractController
         return $this->render('messages/list.html.twig', [
             'title' => 'Règles',
             'messages' => $this->paginator->paginate(
-                $this->repository->findByMessageType('rule'),
+                $this->messageRepository->findByMessageType('rule'),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -121,7 +124,7 @@ class MessageController extends AbstractController
         return $this->render('messages/list.html.twig', [
             'title' => 'Blagues',
             'messages' => $this->paginator->paginate(
-                $this->repository->findByMessageType('joke'),
+                $this->messageRepository->findByMessageType('joke'),
                 $request->query->getInt('page', 1)
             )
         ]);
@@ -174,7 +177,7 @@ class MessageController extends AbstractController
             $this->addFlash('error', 'Certains champs sont vides, merci de réessayer votre édition.');
             return $this->redirectToRoute('messages:edit', ['messageId' => $messageId]);
         }
-        $message = $this->repository->findOneById($messageId);
+        $message = $this->messageRepository->findOneById($messageId);
         if (!$message) {
             $this->addFlash('error', 'Le message avec identifiant ' . $messageId . ' n\'a pas été trouvé dans nos bases de données.');
             return $this->redirectToRoute('messages:logs', ['messageId' => $messageId]);
@@ -198,14 +201,14 @@ class MessageController extends AbstractController
     #[Route('/view/{messageId}', name: 'messages:view')]
     public function viewEdit(Request $request): Response
     {
-        $messageRequest = $this->repository->findOneById($request->get('messageId'));
+        $messageRequest = $this->messageEditRepository->findOneById($request->get('messageId'));
         if (!$messageRequest) {
             $this->addFlash('error', 'Nous n\'avons pas pu trouver de message correspondant à cet identifiant.');
             return new RedirectResponse($this->generateUrl('messages:logs'));
         }
         return $this->render('messages/view.html.twig', [
             'request' => $messageRequest,
-            'previous' => $this->repository->getPreviousEdit($messageRequest)
+            'previous' => $this->messageEditRepository->getPreviousEdit($messageRequest)
         ]);
     }
 
@@ -214,7 +217,7 @@ class MessageController extends AbstractController
     {
         $messageId = $request->request->get('messageId');
         $isValidated = $request->request->getBoolean('validated');
-        $message = $this->repository->findOneById($messageId);
+        $message = $this->messageEditRepository->findOneById($messageId);
         if (!$message || !isset($isValidated)) {
             $this->addFlash('error', 'Votre requête est invalide.');
             return $this->redirectToRoute('messages:view', ['messageId' => $messageId]);
@@ -235,7 +238,7 @@ class MessageController extends AbstractController
         }
         if (!$isValidated) {
             $this->addFlash('success', 'Cette suggestion a bien été marquée comme refusée.');
-            $this->repository->updateEditStatus($message, false, $reviewer, $targetMessage);
+            $this->messageEditRepository->updateEditStatus($message, false, $reviewer, $targetMessage);
             return $this->redirectToRoute('messages:logs');
         }
         if (!$targetMessage) { // It's a new message
@@ -246,13 +249,13 @@ class MessageController extends AbstractController
             $newMessage->setMessageType($message->getMessageType());
             $this->dm->persist($newMessage);
             $this->dm->flush();
-            $this->repository->updateEditStatus($message, $isValidated, $reviewer, $newMessage);
+            $this->messageEditRepository->updateEditStatus($message, $isValidated, $reviewer, $newMessage);
             $this->addFlash('success', 'Cette suggestion a été approuvée, et le message a été créé. Il est donc désormais utilisable avec Swan.');
             return $this->redirectToRoute('messages:logs');
         }
         if ($message->getNewContent() === '') { // It's a deletion request
-            $this->repository->removeByMessage($targetMessage);
-            $this->repository->updateEditStatus($message, $isValidated, $reviewer, $targetMessage);
+            $this->messageEditRepository->removeByMessage($targetMessage);
+            $this->messageEditRepository->updateEditStatus($message, $isValidated, $reviewer, $targetMessage);
             $this->addFlash('success', 'Cette suggestion a été approuvée, et les messages associés ont bien été supprimés.');
             return $this->redirectToRoute('messages:logs');
         }
@@ -260,7 +263,7 @@ class MessageController extends AbstractController
         if ($message->getMessageType() !== null) // A category changement was requested
             $query->field('messageType')->set($message->getMessageType());
         $query->getQuery()->execute();
-        $this->repository->updateEditStatus($message, $isValidated, $reviewer, $targetMessage);
+        $this->messageEditRepository->updateEditStatus($message, $isValidated, $reviewer, $targetMessage);
         $this->addFlash('success', 'Cette suggestion a été approuvée, et le message a été mis à jour.');
         return $this->redirectToRoute('messages:logs');
     }
@@ -268,10 +271,10 @@ class MessageController extends AbstractController
     #[Route('/{messageId}', name: 'messages:edit', methods: ['GET'])]
     public function editMessage(Request $request): Response
     {
-        $message = $this->dm->getRepository(Message::class)->findOneBy($request->get('messageId'));
+        $message = $this->messageRepository->findOneById($request->get('messageId'));
         if (!$message)
             return new RedirectResponse($this->generateUrl('messages:logs'));
-        $messageEditRequest = $this->repository->getPendingEditForMessage($message);
+        $messageEditRequest = $this->messageEditRepository->getPendingEditForMessage($message);
         return $this->render('messages/edit.html.twig', [
             'message' => $message,
             'editForbidden' => isset($messageEditRequest)

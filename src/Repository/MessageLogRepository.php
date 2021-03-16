@@ -13,7 +13,7 @@ use MongoDB\BSON\Regex;
 class MessageLogRepository extends DocumentRepository
 {
 
-    public function findOneByMessageId(string $messageId): MessageLog
+    public function findOneByMessageId(string $messageId): ?MessageLog
     {
         return $this->findOneBy(['messageId' => $messageId]);
     }

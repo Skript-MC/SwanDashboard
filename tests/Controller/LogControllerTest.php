@@ -97,7 +97,7 @@ class LogControllerTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/logs/search');
         $form = $crawler->selectButton('Rechercher')->form([
-            'form[userId]' => 191495299884122112
+            'userId' => 191495299884122112
         ]);
         $crawler = $this->client->submit($form);
         // 2 <tr> for table construction and 2 <tr> for table contents

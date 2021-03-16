@@ -9,9 +9,15 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 class MessageRepository extends DocumentRepository
 {
-    public function findOneById(string $id): Message
+    public function findOneById(string $id): ?Message
     {
         return $this->findOneBy(['_id' => $id]);
+    }
+
+    public function findByMessageType(string $messageType): Builder
+    {
+        return $this->createQueryBuilder()
+            ->field('messageType')->equals($messageType);
     }
 
     public function update(Message $message, MessageEdit $messageEdit): Builder

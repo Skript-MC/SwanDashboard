@@ -41,9 +41,9 @@ class SanctionControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/sanctions');
         $form = $crawler->selectButton('Rechercher')->form();
 
-        $form['form[memberId]']->setValue('191495299884122112');
-        $form['form[moderatorId]']->setValue('752259261475586139');
-        $form['form[sanctionType]']->setValue('ban');
+        $form['memberId']->setValue('191495299884122112');
+        $form['moderatorId']->setValue('752259261475586139');
+        $form['sanctionType']->setValue('ban');
 
         $crawler = $this->client->submit($form);
         $data = $crawler->filter('tbody')
