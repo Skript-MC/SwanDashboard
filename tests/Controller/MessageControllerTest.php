@@ -92,7 +92,7 @@ class MessageControllerTest extends WebTestCase
         $success = $crawler->filter('.alert')
             ->filter('.alert-success')
             ->text();
-        $this->assertEquals('Cette suggestion de modification a été marquée comme validée.', $success);
+        $this->assertEquals('Cette suggestion a été approuvée, et le message a été créé. Il est donc désormais utilisable avec Swan.', $success);
     }
 
     public function testViewInvalidEdit(): void
@@ -203,7 +203,7 @@ class MessageControllerTest extends WebTestCase
         $success = $crawler->filter('.alert')
             ->filter('.alert-success')
             ->text();
-        $this->assertEquals('Cette suggestion de modification a été marquée comme validée.', $success);
+        $this->assertEquals('Cette suggestion a été approuvée, et le message a été mis à jour.', $success);
     }
 
     public function testNewMessage(): void
