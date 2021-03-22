@@ -12,34 +12,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    private DiscordService $discordService;
-    private CacheService $cacheService;
-    private ClientRegistry $clientRegistry;
-
-    public function __construct(DiscordService $discordService, CacheService $cacheService, ClientRegistry $clientRegistry)
-    {
-        $this->discordService = $discordService;
-        $this->cacheService = $cacheService;
-        $this->clientRegistry = $clientRegistry;
-    }
-
     #[Route('', name: 'home')]
-    public function home(): Response
+    public function home(DiscordService $discordService, CacheService $cacheService): Response
     {
         if (!$this->isGranted('ROLE_USER'))
             return $this->render('welcome.html.twig');
-        $guild = $this->discordService->getGuild();
+        $guild = $discordService->getGuild();
         return $this->render('dashboard.html.twig', [
             'discordMembers' => $guild?->approximate_member_count ?? 'Inconnu',
             'discordOnlineMembers' => $guild?->approximate_presence_count ?? 'Inconnu',
-            'commandStats' => $this->cacheService->getCommandStats()
+            'commandStats' => $cacheService->getCommandStats()
         ]);
     }
 
     #[Route('/login', name: 'login')]
-    public function login(): Response
+    public function login(ClientRegistry $clientRegistry): Response
     {
-        return $this->clientRegistry
+        return $clientRegistry
             ->getClient('discord')
             ->redirect(['identify'], []);
     }

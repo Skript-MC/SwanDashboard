@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Document\MessageLog;
-use App\Document\SharedConfig;
 use App\Entity\LogSearch;
 use App\Form\LogSearchType;
 use App\Repository\MessageLogRepository;
+use App\Repository\SharedConfigRepository;
 use App\Service\DiscordService;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,50 +20,45 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_STAFF')]
 class LogController extends AbstractController
 {
-    private DocumentManager $dm;
-    private MessageLogRepository $repository;
-    private DiscordService $discordService;
-    private PaginatorInterface $paginator;
 
-    public function __construct(DocumentManager $dm, DiscordService $discordService, PaginatorInterface $paginator)
+    private SharedConfigRepository $sharedConfigRepository;
+
+    public function __construct(SharedConfigRepository $sharedConfigRepository)
     {
-        $this->dm = $dm;
-        $this->repository = $dm->getRepository(MessageLog::class);
-        $this->discordService = $discordService;
-        $this->paginator = $paginator;
+        $this->sharedConfigRepository = $sharedConfigRepository;
     }
 
     private function getLoggedChannels(): array
     {
-        return $this->dm->getRepository(SharedConfig::class)->getLoggedChannels()?->getValue() ?? [];
+        return $this->sharedConfigRepository->getLoggedChannels()?->getValue() ?? [];
     }
 
     #[Route('', name: 'logs')]
-    public function home(): Response
+    public function home(DiscordService $discordService): Response
     {
         return $this->render('logs/home.html.twig', [
-            'channels' => $this->discordService->getChannels(),
+            'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels()
         ]);
     }
 
     #[Route('/channel/{channelId}', name: 'logs:channel')]
-    public function viewChannel(string $channelId, Request $request): Response
+    public function viewChannel(string $channelId, Request $request, PaginatorInterface $paginator, MessageLogRepository $messageLogRepository, DiscordService $discordService): Response
     {
-        $deletions = $this->paginator->paginate(
-            $this->repository->findDeletedMessagesOfChannel($channelId),
+        $deletions = $paginator->paginate(
+            $messageLogRepository->findDeletedMessagesOfChannel($channelId),
             $request->query->getInt('pageDeletions', 1),
             10,
             ['pageParameterName' => 'pageDeletions']
         );
-        $editions = $this->paginator->paginate(
-            $this->repository->findEditedMessagesOfChannel($channelId),
+        $editions = $paginator->paginate(
+            $messageLogRepository->findEditedMessagesOfChannel($channelId),
             $request->query->getInt('pageEditions', 1),
             10,
             ['pageParameterName' => 'pageDeletions']
         );
         return $this->render('logs/channel.html.twig', [
-            'channels' => $this->discordService->getChannels(),
+            'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels(),
             'deletions' => $deletions,
             'editions' => $editions
@@ -73,34 +66,32 @@ class LogController extends AbstractController
     }
 
     #[Route('/message/{messageId}', name: 'logs:message')]
-    public function viewMessage(string $messageId): Response
+    public function viewMessage(string $messageId, MessageLogRepository $messageLogRepository, DiscordService $discordService): Response
     {
-        $message = $this->dm
-            ->getRepository(MessageLog::class)
-            ->findOneByMessageId($messageId);
+        $message = $messageLogRepository->findOneByMessageId($messageId);
         if (!$message)
             return new RedirectResponse($this->generateUrl('logs'), Response::HTTP_SEE_OTHER);
         return $this->render('logs/message.html.twig', [
-            'channels' => $this->discordService->getChannels(),
+            'channels' => $discordService->getChannels(),
             'loggedChannels' => $this->getLoggedChannels(),
             'message' => $message
         ]);
     }
 
     #[Route('/search', name: 'logs:search')]
-    public function searchMessages(Request $request): Response
+    public function searchMessages(Request $request, PaginatorInterface $paginator, MessageLogRepository $messageLogRepository): Response
     {
         $search = new LogSearch();
         $form = $this->createForm(LogSearchType::class, $search)
             ->handleRequest($request);
-        $editions = $this->paginator->paginate(
-            $this->repository->searchEditedMessages($search),
+        $editions = $paginator->paginate(
+            $messageLogRepository->searchEditedMessages($search),
             $request->query->getInt('page', 1),
             10,
             ['pageParameterName' => 'pageEditions']
         );
-        $deletions = $this->paginator->paginate(
-            $this->repository->searchDeletedMessages($search),
+        $deletions = $paginator->paginate(
+            $messageLogRepository->searchDeletedMessages($search),
             $request->query->getInt('page', 1),
             10,
             ['pageParameterName' => 'pageDeletions']
@@ -113,7 +104,7 @@ class LogController extends AbstractController
     }
 
     #[Route('/api/channels', methods: ['POST'])]
-    public function changeLoggingState(Request $request): JsonResponse
+    public function changeLoggingState(Request $request, SharedConfigRepository $sharedConfigRepository): JsonResponse
     {
         $channelId = $request->request->getAlnum('channelId');
         $checked = $request->request->getBoolean('checked');
@@ -127,7 +118,7 @@ class LogController extends AbstractController
             unset($channels[$key]);
         }
         // Update the logged channels with the updated array
-        $this->dm->getRepository(SharedConfig::class)->updateLoggedChannels($channels);
+        $sharedConfigRepository->updateLoggedChannels($channels);
         return new JsonResponse(['status' => 'OK'], Response::HTTP_OK);
     }
 

@@ -4,11 +4,17 @@ namespace App\Repository;
 
 use App\Document\Message;
 use App\Document\MessageEdit;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
-class MessageRepository extends DocumentRepository
+class MessageRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Message::class);
+    }
+
     public function findOneById(string $id): ?Message
     {
         return $this->findOneBy(['_id' => $id]);

@@ -3,10 +3,16 @@
 namespace App\Repository;
 
 use App\Document\DiscordUser;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 
-class DiscordUserRepository extends DocumentRepository
+class DiscordUserRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, DiscordUser::class);
+    }
+
     public function updateUser(DiscordUser $user): void
     {
         $this->createQueryBuilder()

@@ -5,12 +5,18 @@ namespace App\Repository;
 use App\Document\DiscordUser;
 use App\Document\Message;
 use App\Document\MessageEdit;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use MongoDB\BSON\ObjectId;
 
-class MessageEditRepository extends DocumentRepository
+class MessageEditRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, MessageEdit::class);
+    }
+
     public function getPendingEditForMessage(Message $message): ?object
     {
         return $this->createQueryBuilder()

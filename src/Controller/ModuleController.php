@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Document\SwanModule;
 use App\Repository\SwanModuleRepository;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,23 +14,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_USER')]
 class ModuleController extends AbstractController
 {
-    private SwanModuleRepository $repository;
-
-    public function __construct(DocumentManager $dm)
-    {
-        $this->repository = $dm->getRepository(SwanModule::class);
-    }
-
     #[Route('', name: 'modules')]
-    public function home(): Response
+    public function home(SwanModuleRepository $swanModuleRepository): Response
     {
         return $this->render('modules/home.html.twig', [
-            'modules' => $this->repository->findAll()
+            'modules' => $swanModuleRepository->findAll()
         ]);
     }
 
     #[Route('/api', methods: ['POST'])]
-    public function api(Request $request): Response
+    public function api(Request $request, SwanModuleRepository $swanModuleRepository): Response
     {
         if (!$this->isGranted('ROLE_STAFF'))
             return new JsonResponse(['error' => 'Vous n\'avez pas la permission de modifier l\'état de ce module.'], Response::HTTP_FORBIDDEN);
@@ -40,7 +31,7 @@ class ModuleController extends AbstractController
         $enabled = $request->request->getBoolean('enabled');
         if (!$moduleId || !isset($enabled))
             return new JsonResponse(['error' => 'Votre requête est invalide.'], Response::HTTP_BAD_REQUEST);
-        $this->repository->changeModuleState($moduleId, $enabled);
+        $swanModuleRepository->changeModuleState($moduleId, $enabled);
         return new JsonResponse([
             'status' => 'OK'
         ], Response::HTTP_OK);

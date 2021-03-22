@@ -6,12 +6,17 @@ use App\Document\DiscordUser;
 use App\Document\MessageLog;
 use App\Entity\LogSearch;
 use App\Utils\DiscordUtils;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use MongoDB\BSON\Regex;
 
-class MessageLogRepository extends DocumentRepository
+class MessageLogRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, MessageLog::class);
+    }
 
     public function findOneByMessageId(string $messageId): ?MessageLog
     {

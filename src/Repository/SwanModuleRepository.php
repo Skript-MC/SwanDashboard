@@ -2,12 +2,19 @@
 
 namespace App\Repository;
 
+use App\Document\SwanModule;
 use DateTime;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use MongoDB\BSON\UTCDateTime;
 
-class SwanModuleRepository extends DocumentRepository
+class SwanModuleRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, SwanModule::class);
+    }
+
     public function changeModuleState(string $moduleId, bool $enabled): void
     {
         $this->createQueryBuilder()

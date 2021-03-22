@@ -13,20 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
-    private DiscordService $discordService;
-
-    public function __construct(DiscordService $discordService)
-    {
-        $this->discordService = $discordService;
-    }
-
     #[Route('', name: 'profile')]
-    public function home(): Response
+    public function home(DiscordService $discordService): Response
     {
         /** @var DiscordUser $user */
         $user = $this->getUser();
         return $this->render('profile.html.twig', [
-            'discordRoles' => $this->discordService->getRolesFromSnowflakes($user->getDiscordRoles())
+            'discordRoles' => $discordService->getRolesFromSnowflakes($user->getDiscordRoles())
         ]);
     }
 }

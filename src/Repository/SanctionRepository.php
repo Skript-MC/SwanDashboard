@@ -2,13 +2,20 @@
 
 namespace App\Repository;
 
+use App\Document\Moderation\Sanction;
 use App\Entity\SanctionSearch;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\ODM\MongoDB\Query\Query;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use MongoDB\BSON\Regex;
 
-class SanctionRepository extends DocumentRepository
+class SanctionRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Sanction::class);
+    }
+
     public function search(SanctionSearch $sanctionSearch): Query
     {
         $query = $this->createQueryBuilder();

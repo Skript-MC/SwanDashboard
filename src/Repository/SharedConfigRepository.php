@@ -2,10 +2,16 @@
 
 namespace App\Repository;
 
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use App\Document\SharedConfig;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 
-class SharedConfigRepository extends DocumentRepository
+class SharedConfigRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, SharedConfig::class);
+    }
 
     public function updateLoggedChannels(array $loggedChannels): void
     {
