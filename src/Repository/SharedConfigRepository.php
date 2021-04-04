@@ -18,7 +18,7 @@ class SharedConfigRepository extends ServiceDocumentRepository
         $this->createQueryBuilder()
             ->findAndUpdate()
             ->field('name')->equals('logged-channels')
-            ->field('value')->set($loggedChannels)
+            ->field('value')->set([$loggedChannels])
             ->getQuery()
             ->execute();
     }
