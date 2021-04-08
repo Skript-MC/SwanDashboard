@@ -75,7 +75,11 @@ class DiscordService implements ServiceSubscriberInterface
      */
     public function getMember(int $userId): ?GuildMember
     {
-        return $this->discordClient->guild->getGuildMember(['guild.id' => $this->discordGuild, 'user.id' => $userId]);
+        try {
+            return $this->discordClient->guild->getGuildMember(['guild.id' => $this->discordGuild, 'user.id' => $userId]);
+        } catch (CommandClientException) {
+            return null;
+        }
     }
 
     public function getChannels(): array

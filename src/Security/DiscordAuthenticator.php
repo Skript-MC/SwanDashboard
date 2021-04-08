@@ -59,11 +59,11 @@ class DiscordAuthenticator extends SocialAuthenticator
     /**
      * @param $credentials
      * @param UserProviderInterface $userProvider
-     * @return DiscordUser
+     * @return DiscordUser|null
      * @throws MongoDBException
      * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
      */
-    public function getUser($credentials, UserProviderInterface $userProvider): DiscordUser
+    public function getUser($credentials, UserProviderInterface $userProvider): ?DiscordUser
     {
         /** @var DiscordRessourceOwner $discordUser */
         $discordUser = $this
@@ -78,6 +78,8 @@ class DiscordAuthenticator extends SocialAuthenticator
         // Merge existing user and new user, this will update the existing user if it is found
         $user = $existingUser ? $existingUser : new DiscordUser();
         $discordMember = $this->discordService->getMember($discordUser->getId());
+        if (!$discordMember)
+            return null;
 
         // If we have an existing user, don't refresh these data.
         if (!$existingUser)
@@ -101,9 +103,8 @@ class DiscordAuthenticator extends SocialAuthenticator
      * @return RedirectResponse
      * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): RedirectResponse
     {
-
         return new RedirectResponse($this->getTargetPath($request->getSession(), 'discord') ?? $this->router->generate('home'));
     }
 
