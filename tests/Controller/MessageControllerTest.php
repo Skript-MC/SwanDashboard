@@ -2,21 +2,21 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MessageControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private User $staffUser;
+    private DiscordUser $staffUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->staffUser = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 752259261475586139]);
+        $this->staffUser = $dm->getRepository(DiscordUser::class)
+            ->findOneBy(['userId' => 752259261475586139]);
     }
 
     public function testAuthorization(): void
@@ -76,7 +76,7 @@ class MessageControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->staffUser);
 
-        $crawler = $this->client->request('GET', '/messages/waiting');
+        $crawler = $this->client->request('GET', '/messages');
         $link = $crawler->filter('tbody')
             ->filter('td')
             ->filter('a')
@@ -92,7 +92,7 @@ class MessageControllerTest extends WebTestCase
         $success = $crawler->filter('.alert')
             ->filter('.alert-success')
             ->text();
-        $this->assertEquals('Cette suggestion de modification a été marquée comme validée.', $success);
+        $this->assertEquals('Cette suggestion a été approuvée, et le message a été créé. Il est donc désormais utilisable avec Swan.', $success);
     }
 
     public function testViewInvalidEdit(): void
@@ -158,7 +158,7 @@ class MessageControllerTest extends WebTestCase
         // Test with an invalid message
         $this->client->request('POST', '/messages/edit', [
             'messageId' => $messageId,
-            'name' => 'This an auto message',
+            'name' => '',
             'aliases' => ['autotest', 'testmsg'],
             'type' => 'addonpack'
         ]);
@@ -189,7 +189,7 @@ class MessageControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->staffUser);
 
-        $crawler = $this->client->request('GET', '/messages/waiting');
+        $crawler = $this->client->request('GET', '/messages');
         $link = $crawler->filter('tbody')
             ->filter('td')
             ->filter('a')
@@ -203,7 +203,7 @@ class MessageControllerTest extends WebTestCase
         $success = $crawler->filter('.alert')
             ->filter('.alert-success')
             ->text();
-        $this->assertEquals('Cette suggestion de modification a été marquée comme validée.', $success);
+        $this->assertEquals('Cette suggestion a été approuvée, et le message a été mis à jour.', $success);
     }
 
     public function testNewMessage(): void
@@ -233,10 +233,7 @@ class MessageControllerTest extends WebTestCase
         return [
             ['auto'],
             ['error'],
-            ['addonpack'],
-            ['waiting'],
-            ['accepted'],
-            ['denied']
+            ['addonpack']
         ];
     }
 

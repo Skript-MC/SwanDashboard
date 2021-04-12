@@ -5,9 +5,11 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document(collection="messageHistories")
+ * Class MessageLog
+ * @package App\Document
+ * @MongoDB\Document(collection="messagelogs", repositoryClass="App\Repository\MessageLogRepository")
  */
-class MessageHistory
+class MessageLog
 {
     /**
      * @MongoDB\Id
@@ -15,19 +17,19 @@ class MessageHistory
     protected string $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class)
+     * @MongoDB\ReferenceOne(targetDocument=DiscordUser::class, storeAs="id")
      */
-    protected User $user;
+    protected DiscordUser $user;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\Field(type="string")
      */
-    protected int $messageId;
+    protected string $messageId;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\Field(type="string")
      */
-    protected int $channelId;
+    protected string $channelId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -61,49 +63,49 @@ class MessageHistory
     }
 
     /**
-     * @return User
+     * @return DiscordUser
      */
-    public function getUser(): User
+    public function getUser(): DiscordUser
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param DiscordUser $user
      */
-    public function setUser(User $user): void
+    public function setUser(DiscordUser $user): void
     {
         $this->user = $user;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getMessageId(): int
+    public function getMessageId(): string
     {
         return $this->messageId;
     }
 
     /**
-     * @param int $messageId
+     * @param string $messageId
      */
-    public function setMessageId(int $messageId): void
+    public function setMessageId(string $messageId): void
     {
         $this->messageId = $messageId;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getChannelId(): int
+    public function getChannelId(): string
     {
         return $this->channelId;
     }
 
     /**
-     * @param int $channelId
+     * @param string $channelId
      */
-    public function setChannelId(int $channelId): void
+    public function setChannelId(string $channelId): void
     {
         $this->channelId = $channelId;
     }

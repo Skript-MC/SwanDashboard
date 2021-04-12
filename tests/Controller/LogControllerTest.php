@@ -1,40 +1,38 @@
 <?php
 
-
 namespace App\Tests\Controller;
 
-
 use App\Document\SharedConfig;
-use App\Document\User;
+use App\Document\DiscordUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class HistoryControllerTest extends WebTestCase
+class LogControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private DocumentManager $dm;
-    private User $adminUser;
+    private DiscordUser $adminUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $this->dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->adminUser = $this->dm->getRepository(User::class)
-            ->findOneBy(['_id' => 191495299884122112]);
+        $this->adminUser = $this->dm->getRepository(DiscordUser::class)
+            ->findOneBy(['userId' => 191495299884122112]);
     }
 
     public function testAuthorization(): void
     {
         // The request should return a redirect response to login page.
-        $this->client->request('GET', '/history');
+        $this->client->request('GET', '/logs');
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
 
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
         // The request should have been authorized and return the page.
-        $this->client->request('GET', '/history');
+        $this->client->request('GET', '/logs');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -43,7 +41,7 @@ class HistoryControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
-        $crawler = $this->client->request('GET', '/history/channel/780877192753184868');
+        $crawler = $this->client->request('GET', '/logs/channel/780877192753184868');
         $edition = $crawler->filter('div')
             ->filter('.card')
             ->filter('tr')
@@ -66,7 +64,7 @@ class HistoryControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
-        $crawler = $this->client->request('GET', '/history/channel/780877192753184868');
+        $crawler = $this->client->request('GET', '/logs/channel/780877192753184868');
         $edition = $crawler->filter('div')
             ->filter('.card')
             ->filter('tr')
@@ -88,7 +86,7 @@ class HistoryControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
-        $this->client->request('GET', '/history/message/928677192753619275');
+        $this->client->request('GET', '/logs/message/928677192753619275');
         $this->assertEquals(303, $this->client->getResponse()->getStatusCode());
     }
 
@@ -97,9 +95,9 @@ class HistoryControllerTest extends WebTestCase
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
-        $crawler = $this->client->request('GET', '/history/search');
+        $crawler = $this->client->request('GET', '/logs/search');
         $form = $crawler->selectButton('Rechercher')->form([
-            'form[userId]' => 191495299884122112
+            'userId' => 191495299884122112
         ]);
         $crawler = $this->client->submit($form);
         // 2 <tr> for table construction and 2 <tr> for table contents
@@ -108,25 +106,25 @@ class HistoryControllerTest extends WebTestCase
 
     function testSwitchChannel(): void
     {
-        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'archived-channels']);
+        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'logged-channels']);
         $this->assertEquals([780877192753184868], $channels->getValue());
 
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
-        $this->client->request('POST', '/history/api/channels', [
+        $this->client->request('POST', '/logs/api/channels', [
             'channelId' => 780877192753184868,
             'checked' => false
         ]);
         $this->assertEquals('{"status":"OK"}', $this->client->getResponse()->getContent());
 
-        $this->client->request('POST', '/history/api/channels', [
+        $this->client->request('POST', '/logs/api/channels', [
             'channelId' => 780877192753184868,
             'checked' => true
         ]);
         $this->assertEquals('{"status":"OK"}', $this->client->getResponse()->getContent());
 
-        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'archived-channels']);
+        $channels = $this->dm->getRepository(SharedConfig::class)->findOneBy(['name' => 'logged-channels']);
         $this->assertEquals([780877192753184868], $channels->getValue());
     }
 

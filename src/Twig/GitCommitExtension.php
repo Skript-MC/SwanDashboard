@@ -2,13 +2,13 @@
 
 namespace App\Twig;
 
-use App\Service\GitVersion;
+use App\Service\GitVersionService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class GitCommitExtension extends AbstractExtension
 {
-    const GITHUB_REPO = "https://github.com/Romitou/SwanDashboard/commit/";
+    const GITHUB_REPO = "https://github.com/Skript-MC/SwanDashboard/commit/";
 
     /**
      * @return TwigFunction[]
@@ -23,7 +23,7 @@ class GitCommitExtension extends AbstractExtension
 
     public function gitCommit(): string
     {
-        $commitHash = GitVersion::getCommitHash();
+        $commitHash = GitVersionService::getCommitHash();
         $shortHash = substr($commitHash, 0, 6);
         return '<a href="' . self::GITHUB_REPO . $commitHash . '">' . $shortHash . '</a>';
     }

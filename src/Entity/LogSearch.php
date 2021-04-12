@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 /**
- * Class HistoryQuery
+ * Class LogSearchType
  * @package App\Entity
  */
-class HistoryQuery
+class LogSearch
 {
 
     private ?string $userId = null;

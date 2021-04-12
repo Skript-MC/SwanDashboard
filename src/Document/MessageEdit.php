@@ -5,24 +5,26 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document(collection="messageEditRequests")
+ * Class MessageEdit
+ * @package App\Document
+ * @MongoDB\Document(collection="messageedits", repositoryClass="App\Repository\MessageEditRepository")
  */
-class MessageEditRequest
+class MessageEdit
 {
     /**
-     * @MongoDB\Id
+     * @MongoDB\Id(type="string")
      */
     protected string $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true)
+     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true, storeAs="id")
      */
     protected ?Message $message = null;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class)
+     * @MongoDB\ReferenceOne(targetDocument=DiscordUser::class, storeAs="id")
      */
-    protected User $user;
+    protected DiscordUser $user;
 
     /**
      * @MongoDB\Field(type="string")
@@ -45,9 +47,9 @@ class MessageEditRequest
     protected ?bool $validated = null;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=User::class, nullable=true)
+     * @MongoDB\ReferenceOne(targetDocument=DiscordUser::class, nullable=true, storeAs="id")
      */
-    protected ?User $reviewer = null;
+    protected ?DiscordUser $reviewer = null;
 
     /**
      * @MongoDB\Field(type="string")
@@ -71,7 +73,7 @@ class MessageEditRequest
     }
 
     /**
-     * @return Message
+     * @return Message|null
      */
     public function getMessage(): ?Message
     {
@@ -87,17 +89,17 @@ class MessageEditRequest
     }
 
     /**
-     * @return User
+     * @return DiscordUser
      */
-    public function getUser(): User
+    public function getUser(): DiscordUser
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param DiscordUser $user
      */
-    public function setUser(User $user): void
+    public function setUser(DiscordUser $user): void
     {
         $this->user = $user;
     }
@@ -159,25 +161,25 @@ class MessageEditRequest
     }
 
     /**
-     * @param bool $validated
+     * @param bool|null $validated
      */
-    public function setValidated(bool $validated): void
+    public function setValidated(?bool $validated): void
     {
         $this->validated = $validated;
     }
 
     /**
-     * @return User|null
+     * @return DiscordUser|null
      */
-    public function getReviewer(): ?User
+    public function getReviewer(): ?DiscordUser
     {
         return $this->reviewer;
     }
 
     /**
-     * @param User|null $reviewer
+     * @param DiscordUser|null $reviewer
      */
-    public function setReviewer(?User $reviewer): void
+    public function setReviewer(?DiscordUser $reviewer): void
     {
         $this->reviewer = $reviewer;
     }
@@ -196,6 +198,20 @@ class MessageEditRequest
     public function setMessageType(?string $messageType): void
     {
         $this->messageType = $messageType;
+    }
+
+    /**
+     * Used for make a diff with an empty edit and a simple edit.
+     * @return $this
+     */
+    public static function getEmptyEdit(): self
+    {
+        $emptyEdit = new self();
+        $emptyEdit->setNewName('Sans nom');
+        $emptyEdit->setNewAliases([]);
+        $emptyEdit->setNewContent('');
+        $emptyEdit->setMessageType('');
+        return $emptyEdit;
     }
 
 }

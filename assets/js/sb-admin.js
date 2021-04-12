@@ -13,19 +13,17 @@ require('bootstrap');
     "use strict"; // Start of use strict
 
     // Toggle the side navigation
-    $("#sidebarToggle, #sidebarToggleTop").on('click', function() {
+    $("#sidebarToggle, #sidebarToggleTop").on('click', () => {
         $("body").toggleClass("sidebar-toggled");
         $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
+        if ($(".sidebar").hasClass("toggled"))
             $('.sidebar .collapse').collapse('hide');
-        }
     });
 
     // Close any open menu accordions when window is resized below 768px
-    $(window).resize(function() {
-        if ($(window).width() < 768) {
+    $(window).resize(() => {
+        if ($(window).width() < 768)
             $('.sidebar .collapse').collapse('hide');
-        }
 
         // Toggle the side navigation when window is resized below 480px
         if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
@@ -36,7 +34,7 @@ require('bootstrap');
     });
 
     // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
+    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', (e) => {
         if ($(window).width() > 768) {
             const e0 = e.originalEvent,
                 delta = e0.wheelDelta || -e0.detail;
@@ -46,20 +44,10 @@ require('bootstrap');
     });
 
     // Scroll to top button appear
-    $(document).on('scroll', function() {
-        const scrollDistance = $(this).scrollTop();
-        if (scrollDistance > 100) {
-            $('.scroll-to-top').fadeIn();
-            if (!$('.sidebar').hasClass('toggled')) {
-                $('.sidebar').toggleClass("toggled");
-            }
-        } else {
-            $('.scroll-to-top').fadeOut();
-        }
-    });
+    $(document).on('scroll', () => $(this).scrollTop());
 
     // Smooth scrolling using jQuery easing
-    $(document).on('click', 'a.scroll-to-top', function() {
+    $(document).on('click', 'a.scroll-to-top', () => {
         $(this);
         $("html, body").animate({ scrollTop: 0 }, "slow");
     });

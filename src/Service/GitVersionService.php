@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class GitVersion
+class GitVersionService
 {
     public static function getCommitHash(): ?string
     {

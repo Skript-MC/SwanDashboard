@@ -25,9 +25,11 @@
                                     <span class="input-group-text">Catégorie de message</span>
                                 </div>
                                 <select class="form-control" name="type" id="type" onchange="generateDiff()">
-                                    <option value="auto" {{ message.messageType == 'auto' ? 'selected' }}>Message rapide</option>
-                                    <option value="error" {{ message.messageType == 'error' ? 'selected' }}>Détails d'erreurs</option>
-                                    <option value="addonpack" {{ message.messageType == 'addonpack' ? 'selected' }}>Pack d'add-ons</option>
+                                    <option value="auto" {{ message.messageType == 'auto' ? 'selected' }}>💬 Message rapide</option>
+                                    <option value="error" {{ message.messageType == 'error' ? 'selected' }}>💬 Détail d'erreur</option>
+                                    <option value="addonpack" {{ message.messageType == 'addonpack' ? 'selected' }}>💬 Pack d'add-ons</option>
+                                    <option value="rule" {{ message.messageType == 'rule' ? 'selected' }}>💬 Règle</option>
+                                    <option value="joke" {{ message.messageType == 'joke' ? 'selected' }}>💬 Blague</option>
                                 </select>
                             </div>
                             <div class="dropdown-divider mb-3"></div>
@@ -83,7 +85,13 @@
                             {% endfor %}
                         </div>
                     </div>
-
+                    <div class="card shadow position-relative mt-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Guide de contribution</h6>
+                        </div>
+                        <div class="card-body" id="guidelines">
+                        </div>
+                    </div>
                 </div>
             </div>
             <script>
@@ -108,7 +116,6 @@
                 document.querySelectorAll('.link-remove').forEach((el) => el.addEventListener('click', () => {
                     const element = el.parentNode.parentNode;
                     element.parentNode.removeChild(element);
-
                     generateDiff();
                 }));
 
@@ -125,7 +132,6 @@
                     linkRemove.addEventListener('click', () => {
                         const element = linkRemove.parentNode.parentNode;
                         element.parentNode.removeChild(element);
-
                         generateDiff();
                     });
 
@@ -137,17 +143,36 @@
                     const aliases = getAliases();
                     const diff = window.diff.createTwoFilesPatch('{{ message.name|escape('js')|raw }}', name, 'Catégorie: {{ message.messageType }}\nAliases:\n{{ message.aliases|join('\n')|escape('js')|raw }}\n\n{{ message.content|escape('js')|raw }}', `Catégorie: ${type}\nAliases:\n${aliases.join('\n')}\n\n${easyMDE.value()}`);
 
+                    fitWithType(type);
                     checkChanges(name === '{{ message.name }}'
                         && '{{ message.messageType }}' === type
                         && '{{ message.aliases|join|escape('js')|raw }}' === aliases.join('')
                         && '{{ message.content|escape('js')|raw }}' === easyMDE.value(),
                         easyMDE.value().length > 2000
                     );
+                    alertMessage(easyMDE.value() === '', 'Attention : vous vous apprêtez à suggérer la suppression de ce message.')
 
                     const diffJson = diff2html.parse(diff);
                     document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                         drawFileList: false
                     });
+                }
+
+                function fitWithType(type) {
+                    const guidelines = document.getElementById('guidelines');
+                    switch (type) {
+                        case 'addonpack':
+                        case 'auto':
+                        case 'error':
+                        case 'rule':
+                            guidelines.innerHTML = 'Vous souhaitez modifier un message ? Pas de problème ! Une fois que vous aurez suggéré votre modification, l\'équipe de modération devra l\'approuver avant qu\'il puisse être utilisé avec Swan. Cependant, voici quelques conventions à respecter afin que nos messages soient cohérents : <ul class="mt-3"> <li>✒️ <strong>Règles de français</strong> : veillez à ce que votre message ne comporte aucune faute de français (orthographe, conjugaison, grammaire, syntaxe...) et qu\'il soit correctement construit ;</li><li>🔎 <strong>Informations essentielles</strong> : essayez de faire ressortir les informations importantes de votre message, de manière à ce que les utilisateurs puissent trouver rapidement ce dont ils ont besoin ;</li><li>📰 <strong>Markdown</strong> : les messages Discord utilisant Markdown, vous devez utiliser cette mise en forme pour vos messages. L\'éditeur supporte ce formatage. Si vous avez besoin d\'aide, consultez ce <a href="https://support.discord.com/hc/fr/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-">tutoriel</a>.</li></ul>'
+                            break;
+                        case 'joke':
+                            guidelines.innerHTML = 'Vous souhaitez modifier une blague ? Pas de problème ! Une fois que vous aurez suggéré votre modification, l\'équipe de modération devra l\'approuver avant qu\'elle puisse être utilisé avec Swan. Cependant, veillez à ce que votre blague reste adaptée à tout public. Pour terminer, merci d\'être drôle.'
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 function checkChanges(isEmpty, isNotValid) {

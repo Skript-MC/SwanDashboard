@@ -6,11 +6,11 @@ use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * Class Module
+ * Class SwanModule
  * @package App\Document
- * @MongoDB\Document(collection="swanmodules")
+ * @MongoDB\Document(collection="swanmodules", repositoryClass="App\Repository\SwanModuleRepository")
  */
-class Module
+class SwanModule
 {
 
     /**

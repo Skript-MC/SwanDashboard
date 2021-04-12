@@ -24,8 +24,8 @@
             <div class="sidebar-heading">
                 Messages
             </div>
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'messages:history' ? 'active' }}">
-                <a class="nav-link" href="{{ path('messages:history') }}">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'messages:logs' ? 'active' }}">
+                <a class="nav-link" href="{{ path('messages:logs') }}">
                     <i class="fas fa-list"></i>
                     <span>Modifications récentes</span>
                 </a>
@@ -42,21 +42,13 @@
                     <span>Nouveau message</span>
                 </a>
             </li>
-            {% if is_granted('ROLE_STAFF') %}
-                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'messages:approbation' ? 'active' }}">
-                    <a class="nav-link" href="{{ path('messages:approbation:waiting') }}">
-                        <i class="fas fa-vote-yea"></i>
-                        <span>Approbation</span>
-                    </a>
-                </li>
-            {% endif %}
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Swan
             </div>
             {% if is_granted('ROLE_STAFF') %}
-                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'history' ? 'active' }}">
-                    <a class="nav-link" href="{{ path('history') }}">
+                <li class="nav-item {{ app.request.attributes.get('_route') starts with 'logs' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('logs') }}">
                         <i class="fas fa-history"></i>
                         <span>Historique</span>
                     </a>
@@ -123,7 +115,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Swan Dashboard (version {{ gitCommit()|raw }}) développé par <a href="https://github.com/Romitou">Romitou</a> et <a href="https://github.com/Romitou/SwanDashboard/graphs/contributors">contributeurs</a> - Panel par <a href="https://startbootstrap.com">Start Bootstrap</a></span>
+                        <span>Swan Dashboard (version {{ gitCommit()|raw }}) développé par <a href="https://github.com/Romitou">Romitou</a> et <a href="https://github.com/Skript-MC/SwanDashboard/graphs/contributors">nos contributeurs</a> - Panel par <a href="https://startbootstrap.com">Start Bootstrap</a></span>
                     </div>
                 </div>
             </footer>

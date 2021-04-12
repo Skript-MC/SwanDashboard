@@ -25,9 +25,15 @@
                         <form method="POST">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">Identifiant</span>
+                                    <span class="input-group-text" id="discordId">Identifiant panel</span>
                                 </div>
-                                <input type="text" name="discordId" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                                <input type="text" class="form-control" value="{{ user.id }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="discordId">Identifiant Discord</span>
+                                </div>
+                                <input type="text" name="discordId" class="form-control" value="{{ user.userId }}" aria-label="Identifiant" aria-describedby="discordId" readonly>
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -47,9 +53,9 @@
                                     <span class="input-group-text" id="dashboardRole">Rôle Dashboard</span>
                                 </div>
                                 <select class="custom-select" name="dashboardRole">
-                                    <option value="ROLE_USER" {{ 'ROLE_USER' in app.user.roles ? 'selected' }}>Utilisateur</option>
-                                    <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in app.user.roles ? 'selected' }}>Staff</option>
-                                    <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in app.user.roles ? 'selected' }}>Administrateur</option>
+                                    <option value="ROLE_USER" {{ 'ROLE_USER' in user.roles ? 'selected' }}>Utilisateur</option>
+                                    <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in user.roles ? 'selected' }}>Staff</option>
+                                    <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' }}>Administrateur</option>
                                 </select>
                             </div>
 

@@ -405,14 +405,8 @@
     "symfony/polyfill-php73": {
         "version": "v1.22.0"
     },
-    "symfony/polyfill-php80": {
-        "version": "v1.22.0"
-    },
     "symfony/polyfill-uuid": {
         "version": "v1.22.0"
-    },
-    "symfony/process": {
-        "version": "v5.2.1"
     },
     "symfony/property-access": {
         "version": "v5.2.1"

@@ -64,6 +64,8 @@
                     </div>
                     <div class="card-body">
                         <div id="diff"></div>
+                        <div class="alert alert-info mt-3" id="alert">
+                        </div>
                         <div class="input-group">
                             {% if (request.validated) is null %}
                                 {% if is_granted('ROLE_STAFF') %}
@@ -110,6 +112,12 @@
             document.getElementById('diff').innerHTML = diff2html.html(diffJson, {
                 drawFileList: false
             });
+            alertMessage('{{ request.newContent|escape('js')|raw }}' === '', 'Attention : cette suggestion est une demande de suppression.')
+            function alertMessage(status, message) {
+                const alert = document.getElementById('alert');
+                alert.style.display = (status ? 'block' : 'none');
+                if (message) alert.innerText = message;
+            }
         </script>
     </div>
 {% endblock %}

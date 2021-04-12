@@ -6,14 +6,21 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @MongoDB\Document(collection="users")
+ * Class DiscordUser
+ * @package App\Document
+ * @MongoDB\Document(collection="discordusers", repositoryClass="App\Repository\DiscordUserRepository")
  */
-class User implements UserInterface
+class DiscordUser implements UserInterface
 {
     /**
-     * @MongoDB\Id(strategy="none", type="int")
+     * @MongoDB\Id(type="string")
      */
-    protected int $id;
+    protected string $id;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected string $userId;
 
     /**
      * @MongoDB\Field(type="string")
@@ -28,7 +35,7 @@ class User implements UserInterface
     /**
      * @MongoDB\Field(type="bool")
      */
-    protected bool $hasMFA;
+    protected ?bool $hasMFA = null;
 
     /**
      * @MongoDB\Field(type="collection")
@@ -41,19 +48,35 @@ class User implements UserInterface
     protected array $discordRoles = [];
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param string $id
      */
-    public function setId(int $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param string $userId
+     */
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
     }
 
     /**
@@ -89,17 +112,17 @@ class User implements UserInterface
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isHasMFA(): bool
+    public function hasMFA(): ?bool
     {
         return $this->hasMFA;
     }
 
     /**
-     * @param bool $hasMFA
+     * @param bool|null $hasMFA
      */
-    public function setHasMFA(bool $hasMFA): void
+    public function setHasMFA(?bool $hasMFA): void
     {
         $this->hasMFA = $hasMFA;
     }
@@ -109,7 +132,10 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     /**

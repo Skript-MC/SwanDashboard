@@ -2,24 +2,24 @@
 
 namespace App\DataFixtures;
 
-use App\Document\MessageHistory;
-use App\Document\User;
+use App\Document\MessageLog;
+use App\Document\DiscordUser;
 use Doctrine\Bundle\MongoDBBundle\Fixture\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Class MessageHistoryFixtures
+ * Class MessageLogFixtures
  * @package App\DataFixtures
  */
-class MessageHistoryFixtures extends Fixture implements DependentFixtureInterface
+class MessageLogFixtures extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager)
     {
-        $user = $manager->getRepository(User::class)->findOneBy(['_id' => 191495299884122112]);
+        $user = $manager->getRepository(DiscordUser::class)->findOneBy(['userId' => 191495299884122112]);
 
-        $deletedMessage = new MessageHistory();
+        $deletedMessage = new MessageLog();
         $deletedMessage->setUser($user);
         $deletedMessage->setMessageId(806625253429870642);
         $deletedMessage->setChannelId(780877192753184868);
@@ -30,7 +30,7 @@ class MessageHistoryFixtures extends Fixture implements DependentFixtureInterfac
         $manager->persist($deletedMessage);
         $manager->flush();
 
-        $editedMessage = new MessageHistory();
+        $editedMessage = new MessageLog();
         $editedMessage->setUser($user);
         $editedMessage->setMessageId(806625253429570671);
         $editedMessage->setChannelId(780877192753184868);

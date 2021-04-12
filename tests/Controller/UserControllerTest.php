@@ -2,21 +2,21 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private User $adminUser;
+    private DiscordUser $adminUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->adminUser = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 191495299884122112]);
+        $this->adminUser = $dm->getRepository(DiscordUser::class)
+            ->findOneBy(['userId' => 191495299884122112]);
     }
 
     public function testAuthorization(): void
@@ -42,7 +42,7 @@ class UserControllerTest extends WebTestCase
         $data = $crawler->filter('tbody')
             ->filter('td');
         $this->assertEquals('Romitou#9685', $data->eq(0)->text());
-        $this->assertEquals('ROLE_ADMIN', $data->eq(1)->text());
+        $this->assertEquals('ROLE_ADMIN, ROLE_USER', $data->eq(1)->text());
         $this->assertEquals('191495299884122112', $data->eq(3)->text());
 
         $link = $data->eq(4)->filter('a')->attr('href');

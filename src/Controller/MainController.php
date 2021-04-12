@@ -12,41 +12,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    /**
-     * @Route("", name="home")
-     * @param DiscordService $discordService
-     * @param CacheService $cache
-     * @return Response
-     */
-    public function home(DiscordService $discordService, CacheService $cache): Response
+    #[Route('', name: 'home')]
+    public function home(DiscordService $discordService, CacheService $cacheService): Response
     {
         if (!$this->isGranted('ROLE_USER'))
             return $this->render('welcome.html.twig');
         $guild = $discordService->getGuild();
         return $this->render('dashboard.html.twig', [
-            'discordMembers' => $guild?->member_count ?? 'Inconnu',
+            'discordMembers' => $guild?->approximate_member_count ?? 'Inconnu',
             'discordOnlineMembers' => $guild?->approximate_presence_count ?? 'Inconnu',
-            'commandStats' => $cache->getCommandStats()
+            'commandStats' => $cacheService->getCommandStats()
         ]);
     }
 
-    /**
-     * @Route("/login", name="login")
-     * @param ClientRegistry $registry
-     * @return Response
-     */
-    public function login(ClientRegistry $registry): Response
+    #[Route('/login', name: 'login')]
+    public function login(ClientRegistry $clientRegistry): Response
     {
-        return $registry
+        return $clientRegistry
             ->getClient('discord')
-            ->redirect(['identify'], ['prompt' => 'none']);
+            ->redirect(['identify'], []);
     }
 
-    /**
-     * @Route("/error", name="error")
-     * @param Request $request
-     * @return Response
-     */
+    #[Route('/error', name: 'error')]
     public function error(Request $request): Response
     {
         return $this->render('error.html.twig', [
@@ -55,5 +42,4 @@ class MainController extends AbstractController
             'message' => ($request->get('message') ?? 'Nous ne savons pas exactement ce qu\'il s\'est passé.') . ' Si le problème persiste, n\'hésitez pas à nous contacter sur Discord.'
         ]);
     }
-
 }

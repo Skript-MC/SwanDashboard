@@ -2,21 +2,21 @@
 
 namespace App\Tests\Controller;
 
-use App\Document\User;
+use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SanctionControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private User $adminUser;
+    private DiscordUser $adminUser;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->adminUser = $dm->getRepository(User::class)
-            ->findOneBy(['_id' => 191495299884122112]);
+        $this->adminUser = $dm->getRepository(DiscordUser::class)
+            ->findOneBy(['userId' => 191495299884122112]);
     }
 
     public function testAuthorization(): void
@@ -41,9 +41,9 @@ class SanctionControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/sanctions');
         $form = $crawler->selectButton('Rechercher')->form();
 
-        $form['form[memberId]']->setValue('191495299884122112');
-        $form['form[moderatorId]']->setValue('752259261475586139');
-        $form['form[sanctionType]']->setValue('ban');
+        $form['memberId']->setValue('191495299884122112');
+        $form['moderatorId']->setValue('752259261475586139');
+        $form['sanctionType']->setValue('ban');
 
         $crawler = $this->client->submit($form);
         $data = $crawler->filter('tbody')
