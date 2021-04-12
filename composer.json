@@ -45,6 +45,7 @@
         "symfony/form": "5.2.*",
         "symfony/framework-bundle": "5.2.*",
         "symfony/http-client": "5.2.*",
+        "symfony/monolog-bundle": "^3.7",
         "symfony/polyfill-php80": "^1.22",
         "symfony/security-bundle": "5.2.*",
         "symfony/serializer": "5.2.*",
