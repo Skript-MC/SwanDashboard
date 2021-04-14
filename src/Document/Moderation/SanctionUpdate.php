@@ -2,8 +2,10 @@
 
 namespace App\Document\Moderation;
 
+use DateInterval;
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Exception;
 
 /**
  * Class SanctionUpdate
@@ -20,9 +22,9 @@ class SanctionUpdate
     protected string $id;
 
     /**
-     * @MongoDB\Field(type="date")
+     * @MongoDB\Field(type="int")
      */
-    protected DateTime $date;
+    protected int $date;
 
     /**
      * @MongoDB\Field(type="string")
@@ -54,7 +56,7 @@ class SanctionUpdate
      */
     public function getDate(): DateTime
     {
-        return $this->date;
+        return date_create()->setTimestamp($this->date / 1000);
     }
 
     /**
@@ -62,7 +64,7 @@ class SanctionUpdate
      */
     public function setDate(DateTime $date): void
     {
-        $this->date = $date;
+        $this->date = $date->getTimestamp();
     }
 
     /**
@@ -98,35 +100,42 @@ class SanctionUpdate
     }
 
     /**
-     * @return int|null
+     * @return string
+     * @throws Exception
      */
-    public function getValueBefore(): ?int
+    public function getValueBefore(): string
     {
-        return $this->valueBefore;
+        $d1 = new DateTime();
+        $d2 = new DateTime();
+        $d2->add(new DateInterval('PT' . ($this->valueBefore / 1000 ?? 0) . 'S'));
+        return $d2->diff($d1)->format('%m mois, %d jour(s), %h heure(s), %i minute(s) et %s seconde(s)');
     }
 
     /**
-     * @param int|null $valueBefore
+     * @param DateTime $date
      */
-    public function setValueBefore(?int $valueBefore): void
+    public function setValueBefore(DateTime $date): void
     {
-        $this->valueBefore = $valueBefore;
+        $this->valueBefore = $date->getTimestamp();
+    }
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getValueAfter(): string
+    {
+        $d1 = new DateTime();
+        $d2 = new DateTime();
+        $d2->add(new DateInterval('PT' . ($this->valueAfter / 1000 ?? 0) . 'S'));
+        return $d2->diff($d1)->format('%m mois, %d jour(s), %h heure(s), %i minute(s) et %s seconde(s)');
     }
 
     /**
-     * @return int|null
+     * @param DateTime $date
      */
-    public function getValueAfter(): ?int
+    public function setValueAfter(DateTime $date): void
     {
-        return $this->valueAfter;
-    }
-
-    /**
-     * @param int|null $valueAfter
-     */
-    public function setValueAfter(?int $valueAfter): void
-    {
-        $this->valueAfter = $valueAfter;
+        $this->valueAfter = $date->getTimestamp();
     }
 
     /**

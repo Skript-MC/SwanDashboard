@@ -33,8 +33,8 @@
                                 <td>{{ sanction.reason|truncate(50) }}</td>
                                 <td>{{ sanction.start.format('d/m/Y à H:i') }}</td>
                                 <td>{{ sanction.finish == null ? 'Non défini' : sanction.finish.format('d/m/Y à H:i') }}</td>
-                                <td>{% include 'components/sanctionStatusBadge.html.twig' with {'isRevoked': sanction.revoked} %}</td>
-                                <td><a class="btn btn-info"><i class="fas fa-eye"></i></a></td>
+                                <td>{% include 'components/sanctionStatusBadge.html.twig' with { isRevoked: sanction.revoked } %}</td>
+                                <td><a href="{{ path('sanctions:view', { sanctionId: sanction.id }) }}"><i class="fas fa-eye"></i></a></td>
                             </tr>
                         {% endfor %}
                         </tbody>
