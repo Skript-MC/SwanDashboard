@@ -32,35 +32,35 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for request in requests %}
+                                {% for edition in myEditions %}
                                     <tr>
                                         <td>
-                                            {{ request.message.name ?? request.newName }}
+                                            {{ edition.message.name ?? edition.newName }}
                                         </td>
                                         <td>
-                                            {{ request.messageType ?? request.message.messageType }}
+                                            {{ edition.messageType ?? edition.message.messageType }}
                                         </td>
                                         <td>
-                                            {{ request.reviewer.username ?? '' }}
+                                            {{ edition.reviewer.username ?? '' }}
                                         </td>
                                         <td>
-                                            {% if request.validated is null %}
+                                            {% if edition.validated is null %}
                                                 <span class="badge badge-secondary badge-pill">En attente</span>
-                                            {% elseif request.validated %}
+                                            {% elseif edition.validated %}
                                                 <span class="badge badge-success badge-pill">Validée</span>
                                             {% else %}
                                                 <span class="badge badge-warning badge-pill">Refusée</span>
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <a href="{{ path('messages:view', { messageId: request.id }) }}"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('messages:view', { messageId: edition.id }) }}"><i class="fas fa-eye"></i></a>
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                        {{ knp_pagination_render(requests) }}
+                        {{ knp_pagination_render(myEditions) }}
                     </div>
                 </div>
             </div>

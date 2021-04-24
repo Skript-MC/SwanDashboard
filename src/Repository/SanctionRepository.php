@@ -38,4 +38,9 @@ class SanctionRepository extends ServiceDocumentRepository
         return $query->sort('_id', 'DESC')
             ->getQuery();
     }
+
+    public function findOneById($id): Sanction|null
+    {
+        return $this->findOneBy(['_id' => $id]);
+    }
 }

@@ -40,20 +40,23 @@ class MessageController extends AbstractController
     {
         /** @var DiscordUser $user */
         $user = $this->getUser();
-        $editions = $paginator->paginate(
-            $messageEditRepository->findAllEdits(),
-            $request->query->getInt('pageEditions', 1),
-            10,
-            ['pageParameterName' => 'pageRequests']
-        );
-        $requests = $paginator->paginate(
+
+        $myEditions = $paginator->paginate(
             $messageEditRepository->findAllEditsByUser($user->getId()),
             $request->query->getInt('pageRequests', 1),
             10,
-            ['pageParameterName' => 'pageEditions']
+            ['pageParameterName' => 'myEditions']
         );
+
+        $editions = $paginator->paginate(
+            $messageEditRepository->findAllEdits(),
+            $request->query->getInt('myEditions', 1),
+            10,
+            ['pageParameterName' => 'editions']
+        );
+
         return $this->render('messages/logs.html.twig', [
-            'requests' => $requests,
+            'myEditions' => $myEditions,
             'editions' => $editions
         ]);
     }
