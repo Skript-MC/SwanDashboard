@@ -37,9 +37,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-node-
 
-    - name: 🔒 Create default environment file
-      run: cp ./.env.example ./.env
-
     - name: 🔒 Create test environment file
       uses: SpicyPizza/create-envfile@v1
       with:
