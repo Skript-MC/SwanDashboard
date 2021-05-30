@@ -10,6 +10,7 @@
         <server name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
         <server name="SYMFONY_PHPUNIT_VERSION" value="9"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
         <env name="KERNEL_CLASS" value="App\Kernel" />
         <env name="XDEBUG_MODE" value="coverage" />
         <env name="APP_ENV" value="test"/>

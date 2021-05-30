@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Document\DiscordUser;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
+use Doctrine\ODM\MongoDB\MongoDBException;
 
 class DiscordUserRepository extends ServiceDocumentRepository
 {
@@ -13,6 +14,9 @@ class DiscordUserRepository extends ServiceDocumentRepository
         parent::__construct($registry, DiscordUser::class);
     }
 
+    /**
+     * @throws MongoDBException
+     */
     public function updateUser(DiscordUser $user): void
     {
         $this->createQueryBuilder()
