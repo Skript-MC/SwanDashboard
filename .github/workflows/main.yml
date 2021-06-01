@@ -60,13 +60,19 @@ jobs:
     - name: 👷 Run production build
       run: yarn build
       
+    - name: 🔎 Get last commit informations
+      id: lastCommit
+      shell: bash
+      run: |
+        echo "::set-output name=sha::$(git rev-parse HEAD~)"
+        
     - name: 🕑 Wait last workflow to finish
       uses: tomchv/wait-my-workflow@v1.1.0
       id: wait-build
       with:
         token: ${{ secrets.GH_TOKEN }}
         checkName: build-and-test
-        ref: $(git rev-parse HEAD~)
+        ref: ${{ steps.lastCommit.outputs.sha }}
         intervalSeconds: 10
         timeoutSeconds: 100
         
