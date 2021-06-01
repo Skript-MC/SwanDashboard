@@ -60,7 +60,7 @@
     "require-dev": {
         "symfony/browser-kit": "5.2.*",
         "symfony/css-selector": "5.2.*",
-        "symfony/debug-bundle": "5.2.*",
+        "symfony/debug-bundle": "5.3.*",
         "symfony/maker-bundle": "^1.31.1",
         "symfony/phpunit-bridge": "5.2.*",
         "symfony/stopwatch": "5.3.*",
