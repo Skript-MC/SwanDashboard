@@ -38,16 +38,7 @@ jobs:
           ${{ runner.os }}-build-node-
 
     - name: 🔒 Create test environment file
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_MONGODB_URL: ${{ secrets.MONGODB_URL }}
-        envkey_MONGODB_DB: ${{ secrets.MONGODB_DB }}
-        envkey_DATABASE_URL: 'null'
-        envkey_DISCORD_GUILD: 'null'
-        envkey_DISCORD_SWAN_TOKEN: 'null'
-        envkey_OAUTH_DISCORD_CLIENT_ID: 'null'
-        envkey_OAUTH_DISCORD_CLIENT_SECRET: 'null'
-        file_name: .env.test
+      run: cp .env .env.test
 
     - name: ➕ Install Composer packages
       if: steps.composer-cache.outputs.cache-hit != 'true'
@@ -59,29 +50,16 @@ jobs:
 
     - name: 👷 Run production build
       run: yarn build
-      
-    - name: 🔎 Get last commit informations
-      id: lastCommit
-      shell: bash
-      run: |
-        echo "::set-output name=sha::$(git rev-parse HEAD~)"
-        
-    - name: 🕑 Wait last workflow to finish
-      uses: tomchv/wait-my-workflow@v1.1.0
-      id: wait-build
+
+    - name: 🍃 Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
       with:
-        token: ${{ secrets.GH_TOKEN }}
-        checkName: build-and-test
-        ref: ${{ steps.lastCommit.outputs.sha }}
-        intervalSeconds: 10
-        timeoutSeconds: 100
-        
+        mongodb-version: 4.4
+
     - name: 🗃️ Load Doctrine fixtures
-      if: steps.wait-build.outputs.conclusion == 'success'
       run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
 
     - name: ✅ Run PHPUnit and publish code coverage
-      if: steps.wait-build.outputs.conclusion == 'success'
       uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
