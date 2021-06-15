@@ -39,33 +39,33 @@
         "romitou/oauth2-discord": "^1.0.1",
         "sensio/framework-extra-bundle": "^6.1.0",
         "sentry/sentry-symfony": "^4.1.2",
-        "symfony/asset": "5.2.*",
-        "symfony/dotenv": "5.2.*",
+        "symfony/asset": "5.3.*",
+        "symfony/dotenv": "5.3.*",
         "symfony/flex": "^1.13.3",
-        "symfony/form": "5.2.*",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/http-client": "5.2.*",
+        "symfony/form": "5.3.*",
+        "symfony/framework-bundle": "5.3.*",
+        "symfony/http-client": "5.3.*",
         "symfony/monolog-bundle": "^3.7",
         "symfony/polyfill-php80": "^1.22",
-        "symfony/security-bundle": "5.2.*",
-        "symfony/serializer": "5.2.*",
-        "symfony/string": "5.2.*",
-        "symfony/twig-bundle": "5.2.*",
-        "symfony/validator": "5.2.*",
+        "symfony/security-bundle": "5.3.*",
+        "symfony/serializer": "5.3.*",
+        "symfony/string": "5.3.*",
+        "symfony/twig-bundle": "5.3.*",
+        "symfony/validator": "5.3.*",
         "symfony/webpack-encore-bundle": "^1.11.2",
-        "symfony/yaml": "5.2.*",
+        "symfony/yaml": "5.3.*",
         "twig/extra-bundle": "^3.3.1",
         "twig/twig": "^3.3.2"
     },
     "require-dev": {
-        "symfony/browser-kit": "5.2.*",
-        "symfony/css-selector": "5.2.*",
-        "symfony/debug-bundle": "5.2.*",
+        "symfony/browser-kit": "5.3.*",
+        "symfony/css-selector": "5.3.*",
+        "symfony/debug-bundle": "5.3.*",
         "symfony/maker-bundle": "^1.31.1",
-        "symfony/phpunit-bridge": "5.2.*",
-        "symfony/stopwatch": "5.2.*",
-        "symfony/var-dumper": "5.2.*",
-        "symfony/web-profiler-bundle": "5.2.*"
+        "symfony/phpunit-bridge": "5.3.*",
+        "symfony/stopwatch": "5.3.*",
+        "symfony/var-dumper": "5.3.*",
+        "symfony/web-profiler-bundle": "5.3.*"
     },
     "config": {
         "optimize-autoloader": true,
@@ -108,7 +108,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": "true",
-            "require": "5.2.*"
+            "require": "5.3.*"
         }
     }
 }

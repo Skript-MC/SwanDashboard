@@ -59,11 +59,29 @@ jobs:
 
     - name: 👷 Run production build
       run: yarn build
-
+      
+    - name: 🔎 Get last commit informations
+      id: lastCommit
+      shell: bash
+      run: |
+        echo "::set-output name=sha::$(git rev-parse HEAD~)"
+        
+    - name: 🕑 Wait last workflow to finish
+      uses: tomchv/wait-my-workflow@v1.1.0
+      id: wait-build
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        checkName: build-and-test
+        ref: ${{ steps.lastCommit.outputs.sha }}
+        intervalSeconds: 10
+        timeoutSeconds: 100
+        
     - name: 🗃️ Load Doctrine fixtures
+      if: steps.wait-build.outputs.conclusion == 'success'
       run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
 
     - name: ✅ Run PHPUnit and publish code coverage
+      if: steps.wait-build.outputs.conclusion == 'success'
       uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

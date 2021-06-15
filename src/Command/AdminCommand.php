@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AdminCommand extends Command
 {
     protected static $defaultName = 'app:admin';
-    protected static string $defaultDescription = 'Set a previously registered user as administrator.';
+    protected static $defaultDescription = 'Set a previously registered user as administrator.';
 
     private DocumentManager $dm;
 
