@@ -41,15 +41,18 @@ class MessageEditRepository extends ServiceDocumentRepository
         return $result ?? MessageEdit::getEmptyEdit();
     }
 
-    public function updateEditStatus(MessageEdit $message, bool $isValidated, DiscordUser $reviewer, Message $targetMessage)
+    public function updateEditStatus(MessageEdit $message, bool $isValidated, DiscordUser $reviewer, ?Message $targetMessage)
     {
-        $this->createQueryBuilder()
+        $query = $this->createQueryBuilder()
             ->updateOne()
             ->field('_id')->equals($message->getId())
             ->field('validated')->set($isValidated)
-            ->field('reviewer')->set($reviewer)
-            ->field('message')->set($targetMessage)
-            ->getQuery()
+            ->field('reviewer')->set($reviewer);
+
+        if ($targetMessage)
+            $query->field('message')->set($targetMessage);
+
+        $query->getQuery()
             ->execute();
     }
 
