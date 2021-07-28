@@ -43,14 +43,14 @@ class MessageController extends AbstractController
 
         $myEditions = $paginator->paginate(
             $messageEditRepository->findAllEditsByUser($user->getId()),
-            $request->query->getInt('pageRequests', 1),
+            $request->query->getInt('myEditions', 1),
             10,
             ['pageParameterName' => 'myEditions']
         );
 
         $editions = $paginator->paginate(
             $messageEditRepository->findAllEdits(),
-            $request->query->getInt('myEditions', 1),
+            $request->query->getInt('editions', 1),
             10,
             ['pageParameterName' => 'editions']
         );
