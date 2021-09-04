@@ -9,23 +9,20 @@
             {% else %}
                 <a href="{{ path('logs:search') }}" class="list-group-item list-group-item-action text-center"><i class="fas fa-search"></i> Recherche</a>
             {% endif %}
-            {% if (channels is defined) and (channels|length == 2) %}
-                {% for category in channels[0] %}
-                    <div class="list-group-item bg-light">{{ category.name }}</div>
-                    {% for channel in channels[1][category.id] %}
-                        <a href="{{ path('logs:channel', { channelId: channel.id }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.id) %}active{% endif %}">
-                            <div class="row">
-                                <div class="col-lg-10">
-                                    #{{ channel.name }}
-                                </div>
-                                <div class="col-lg-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
-                                    </div>
+            {% if (channels is defined) %}
+                {% for channel in channels %}
+                    <a href="{{ path('logs:channel', { channelId: channel.channelId }) }}" class="list-group-item list-group-item-action {% if (app.request.attributes.get('_route_params')['channelId'] is defined) and (app.request.attributes.get('_route_params')['channelId'] == channel.channelId) %}active{% endif %}">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                #{{ channel.name }}
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="{{ channel.channelId }}" {{ channel.logged ? 'checked' }}>
                                 </div>
                             </div>
-                        </a>
-                    {% endfor %}
+                        </div>
+                    </a>
                 {% endfor %}
             {% endif %}
         </div>

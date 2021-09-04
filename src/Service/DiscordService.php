@@ -82,27 +82,6 @@ class DiscordService implements ServiceSubscriberInterface
         }
     }
 
-    public function getChannels(): array
-    {
-        try {
-            return $this->cache->get('discordChannels', function (CacheItem $item) {
-                $item->expiresAfter(self::CACHE_TTL);
-                $discordChannels = $this->discordClient->guild->getGuildChannels(['guild.id' => $this->discordGuild]);
-                // @codeCoverageIgnoreStart
-                $categories = [];
-                $channels = [];
-                foreach ($discordChannels as $channel)
-                    if ($channel->type == 4) $categories[] = $channel;
-                foreach ($discordChannels as $channel)
-                    if ($channel->type == 0) $channels[$channel->parent_id][] = $channel;
-                return [$categories, $channels];
-                // @codeCoverageIgnoreStop
-            });
-        } catch (InvalidArgumentException | CommandClientException) {
-            return [];
-        }
-    }
-
     public function getGuild(): ?Guild
     {
         try {

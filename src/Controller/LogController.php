@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\LogSearch;
 use App\Form\LogSearchType;
 use App\Repository\MessageLogRepository;
-use App\Repository\SharedConfigRepository;
+use App\Repository\SwanChannelRepository;
 use App\Service\DiscordService;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,24 +21,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class LogController extends AbstractController
 {
 
-    private SharedConfigRepository $sharedConfigRepository;
+    private SwanChannelRepository $swanChannelRepository;
 
-    public function __construct(SharedConfigRepository $sharedConfigRepository)
+    public function __construct(SwanChannelRepository $swanChannelRepository)
     {
-        $this->sharedConfigRepository = $sharedConfigRepository;
-    }
-
-    private function getLoggedChannels(): array
-    {
-        return $this->sharedConfigRepository->getLoggedChannels()?->getValue() ?? [];
+        $this->swanChannelRepository = $swanChannelRepository;
     }
 
     #[Route('', name: 'logs')]
-    public function home(DiscordService $discordService): Response
+    public function home(): Response
     {
         return $this->render('logs/home.html.twig', [
-            'channels' => $discordService->getChannels(),
-            'loggedChannels' => $this->getLoggedChannels()
+            'channels' => $this->swanChannelRepository->findAll(),
+            'loggedChannels' => $this->swanChannelRepository->findLoggedChannels()
         ]);
     }
 
@@ -58,8 +53,8 @@ class LogController extends AbstractController
             ['pageParameterName' => 'pageDeletions']
         );
         return $this->render('logs/channel.html.twig', [
-            'channels' => $discordService->getChannels(),
-            'loggedChannels' => $this->getLoggedChannels(),
+            'channels' => $this->swanChannelRepository->findAll(),
+            'loggedChannels' => $this->swanChannelRepository->findLoggedChannels(),
             'deletions' => $deletions,
             'editions' => $editions
         ]);
@@ -72,8 +67,8 @@ class LogController extends AbstractController
         if (!$message)
             return new RedirectResponse($this->generateUrl('logs'), Response::HTTP_SEE_OTHER);
         return $this->render('logs/message.html.twig', [
-            'channels' => $discordService->getChannels(),
-            'loggedChannels' => $this->getLoggedChannels(),
+            'channels' => $this->swanChannelRepository->findAll(),
+            'loggedChannels' => $this->swanChannelRepository->findLoggedChannels(),
             'message' => $message
         ]);
     }
@@ -104,21 +99,16 @@ class LogController extends AbstractController
     }
 
     #[Route('/api/channels', methods: ['POST'])]
-    public function changeLoggingState(Request $request, SharedConfigRepository $sharedConfigRepository): JsonResponse
+    public function changeLoggingState(Request $request): JsonResponse
     {
         $channelId = $request->request->getAlnum('channelId');
         $checked = $request->request->getBoolean('checked');
         if (!$channelId || !isset($checked))
             return new JsonResponse(['error' => 'Votre requête est invalide.'], Response::HTTP_BAD_REQUEST);
-        $channels = $this->getLoggedChannels();
-        if ($checked) { // Add the channel to the logged channels
-            $channels[] = $channelId;
-        } else { // Remove the channel from the logged channels
-            $key = array_search($channelId, $channels);
-            unset($channels[$key]);
-        }
-        // Update the logged channels with the updated array
-        $sharedConfigRepository->updateLoggedChannels($channels);
+        $channel = $this->swanChannelRepository->findChannelById($channelId);
+        $channel->setLogged($checked);
+        $this->swanChannelRepository->getDocumentManager()->persist($channel);
+        $this->swanChannelRepository->getDocumentManager()->flush();
         return new JsonResponse(['status' => 'OK'], Response::HTTP_OK);
     }
 
