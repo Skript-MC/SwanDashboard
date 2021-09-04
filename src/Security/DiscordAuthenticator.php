@@ -8,8 +8,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
-use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
-use League\OAuth2\Client\Token\AccessToken;
+use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Romitou\OAuth2\Client\DiscordRessourceOwner;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,10 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class DiscordAuthenticator extends SocialAuthenticator
+class DiscordAuthenticator extends OAuth2Authenticator
 {
     use TargetPathTrait;
 
@@ -43,11 +44,6 @@ class DiscordAuthenticator extends SocialAuthenticator
         return $request->attributes->get('_route') === 'connect_discord_check';
     }
 
-    public function getCredentials(Request $request): AccessToken
-    {
-        return $this->fetchAccessToken($this->getDiscordClient());
-    }
-
     /**
      * @return OAuth2ClientInterface
      */
@@ -58,12 +54,11 @@ class DiscordAuthenticator extends SocialAuthenticator
 
     /**
      * @param $credentials
-     * @param UserProviderInterface $userProvider
      * @return DiscordUser|null
      * @throws MongoDBException
      * @codeCoverageIgnore The Discord OAuth authentication cannot be unit tested.
      */
-    public function getUser($credentials, UserProviderInterface $userProvider): ?DiscordUser
+    public function getUser($credentials): ?DiscordUser
     {
         /** @var DiscordRessourceOwner $discordUser */
         $discordUser = $this
@@ -121,15 +116,16 @@ class DiscordAuthenticator extends SocialAuthenticator
         );
     }
 
-    /**
-     * Called when authentication is needed.
-     * @param Request $request
-     * @param AuthenticationException|null $authException
-     * @return RedirectResponse
-     */
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
+    public function authenticate(Request $request): PassportInterface
     {
-        $this->saveTargetPath($request->getSession(), 'discord', $request->getRequestUri());
-        return new RedirectResponse($this->router->generate('home'));
+
+        $client = $this->getDiscordClient();
+        $accessToken = $this->fetchAccessToken($client);
+
+        return new SelfValidatingPassport(
+            new UserBadge($accessToken, function() use ($accessToken) {
+                return $this->getUser($accessToken);
+            })
+        );
     }
 }
