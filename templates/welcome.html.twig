@@ -13,9 +13,9 @@
 
             <p>Merci de vous authentifier avec votre compte Discord afin d'accéder au panel de Swan.</p>
         </div>
-        <a href="{{ path('login') }}" class="btn btn-facebook btn-block"><i class="fab fa-discord fa-fw mt-0"></i> Connexion avec Discord</a>
-        {% if app.request.session|targetPath('discord') is not null %}
-            <div class="text-gray-400 text-center small mt-2">Après votre connexion, vous serez redirigé vers {{ app.request.session|targetPath('discord') }}</div>
-        {% endif %}
+
+        <div class="d-grid gap-2">
+            <a href="{{ path('login') }}" class="btn btn-welcome btn-block"><i class="fab fa-discord fa-fw mt-0"></i> Connexion avec Discord</a>
+        </div>
     </div>
 {% endblock %}
