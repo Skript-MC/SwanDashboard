@@ -1,7 +1,6 @@
 // Setting up Popper and jQuery.
-window.Popper = require('popper.js').default;
-window.$ = window.jQuery = require('jquery');
-require('bootstrap');
+import jQuery from 'jquery';
+window.$ = window.jQuery = jQuery;
 
 /*!
  * Start Bootstrap - SB Admin 2 v4.1.3 (https://startbootstrap.com/theme/sb-admin-2)

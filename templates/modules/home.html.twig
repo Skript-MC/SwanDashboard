@@ -3,9 +3,11 @@
 {% block title %}Modules{% endblock %}
 {% block content %}
     <div class="container-fluid">
-        <div class="card-columns">
+
+        <div class="row row-cols-2 row-cols-md-4 g-4">
             {% for module in modules %}
-                <div class="card shadow position-relative">
+            <div class="col">
+                <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title">
                             {{ module.name }}
@@ -13,7 +15,7 @@
                         <p>{{ module.description ?? '' }}</p>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-8">
 
                                 {% if module.enabled %}
                                     <i class="fa fa-check text-success"></i><span class="text-success"> Activé</span>
@@ -21,10 +23,9 @@
                                     <i class="fa fa-times text-danger"></i><span class="text-danger"> Désactivé</span>
                                 {% endif %}
                             </div>
-                            <div class="col-6">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="{{ module.id }}" {{ module.enabled ? 'checked' }}>
-                                    <label class="custom-control-label" for="{{ module.id }}"></label>
+                            <div class="col-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="{{ module.id }}" {{ module.enabled ? 'checked' }}>
                                 </div>
                             </div>
                         </div>
@@ -33,6 +34,7 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
     </div>
@@ -55,7 +57,7 @@
         </div>
     </div>
     <script>
-        document.querySelectorAll('.custom-switch').forEach((el) => el.addEventListener('change', async (change) => {
+        document.querySelectorAll('.form-check').forEach((el) => el.addEventListener('change', async (change) => {
             const moduleId = change.target.id;
             const enabled = change.target.checked;
             const titleElement = document.getElementById('titleModal');

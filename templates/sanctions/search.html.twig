@@ -35,7 +35,7 @@
                                     <td>{{ result.start.format('d/m/Y à H:i') }}</td>
                                     <td>{{ result.finish == null ? 'Non défini' : result.finish.format('d/m/Y à H:i') }}</td>
                                     <td>{% include 'components/sanctionStatusBadge.html.twig' with {'isRevoked': result.revoked} %}</td>
-                                    <td><a class="btn btn-info"><i class="fas fa-eye"></i></a></td>
+                                    <td><a class="btn btn-info text-white"><i class="fas fa-eye"></i></a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

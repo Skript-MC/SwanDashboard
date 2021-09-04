@@ -19,9 +19,8 @@
                                     #{{ channel.name }}
                                 </div>
                                 <div class="col-lg-2">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
-                                        <label class="custom-control-label" for="{{ channel.id }}"></label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="{{ channel.id }}" {{ channel.id in loggedChannels ? 'checked' }}>
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +50,7 @@
     </div>
 </div>
 <script>
-    document.querySelectorAll('.custom-switch').forEach((el) => el.addEventListener('change', async (change) => {
+    document.querySelectorAll('.form-check').forEach((el) => el.addEventListener('change', async (change) => {
         const channelId = change.target.id;
         const checked = change.target.checked;
         const titleElement = document.getElementById('titleModal');
