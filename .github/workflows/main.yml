@@ -52,19 +52,19 @@ jobs:
     - name: 👷 Run production build
       run: yarn build
 
-    - name: 🍃 Start MongoDB
-      uses: supercharge/mongodb-github-action@1.6.0
-      with:
-        mongodb-version: 4.4
+#    - name: 🍃 Start MongoDB
+#      uses: supercharge/mongodb-github-action@1.6.0
+#      with:
+#        mongodb-version: 4.4
 
-    - name: 🗃️ Load Doctrine fixtures
-      run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
+#    - name: 🗃️ Load Doctrine fixtures
+#      run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
 
-    - name : ✅ Run PHPUnit
-      run: php bin/phpunit --coverage-clover clover.xml
-
-    - name: 📤 Publish code coverage
-      uses: paambaati/codeclimate-action@v2.7.5
-      if: github.ref == 'refs/heads/master'
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+#    - name : ✅ Run PHPUnit
+#      run: php bin/phpunit --coverage-clover clover.xml
+#
+#    - name: 📤 Publish code coverage
+#      uses: paambaati/codeclimate-action@v2.7.5
+#      if: github.ref == 'refs/heads/master'
+#      env:
+#        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
