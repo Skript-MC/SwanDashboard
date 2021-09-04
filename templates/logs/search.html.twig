@@ -31,7 +31,7 @@
                                                 {{ edition.oldContent|truncate }}
                                             </td>
                                             <td>
-                                                <a href="{{ path('logs:message', { messageId: edition.messageId }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ path('logs:message', { messageId: edition.messageId }) }}" type="button" class="btn btn-info text-white"><i class="fas fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -71,7 +71,7 @@
                                                 {{ deletion.oldContent|truncate }}
                                             </td>
                                             <td>
-                                                <a href="{{ path('logs:message', { messageId: deletion.messageId }) }}" type="button" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ path('logs:message', { messageId: deletion.messageId }) }}" type="button" class="btn btn-info text-white"><i class="fas fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}

@@ -36,8 +36,8 @@
                             <div> {# Don't remove this empty node #}
                                 <div class="form-row" id="aliases">
                                     {% for alias in message.aliases %}
-                                        <div class="form-group mr-2">
-                                            <div class="input-group">
+                                        <div class="form-group me-2">
+                                            <div class="input-group my-2">
                                                 <input type="text" class="form-control" name="aliases[{index}]" value="{{ alias }}" onkeyup="generateDiff()">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-danger link-remove" type="button">
@@ -50,7 +50,7 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <button type="button" id="addAliasButton" class="btn btn-sm btn-success">
+                                <button type="button" id="addAliasButton" class="btn btn-sm btn-success text-white">
                                     <i class="fas fa-plus"></i> Ajouter un alias
                                 </button>
                             </div>
@@ -74,7 +74,7 @@
                                     <br/>Vous ne pouvez pas le modifier tant qu'elle n'aura pas été traitée.
                                 </div>
                             {% else %}
-                                <button type="submit" class="btn btn-info m-1" id="send"><i class="fas fa-check"></i> Suggérer mes modifications</button>
+                                <button type="submit" class="btn btn-info m-1 text-white" id="send"><i class="fas fa-check"></i> Suggérer mes modifications</button>
                             {% endif %}
                             <div class="alert alert-info mt-3" id="alert">
                             </div>
@@ -120,10 +120,10 @@
                 }));
 
                 document.getElementById('addAliasButton').addEventListener('click', () => {
-                    const input = '<div class="input-group"> <input type="text" class="form-control" name="aliases[{index}]" onkeyup="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
+                    const input = '<div class="input-group my-2"> <input type="text" class="form-control" name="aliases[{index}]" onkeyup="generateDiff()" <div class="input-group-append"> <button class="btn btn-outline-danger link-remove" type="button"> <i class="fas fa-times"></i> </button> </div> </div>'
                     const newElement = document.createElement('div');
 
-                    newElement.className = 'form-group mr-2';
+                    newElement.className = 'form-group me-2';
                     newElement.innerHTML = input;
 
                     document.getElementById('aliases').appendChild(newElement);

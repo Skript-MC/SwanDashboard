@@ -48,7 +48,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="dashRoles">Rôle Dashboard</span>
                             </div>
-                            <select class="custom-select" disabled>
+                            <select class="form-select" disabled>
                                 <option value="ROLE_USER" {{ 'ROLE_USER' in app.user.roles ? 'selected' }}>Utilisateur</option>
                                 <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in app.user.roles ? 'selected' }}>Staff</option>
                                 <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in app.user.roles ? 'selected' }}>Administrateur</option>
@@ -56,9 +56,9 @@
                         </div>
                         <div class="input-group">
                             {# <form method="post" action="{{ path('profile:delete') }}">
-                                <button type="submit" class="btn btn-danger m-1"><i class="fas fa-trash-alt"></i> Supprimer mon compte</button>
+                                <button type="submit" class="btn btn-danger m-1 text-white"><i class="fas fa-trash-alt"></i> Supprimer mon compte</button>
                             </form> #}
-                            <a href="{{ path('login') }}" class="btn btn-info m-1"><i class="fas fa-sync-alt"></i> Rafraîchir mon compte</a>
+                            <a href="{{ path('login') }}" class="btn btn-info m-1 text-white"><i class="fas fa-sync-alt"></i> Rafraîchir mon compte</a>
                         </div>
                         {% for message in app.flashes('error') %}
                             <div class="alert alert-danger mt-3">

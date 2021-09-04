@@ -52,14 +52,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="dashboardRole">Rôle Dashboard</span>
                                 </div>
-                                <select class="custom-select" name="dashboardRole">
+                                <select class="form-select" name="dashboardRole">
                                     <option value="ROLE_USER" {{ 'ROLE_USER' in user.roles ? 'selected' }}>Utilisateur</option>
                                     <option value="ROLE_STAFF" {{ 'ROLE_STAFF' in user.roles ? 'selected' }}>Staff</option>
                                     <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' }}>Administrateur</option>
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-info"><i class="fas fa-save"></i> Sauvegarder les modifications</button>
+                            <button type="submit" class="btn btn-info text-white"><i class="fas fa-save"></i> Sauvegarder les modifications</button>
                         </form>
                     </div>
                 </div>
