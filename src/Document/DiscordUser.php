@@ -30,7 +30,7 @@ class DiscordUser implements UserInterface
     /**
      * @MongoDB\Field(type="string")
      */
-    protected string $avatarUrl;
+    protected string $avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
 
     /**
      * @MongoDB\Field(type="bool")
