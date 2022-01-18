@@ -28,7 +28,7 @@ Vous pouvez vous rendre dans le [menu des issues](https://github.com/Skript-MC/S
 ## 🔨 Développement et contributions
 
 Nos Pull Request sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Skript-MC/SwanDashboard/fork) (= une copie) de ce dépôt et y faire vos modifications. Veillez à ajoutez le moins de dépendances possibles.\
-N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.com/njSgX3w) !
+N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.gg/njSgX3w) !
 
 ### ✅ Tests unitaires
 
