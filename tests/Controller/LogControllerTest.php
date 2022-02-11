@@ -18,7 +18,7 @@ class LogControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->dm = static::getContainer()->get(DocumentManager::class);
         $this->adminUser = $this->dm->getRepository(DiscordUser::class)
             ->findOneBy(['userId' => 191495299884122112]);
     }

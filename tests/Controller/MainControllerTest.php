@@ -16,7 +16,7 @@ class MainControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->dm = static::getContainer()->get(DocumentManager::class);
     }
 
     public function testAuthorization(): void

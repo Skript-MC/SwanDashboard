@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Document\DiscordUser;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,7 @@ class UserControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $dm = static::getContainer()->get(DocumentManager::class);
         $this->adminUser = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['userId' => 191495299884122112]);
     }
