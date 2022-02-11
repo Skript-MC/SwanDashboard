@@ -11,10 +11,10 @@ jobs:
     - name: 🔧 Setup PHP 8.0 with tools
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.0'
+        php-version: '8.1'
         tools: composer
         coverage: xdebug
-        extensions: mongodb-1.10.0
+        extensions: mongodb-1.12.0
 
     - name: 📦 Cache Composer packages
       uses: actions/cache@v2
@@ -52,19 +52,19 @@ jobs:
     - name: 👷 Run production build
       run: yarn build
 
-#    - name: 🍃 Start MongoDB
-#      uses: supercharge/mongodb-github-action@1.6.0
-#      with:
-#        mongodb-version: 4.4
+    - name: 🍃 Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
+      with:
+        mongodb-version: 4.4
 
-#    - name: 🗃️ Load Doctrine fixtures
-#      run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
+    - name: 🗃️ Load Doctrine fixtures
+      run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
 
-#    - name : ✅ Run PHPUnit
-#      run: php bin/phpunit --coverage-clover clover.xml
-#
-#    - name: 📤 Publish code coverage
-#      uses: paambaati/codeclimate-action@v2.7.5
-#      if: github.ref == 'refs/heads/master'
-#      env:
-#        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - name : ✅ Run PHPUnit
+      run: php ./vendor/bin/phpunit --coverage-clover clover.xml
+
+    - name: 📤 Publish code coverage
+      uses: paambaati/codeclimate-action@v2.7.5
+      if: github.ref == 'refs/heads/master'
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

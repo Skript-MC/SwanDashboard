@@ -176,4 +176,9 @@ class DiscordUser implements UserInterface
     {
         return null;
     }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
 }

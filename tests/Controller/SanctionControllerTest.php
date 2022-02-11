@@ -3,8 +3,10 @@
 namespace App\Tests\Controller;
 
 use App\Document\DiscordUser;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class SanctionControllerTest extends WebTestCase
 {
@@ -14,7 +16,7 @@ class SanctionControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $dm = static::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $dm = static::getContainer()->get(DocumentManager::class);
         $this->adminUser = $dm->getRepository(DiscordUser::class)
             ->findOneBy(['userId' => 191495299884122112]);
     }
@@ -23,14 +25,14 @@ class SanctionControllerTest extends WebTestCase
     {
         // The request should return a redirect response to login page.
         $this->client->request('GET', '/sanctions');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_TEMPORARY_REDIRECT, $this->client->getResponse()->getStatusCode());
 
         // Log in the user into the client.
         $this->client->loginUser($this->adminUser);
 
         // The request should have been authorized and return the page.
         $this->client->request('GET', '/sanctions');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testSearch(): void
