@@ -6,6 +6,7 @@ use App\Document\DiscordUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class MainControllerTest extends WebTestCase
 {
@@ -47,14 +48,7 @@ class MainControllerTest extends WebTestCase
     public function testRedirectPath($url): void
     {
         $this->client->request('GET', $url);
-        $crawler = $this->client->followRedirect();
-        $redirect = $crawler
-            ->filter('.text-gray-400')
-            ->filter('.text-center')
-            ->filter('.small')
-            ->first()
-            ->text();
-        $this->assertEquals($url, str_replace('Après votre connexion, vous serez redirigé vers ', '', $redirect));
+        $this->assertEquals(Response::HTTP_TEMPORARY_REDIRECT, $this->client->getResponse()->getStatusCode());
     }
 
     public function provideRedirectPathUrls(): array

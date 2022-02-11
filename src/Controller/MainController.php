@@ -34,12 +34,21 @@ class MainController extends AbstractController
     }
 
     #[Route('/error', name: 'error')]
-    public function error(Request $request): Response
+    public function error(): Response
     {
         return $this->render('error.html.twig', [
             'title' => 'Une erreur est survenue',
             'fa' => 'exclamation-circle',
-            'message' => ($request->get('message') ?? 'Nous ne savons pas exactement ce qu\'il s\'est passé.') . ' Si le problème persiste, n\'hésitez pas à nous contacter sur Discord.'
+            'message' => 'Nous ne savons pas exactement ce qu\'il s\'est passé. Si le problème persiste, n\'hésitez pas à nous contacter sur Discord.'
+        ]);
+    }
+    #[Route('/login/error', name: 'login_error')]
+    public function login_error(): Response
+    {
+        return $this->render('error.html.twig', [
+            'title' => 'Une erreur est survenue',
+            'fa' => 'exclamation-circle',
+            'message' => 'Nous n\'avons pas pu accéder à votre compte afin de vous authentifier. Si le problème persiste, n\'hésitez pas à nous contacter sur Discord.'
         ]);
     }
 }

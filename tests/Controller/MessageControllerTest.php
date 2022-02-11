@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Document\DiscordUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class MessageControllerTest extends WebTestCase
 {
@@ -23,14 +24,14 @@ class MessageControllerTest extends WebTestCase
     {
         // The request should return a redirect response to login page.
         $this->client->request('GET', '/messages');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_TEMPORARY_REDIRECT, $this->client->getResponse()->getStatusCode());
 
         // Log in the user into the client.
         $this->client->loginUser($this->staffUser);
 
         // The request should have been authorized and return the page.
         $this->client->request('GET', '/messages');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(REsponse::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreateInvalidMessage(): void
@@ -124,7 +125,7 @@ class MessageControllerTest extends WebTestCase
         $this->assertStringStartsWith('/messages/', $link);
 
         $this->client->request('GET', $link);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testEdit(): void
@@ -212,7 +213,7 @@ class MessageControllerTest extends WebTestCase
         $this->client->loginUser($this->staffUser);
 
         $this->client->request('GET', '/messages/new');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -225,7 +226,7 @@ class MessageControllerTest extends WebTestCase
         $this->client->loginUser($this->staffUser);
 
         $this->client->request('GET', '/messages/' . $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function provideUrls(): array
