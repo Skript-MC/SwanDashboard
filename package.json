@@ -11,7 +11,7 @@
         "easymde": "^2.13.0",
         "file-loader": "^6.2.0",
         "jquery": "^3.5.1",
-        "node-sass": "^6.0.1",
+        "node-sass": "^7.0.0",
         "popper.js": "^1.16.1",
         "regenerator-runtime": "^0.13.9",
         "sass-loader": "^12.1.0",
