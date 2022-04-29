@@ -61,10 +61,4 @@ jobs:
       run: php bin/console doctrine:mongodb:fixtures:load --env=test --no-interaction
 
     - name : ✅ Run PHPUnit
-      run: php ./vendor/bin/phpunit --coverage-clover clover.xml
-
-    - name: 📤 Publish code coverage
-      uses: paambaati/codeclimate-action@v2.7.5
-      if: github.ref == 'refs/heads/master'
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      run: php ./vendor/bin/phpunit
