@@ -12,7 +12,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class SwanModule
 {
-
     /**
      * @MongoDB\Id
      */
@@ -26,22 +25,17 @@ class SwanModule
     /**
      * @MongoDB\Field(type="string")
      */
-    private ?string $description = null;
+    private string $description = "Aucune description n'est disponible pour ce module.";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private string $handler;
+    private string $store;
 
     /**
      * @MongoDB\Field(type="bool")
      */
     private bool $enabled;
-
-    /**
-     * @MongoDB\Field(type="date")
-     */
-    private ?DateTime $modified = null;
 
     /**
      * @return string
@@ -53,10 +47,12 @@ class SwanModule
 
     /**
      * @param string $id
+     * @return SwanModule
      */
-    public function setId(string $id): void
+    public function setId(string $id): SwanModule
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
@@ -69,42 +65,48 @@ class SwanModule
 
     /**
      * @param string $name
+     * @return SwanModule
      */
-    public function setName(string $name): void
+    public function setName(string $name): SwanModule
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     */
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getHandler(): string
+    public function getDescription(): string
     {
-        return $this->handler;
+        return $this->description;
     }
 
     /**
-     * @param string $handler
+     * @param string $description
+     * @return SwanModule
      */
-    public function setHandler(string $handler): void
+    public function setDescription(string $description): SwanModule
     {
-        $this->handler = $handler;
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStore(): string
+    {
+        return $this->store;
+    }
+
+    /**
+     * @param string $store
+     * @return SwanModule
+     */
+    public function setStore(string $store): SwanModule
+    {
+        $this->store = $store;
+        return $this;
     }
 
     /**
@@ -117,26 +119,11 @@ class SwanModule
 
     /**
      * @param bool $enabled
+     * @return SwanModule
      */
-    public function setEnabled(bool $enabled): void
+    public function setEnabled(bool $enabled): SwanModule
     {
         $this->enabled = $enabled;
+        return $this;
     }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getModified(): ?DateTime
-    {
-        return $this->modified;
-    }
-
-    /**
-     * @param DateTime|null $modified
-     */
-    public function setModified(?DateTime $modified): void
-    {
-        $this->modified = $modified;
-    }
-
 }

@@ -6,6 +6,7 @@ use App\Document\SwanModule;
 use DateTime;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use MongoDB\BSON\UTCDateTime;
 
 class SwanModuleRepository extends ServiceDocumentRepository
@@ -21,8 +22,17 @@ class SwanModuleRepository extends ServiceDocumentRepository
             ->findAndUpdate()
             ->field('_id')->equals($moduleId)
             ->field('enabled')->set($enabled)
-            ->field('modified')->set(new UTCDateTime(new DateTime()))
             ->getQuery()
             ->execute();
     }
+
+    public function disabledModules(): array
+    {
+        return $this->createQueryBuilder()
+            ->field('enabled')->equals(false)
+            ->getQuery()
+            ->execute()
+            ->toArray();
+    }
+
 }

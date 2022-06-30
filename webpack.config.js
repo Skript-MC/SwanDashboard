@@ -19,6 +19,8 @@ Encore.setOutputPath('public/build/')
     .enableVersioning(Encore.isProduction())
     // enables Sass/SCSS support
     .enableSassLoader()
+    .enablePostCssLoader()
+    .enableVueLoader()
     // copies images without additional processing
     .copyFiles({
         from: './assets/images',

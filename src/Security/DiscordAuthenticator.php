@@ -3,7 +3,6 @@
 namespace App\Security;
 
 use App\Document\DiscordUser;
-use App\Service\DiscordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -28,14 +27,11 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
     private ClientRegistry $clientRegistry;
     private DocumentManager $dm;
     private RouterInterface $router;
-    private DiscordService $discordService;
-
-    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router, DiscordService $discordService)
+    public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router)
     {
         $this->clientRegistry = $clientRegistry;
         $this->dm = $dm;
         $this->router = $router;
-        $this->discordService = $discordService;
     }
 
     private function getDiscordClient(): OAuth2ClientInterface
@@ -69,18 +65,14 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
                     ->findOneBy(['userId' => ''.$discordUser->getId()]);
 
                 // Merge existing user and new user, this will update the existing user if it is found
-                $user = $existingUser ? $existingUser : new DiscordUser();
-                $discordMember = $this->discordService->getMember($discordUser->getId());
-                if (!$discordMember)
-                    return null;
-
+                $user = $existingUser ?: new DiscordUser();
                 // If we have an existing user, don't refresh these data.
                 if (!$existingUser)
                     $user->setUserId(''.$discordUser->getId());
 
                 $user->setUsername($discordUser->getCompleteUsername());
                 $user->setAvatarUrl($discordUser->getAvatarUrl() ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
-                $user->setDiscordRoles($discordMember?->roles ?? []); // The discordMember can be null if the API is unavailable, so give no roles
+                $user->setDiscordRoles([]); // TODO
                 $user->setHasMFA($discordUser->hasMfaEnabled());
 
                 $this->dm->persist($user);
@@ -93,8 +85,14 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        $error = $request->query->getAlpha('error');
+        if ($error === 'accessdenied') {
+            $request->getSession()->getFlashBag()->add('error', 'Vous n\'avez pas autorisé la connexion avec Discord, nous ne sommes pas en mesure de vous authentifier.');
+        } else {
+            $request->getSession()->getFlashBag()->add('error', 'Une erreur est survenue lors de l\'authentification. Réessayez dans quelques minutes ou contactez-nous si le problème persiste.' . $error);
+        }
         return new RedirectResponse(
-            $this->router->generate('login_error'),
+            $this->router->generate('home'),
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

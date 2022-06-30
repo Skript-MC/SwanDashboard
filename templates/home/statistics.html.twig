@@ -1,0 +1,30 @@
+{% extends 'home/layout.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+{% block content %}
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Utilisation des commandes</h3>
+        <p class="mt-1 text-sm text-gray-500">Graphique du nombre d'utilisation des commandes de Swan</p>
+    </div>
+    <div class="mt-5 py-5 px-2">
+        <canvas id="commandStatsChart"></canvas>
+    </div>
+    {{ encore_entry_script_tags('chart.js') }}
+    <script>
+        const commandStatsChart = document.getElementById('commandStatsChart').getContext('2d');
+        new window.Chart(commandStatsChart, {
+            type: 'bar',
+            data: {
+                labels: {{ commandStats[0]|json_encode|raw }},
+                datasets: [{
+                    label: 'Nombre d\'utilisation',
+                    backgroundColor: '#2d98da',
+                    data: {{ commandStats[1]|json_encode|raw }}
+                }]
+            },
+            options: {
+                legend: { display: true }
+            }
+        });
+    </script>
+{% endblock %}

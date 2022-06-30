@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 /**
  * Class CommandStat
  * @package App\Document
- * @MongoDB\Document(collection="commandstats")
+ * @MongoDB\Document(collection="commandstats", repositoryClass="App\Repository\CommandStatRepository")
  */
 class CommandStat
 {
