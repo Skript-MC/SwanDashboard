@@ -18,7 +18,7 @@ class MessageEdit
     private string $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=Message::class, nullable=true, storeAs="id")
+     * @MongoDB\EmbedOne(targetDocument=Message::class, nullable=true)
      */
     private ?Message $message = null;
 
