@@ -27,18 +27,12 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
     private ClientRegistry $clientRegistry;
     private DocumentManager $dm;
     private RouterInterface $router;
+
     public function __construct(ClientRegistry $clientRegistry, DocumentManager $dm, RouterInterface $router)
     {
         $this->clientRegistry = $clientRegistry;
         $this->dm = $dm;
         $this->router = $router;
-    }
-
-    private function getDiscordClient(): OAuth2ClientInterface
-    {
-        return $this
-            ->clientRegistry
-            ->getClient('discord');
     }
 
     public function supports(Request $request): bool
@@ -53,7 +47,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function() use ($accessToken, $client, $request) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client, $request) {
                 /** @var DiscordRessourceOwner $discordUser */
                 $discordUser = $this
                     ->getDiscordClient()
@@ -62,13 +56,13 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
                 /* @var $existingUser DiscordUser */
                 $existingUser = $this->dm
                     ->getRepository(DiscordUser::class)
-                    ->findOneBy(['userId' => ''.$discordUser->getId()]);
+                    ->findOneBy(['userId' => '' . $discordUser->getId()]);
 
                 // Merge existing user and new user, this will update the existing user if it is found
                 $user = $existingUser ?: new DiscordUser();
                 // If we have an existing user, don't refresh these data.
                 if (!$existingUser)
-                    $user->setUserId(''.$discordUser->getId());
+                    $user->setUserId('' . $discordUser->getId());
 
                 $user->setUsername($discordUser->getCompleteUsername());
                 $user->setAvatarUrl($discordUser->getAvatarUrl() ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
@@ -81,6 +75,13 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
                 return $user;
             })
         );
+    }
+
+    private function getDiscordClient(): OAuth2ClientInterface
+    {
+        return $this
+            ->clientRegistry
+            ->getClient('discord');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response

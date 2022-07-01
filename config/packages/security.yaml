@@ -14,7 +14,6 @@ security:
       provider: mongo_provider
       custom_authenticators:
         - App\Security\DiscordAuthenticator
-      access_denied_handler: App\Security\AccessDeniedHandler
       logout:
         path: logout
   role_hierarchy:

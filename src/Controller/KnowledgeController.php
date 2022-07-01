@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Repository\MessageEditRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,8 +22,14 @@ class KnowledgeController extends AbstractController
     }
 
     #[Route('/feed', name: 'knowledge_feed')]
-    public function feed(): Response
+    public function feed(MessageEditRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
-        return $this->render('knowledge/feed.html.twig');
+        return $this->render('knowledge/feed.html.twig', [
+            'edits' => $paginator->paginate(
+                $repository->findRecent(),
+                $request->query->getInt('page', 1),
+                10
+            ),
+        ]);
     }
 }

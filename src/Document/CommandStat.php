@@ -15,17 +15,17 @@ class CommandStat
     /**
      * @MongoDB\Id
      */
-    protected string $id;
+    private string $id;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected string $commandId;
+    private string $commandId;
 
     /**
      * @MongoDB\Field(type="int")
      */
-    protected int $uses = 0;
+    private int $uses = 0;
 
     /**
      * @return string

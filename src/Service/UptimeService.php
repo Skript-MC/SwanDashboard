@@ -4,10 +4,6 @@ namespace App\Service;
 
 use App\Document\SwanUptime;
 use App\Repository\SwanUptimeRepository;
-use DateInterval;
-use DatePeriod;
-use DateTime;
-use Psr\Cache\CacheItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class UptimeService
@@ -44,7 +40,7 @@ class UptimeService
 
         $days = [];
 
-        $end   = date_create()->modify('+1 day');
+        $end = date_create()->modify('+1 day');
         $begin = date_create()->modify('-90 days');
 
         $onlineHours = 0;

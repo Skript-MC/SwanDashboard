@@ -15,37 +15,37 @@ class DiscordUser implements UserInterface
     /**
      * @MongoDB\Id(type="string")
      */
-    protected string $id;
+    private string $id;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected string $userId;
+    private string $userId;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected string $username;
+    private string $username;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected string $avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
+    private string $avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
 
     /**
      * @MongoDB\Field(type="bool")
      */
-    protected ?bool $hasMFA = null;
+    private ?bool $hasMFA = null;
 
     /**
      * @MongoDB\Field(type="collection")
      */
-    protected array $roles = [];
+    private array $roles = [];
 
     /**
      * @MongoDB\Field(type="collection")
      */
-    protected array $discordRoles = [];
+    private array $discordRoles = [];
 
     /**
      * @return string

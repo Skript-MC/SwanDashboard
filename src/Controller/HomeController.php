@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Service\ModuleService;
 use App\Service\StatisticsService;
 use App\Service\UptimeService;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

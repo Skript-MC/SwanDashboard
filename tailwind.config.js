@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./templates/**/*.html.twig'],
+  content: [
+    './templates/**/*.html.twig',
+    './assets/vue/**/*.vue',
+  ],
   theme: {
     fontFamily: {
       sans: ['Raleway', 'sans-serif'],

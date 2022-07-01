@@ -2,7 +2,6 @@
 
 namespace App\Document;
 
-use App\Repository\SwanUptimeRepository;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**

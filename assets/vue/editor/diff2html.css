@@ -1,0 +1,11 @@
+.d2h-code-linenumber {
+    border: solid #eee;
+    border-width: 0 1px;
+    box-sizing: border-box;
+    color: rgba(0,0,0,.3);
+    cursor: pointer;
+    display: inline-block;
+    position: relative !important;
+    text-align: right;
+    width: 7.5em;
+}

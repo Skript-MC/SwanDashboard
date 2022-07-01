@@ -1,0 +1,15 @@
+{% extends 'knowledge/layout.html.twig' %}
+
+{% block title %}Nouveau message rapide{% endblock %}
+{% block content %}
+    <div class="flex-col md:flex-row px-4 py-5 border-b border-gray-200 sm:px-6">
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Nouveau message rapide</h3>
+            <p class="mt-1 text-sm text-gray-500">Bienvenue dans le formulaire de création d'un message rapide !</p>
+        </div>
+    </div>
+    <div id="app" data-post-url="{{ path('knowledge_quickreplies_create') }}"
+         data-success-url="{{ path('knowledge_quickreplies') }}"></div>
+    {{ encore_entry_script_tags('editor') }}
+    {{ encore_entry_link_tags('editor') }}
+{% endblock %}

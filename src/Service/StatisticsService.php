@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Repository\CommandStatRepository;
-use App\Repository\SwanUptimeRepository;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class StatisticsService
