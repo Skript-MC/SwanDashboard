@@ -13,12 +13,13 @@ class SwanModuleRepository extends ServiceDocumentRepository
         parent::__construct($registry, SwanModule::class);
     }
 
-    public function changeModuleState(string $moduleId, bool $enabled): void
+    public function changeModuleStatus(string $moduleId, bool $status): ?SwanModule
     {
-        $this->createQueryBuilder()
+        return $this->createQueryBuilder()
             ->findAndUpdate()
+            ->returnNew()
             ->field('_id')->equals($moduleId)
-            ->field('enabled')->set($enabled)
+            ->field('enabled')->set($status)
             ->getQuery()
             ->execute();
     }

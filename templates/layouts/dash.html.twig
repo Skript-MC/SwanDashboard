@@ -34,8 +34,8 @@
                             </svg>
                             <p class="hidden lg:block">Base de connaissance</p>
                         </a>
-                        <a href=""
-                           class="border-transparent text-white hover:border-gray-300 hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold">
+                        <a href="{{ path('swan') }}"
+                           class="{{ app.request.attributes.get('_route') starts with 'swan_' ? 'border-white' : 'border-transparent hover:border-gray-300 hover:text-gray-200' }} text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold">
                             <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"

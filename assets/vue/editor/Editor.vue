@@ -150,13 +150,11 @@ export default {
                     const id = r.data.messageEditId;
                     window.location.href = this.successUrl + (id ? `review/${id}` : '');
                 })
-                .catch(e => {
-                    Swal.fire({
-                        title: "Erreur",
-                        text: "Une erreur est survenue lors de l'envoi du formulaire",
-                        icon: "error",
-                    });
-                });
+                .catch(() => Swal.fire({
+                    title: "Erreur",
+                    text: "Une erreur est survenue lors de l'envoi du formulaire",
+                    icon: "error",
+                }));
         }
     },
     mounted() {

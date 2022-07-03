@@ -9,7 +9,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  * @package App\Document
  * @MongoDB\Document(collection="swanmodules", repositoryClass="App\Repository\SwanModuleRepository")
  */
-class SwanModule
+class SwanModule implements \JsonSerializable
 {
     /**
      * @MongoDB\Id
@@ -124,5 +124,16 @@ class SwanModule
     {
         $this->enabled = $enabled;
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'store' => $this->getStore(),
+            'enabled' => $this->isEnabled()
+        ];
     }
 }

@@ -11,6 +11,7 @@ Encore.setOutputPath('public/build/')
 
   // Vue entries
   .addEntry('editor', './assets/vue/editor/index.js')
+  .addEntry('modules', './assets/vue/modules/index.js')
 
   //.addEntry('page1', './assets/page1.js')
   //.addEntry('page2', './assets/page2.js')

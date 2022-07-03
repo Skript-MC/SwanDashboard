@@ -1,0 +1,8 @@
+{% extends 'swan/layout.html.twig' %}
+
+{% block title %}Modules{% endblock %}
+{% block content %}
+    <div id="app" data-module-list="{{ moduleList|json_encode }}" data-post-url="{{ path('swan_modules_toggle') }}"></div>
+    {{ encore_entry_script_tags('modules') }}
+    {{ encore_entry_link_tags('modules') }}
+{% endblock %}
