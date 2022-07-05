@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Document\DiscordUser;
+use App\Document\DashUser;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
-class DiscordUserRepository extends ServiceDocumentRepository
+class DashUserRepository extends ServiceDocumentRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DiscordUser::class);
+        parent::__construct($registry, DashUser::class);
     }
 
     /**
      * @throws MongoDBException
      */
-    public function updateUser(DiscordUser $user): void
+    public function updateUser(DashUser $user): void
     {
         $this->createQueryBuilder()
             ->findAndUpdate()
@@ -29,7 +29,7 @@ class DiscordUserRepository extends ServiceDocumentRepository
             ->execute();
     }
 
-    public function findOneById(string $userId): ?DiscordUser
+    public function findOneById(string $userId): ?DashUser
     {
         return $this->findOneBy(['userId' => $userId]);
     }

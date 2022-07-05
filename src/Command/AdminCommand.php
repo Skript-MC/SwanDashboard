@@ -4,7 +4,7 @@
 namespace App\Command;
 
 
-use App\Document\DiscordUser;
+use App\Document\DashUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Symfony\Component\Console\Command\Command;
@@ -35,7 +35,7 @@ class AdminCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $repository = $this->dm->getRepository(DiscordUser::class);
+        $repository = $this->dm->getRepository(DashUser::class);
 
         $user = $repository->findOneById($input->getArgument('discordId'));
         if (!isset($user)) {

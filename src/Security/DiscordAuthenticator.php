@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Document\DiscordUser;
+use App\Document\DashUser;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -53,19 +53,22 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
                     ->getDiscordClient()
                     ->fetchUserFromToken($accessToken);
 
-                /* @var $existingUser DiscordUser */
+                if (!is_numeric($discordUser->getId())) {
+                    throw new \Exception('Discord user ID is not numeric');
+                }
+                $userId = (int) $discordUser->getId();
+
+                /* @var $existingUser DashUser */
                 $existingUser = $this->dm
-                    ->getRepository(DiscordUser::class)
-                    ->findOneBy(['userId' => '' . $discordUser->getId()]);
+                    ->getRepository(DashUser::class)
+                    ->findOneBy(['userId' => $userId]);
 
                 // Merge existing user and new user, this will update the existing user if it is found
-                $user = $existingUser ?: new DiscordUser();
+                $user = $existingUser ?: new DashUser();
                 // If we have an existing user, don't refresh these data.
                 if (!$existingUser)
-                    $user->setUserId('' . $discordUser->getId());
+                    $user->setDiscordId($userId);
 
-                $user->setUsername($discordUser->getCompleteUsername());
-                $user->setAvatarUrl($discordUser->getAvatarUrl() ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
                 $user->setDiscordRoles([]); // TODO
                 $user->setHasMFA($discordUser->hasMfaEnabled());
 
