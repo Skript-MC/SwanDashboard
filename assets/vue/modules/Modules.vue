@@ -1,9 +1,4 @@
 <template>
-    <div class="flex-row px-4 py-5 border-b border-gray-200 sm:px-6 mt-10">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Gestion des modules</h3>
-        <p class="mt-1 text-sm text-gray-500">Consultez la liste des modules présent sur Swan, et activez-les ou désactivez-les au besoin.</p>
-    </div>
-
     <div class="flex flex-col py-5 px-2">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
