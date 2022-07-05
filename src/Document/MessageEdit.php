@@ -23,14 +23,14 @@ class MessageEdit
     private ?Message $message = null;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=DiscordUser::class, storeAs="id")
+     * @MongoDB\ReferenceOne(targetDocument=DashUser::class, storeAs="id")
      */
-    private DiscordUser $user;
+    private DashUser $user;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=DiscordUser::class, nullable=true, storeAs="id")
+     * @MongoDB\ReferenceOne(targetDocument=DashUser::class, nullable=true, storeAs="id")
      */
-    private ?DiscordUser $reviewer = null;
+    private ?DashUser $reviewer = null;
 
     /**
      * @MongoDB\Field(type="string")
@@ -104,36 +104,36 @@ class MessageEdit
     }
 
     /**
-     * @return DiscordUser
+     * @return DashUser
      */
-    public function getUser(): DiscordUser
+    public function getUser(): DashUser
     {
         return $this->user;
     }
 
     /**
-     * @param DiscordUser $user
+     * @param DashUser $user
      * @return MessageEdit
      */
-    public function setUser(DiscordUser $user): MessageEdit
+    public function setUser(DashUser $user): MessageEdit
     {
         $this->user = $user;
         return $this;
     }
 
     /**
-     * @return DiscordUser|null
+     * @return DashUser|null
      */
-    public function getReviewer(): ?DiscordUser
+    public function getReviewer(): ?DashUser
     {
         return $this->reviewer;
     }
 
     /**
-     * @param DiscordUser|null $reviewer
+     * @param DashUser|null $reviewer
      * @return MessageEdit
      */
-    public function setReviewer(?DiscordUser $reviewer): MessageEdit
+    public function setReviewer(?DashUser $reviewer): MessageEdit
     {
         $this->reviewer = $reviewer;
         return $this;

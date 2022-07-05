@@ -2,8 +2,8 @@
 
 namespace App\Controller\Knowledge;
 
-use App\Document\DiscordUser;
-use App\Exceptions\MessageServiceException;
+use App\Document\DashUser;
+use App\Exception\MessageServiceException;
 use App\Repository\MessageEditRepository;
 use App\Repository\MessageRepository;
 use App\Service\MessageService;
@@ -50,7 +50,7 @@ class QuickReplyController extends AbstractController
         $aliases = json_decode($request->request->get('aliases'));
         if (null === $name || null === $content || null === $aliases)
             return new Response('One of the required field is null', Response::HTTP_BAD_REQUEST);
-        /** @var DiscordUser $user */
+        /** @var DashUser $user */
         $user = $this->getUser();
         try {
             $edit = $messageService->createEdit("quickReply", $name, $aliases, $content, $user);
@@ -108,7 +108,7 @@ class QuickReplyController extends AbstractController
         $aliases = json_decode($request->request->get('aliases'));
         if (null === $name || null === $content || null === $aliases)
             return new Response('One of the required field is null', Response::HTTP_BAD_REQUEST);
-        /** @var DiscordUser $user */
+        /** @var DashUser $user */
         $user = $this->getUser();
 
         $message = $repository->findById($messageId, "quickReply");

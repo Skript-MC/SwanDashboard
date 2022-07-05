@@ -43,7 +43,7 @@
             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt class="text-sm font-medium text-gray-500">Utilisateur</dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ edit.user.username }}
+                    {{ edit.user.discordId|discordUsername }}
                 </dd>
             </div>
             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -89,7 +89,7 @@
                                 Annulée
                             </div>
                         {% endif %}
-                        <p class="mt-2 text-gray-900">Traitée par {{ edit.reviewer.username }}
+                        <p class="mt-2 text-gray-900">Traitée par {{ edit.reviewer.discordId|discordUsername }}
                             le {{ edit.reviewedAt|date('d/m/Y à H:i') }}</p>
                         <p class="mt-2 text-gray-900">Proposée le {{ edit.createdAt|date("d/m/Y \\à H:m") }}</p>
                     {% else %}

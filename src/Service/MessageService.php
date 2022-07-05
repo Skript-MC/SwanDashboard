@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\Document\DiscordUser;
+use App\Document\DashUser;
 use App\Document\Message;
 use App\Document\MessageEdit;
-use App\Exceptions\MessageServiceException;
+use App\Exception\MessageServiceException;
 use App\Repository\MessageEditRepository;
 use App\Repository\MessageRepository;
 use DateTime;
@@ -30,7 +30,7 @@ class MessageService
      * @throws MessageServiceException
      * @throws MongoDBException
      */
-    public function createEdit(string $messageType, string $name, array $aliases, string $content, DiscordUser $user): MessageEdit
+    public function createEdit(string $messageType, string $name, array $aliases, string $content, DashUser $user): MessageEdit
     {
         $edit = (new MessageEdit())
             ->setMessageType($messageType)
@@ -55,7 +55,7 @@ class MessageService
      * @throws MessageServiceException
      * @throws MongoDBException
      */
-    public function editMessage(Message $message, string $name, array $aliases, string $content, DiscordUser $user): MessageEdit
+    public function editMessage(Message $message, string $name, array $aliases, string $content, DashUser $user): MessageEdit
     {
         $edit = (new MessageEdit())
             ->setMessageType($message->getMessageType())
@@ -78,7 +78,7 @@ class MessageService
     /**
      * @throws MongoDBException
      */
-    public function acceptEdit(DiscordUser $user, MessageEdit $edit): MessageEdit
+    public function acceptEdit(DashUser $user, MessageEdit $edit): MessageEdit
     {
         $edit->setValidated(true)
             ->setReviewer($user)
@@ -102,7 +102,7 @@ class MessageService
     /**
      * @throws MongoDBException
      */
-    public function refuseEdit(DiscordUser $user, MessageEdit $edit): MessageEdit
+    public function refuseEdit(DashUser $user, MessageEdit $edit): MessageEdit
     {
         $edit->setValidated(false)
             ->setReviewer($user)
