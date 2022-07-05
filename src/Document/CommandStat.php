@@ -11,7 +11,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class CommandStat
 {
-
     /**
      * @MongoDB\Id
      */
@@ -74,5 +73,4 @@ class CommandStat
     {
         $this->uses = $uses;
     }
-
 }

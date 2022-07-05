@@ -80,5 +80,4 @@ class SwanUptime
         $this->hours = $hours;
         return $this;
     }
-
 }

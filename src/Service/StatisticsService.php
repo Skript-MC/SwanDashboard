@@ -19,7 +19,7 @@ class StatisticsService
 
     public function getCommandStats(): array
     {
-        return $this->cache->get('commandStats', function () {
+        return $this->cache->get('statistics_commandStats', function () {
             $commandStats = $this->commandStatRepository->getSorted();
             $commandNames = [];
             $commandValues = [];

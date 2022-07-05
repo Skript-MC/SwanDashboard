@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Knowledge;
 
 use App\Repository\MessageEditRepository;
 use Knp\Component\Pager\PaginatorInterface;
